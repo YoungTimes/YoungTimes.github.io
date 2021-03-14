@@ -30,8 +30,23 @@
 <meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/rem_map.png">
 <meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png">
 <meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/map_challange.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/common_approach_map.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/map_geometric.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/semantic_map.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/drivable_path.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/priority_map.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/map_association.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/stop_point.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/smooth_driving.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/av_map.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/rem_process.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/harvesting.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/map_align_drive.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/align_noise.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/path_align.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/model_process.png">
 <meta property="article:published_time" content="2021-03-14T07:08:08.000Z">
-<meta property="article:modified_time" content="2021-03-14T07:18:42.797Z">
+<meta property="article:modified_time" content="2021-03-14T07:41:48.552Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/rem_map.png">
@@ -193,7 +208,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-03-14 15:08:08 / Modified: 15:18:42" itemprop="dateCreated datePublished" datetime="2021-03-14T15:08:08+08:00">2021-03-14</time>
+              <time title="Created: 2021-03-14 15:08:08 / Modified: 15:41:48" itemprop="dateCreated datePublished" datetime="2021-03-14T15:08:08+08:00">2021-03-14</time>
             </span>
 
           
@@ -214,21 +229,36 @@
 <h2 id="鲜度-Fresh"><a href="#鲜度-Fresh" class="headerlink" title="鲜度-Fresh"></a>鲜度-Fresh</h2><p>理想情况下，地图是在实时更新的。当物理环境发生变化时，需要实时反映到地图上。月级更新、甚至天级更新都是不够的，我们需要做到分钟级，甚至更短。</p>
 <h2 id="精度-Accuracy"><a href="#精度-Accuracy" class="headerlink" title="精度-Accuracy"></a>精度-Accuracy</h2><p>车载系统(OnBoard System)检测的车辆和行人需要与高精地图(High Definiation Map)实现厘米级精度的匹配，因此地图的精度至关重要。</p>
 <p><img src="/2021/03/14/mobileye-rem-map-md/map_challange.png" alt="高精地图挑战"></p>
-<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
-<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
+<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="/2021/03/14/mobileye-rem-map-md/common_approach_map.png" alt="高精地图通用制作方法"></p>
+<h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_geometric.png"></p>
+<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="/2021/03/14/mobileye-rem-map-md/semantic_map.png"></p>
+<p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/drivable_path.png"></p>
 <p>如下图所示，转向规则千奇百怪：禁止红灯右转，完全停车后允许红灯右转，绿灯禁止左转，绿灯Yield后允许左转…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/priority_map.png"></p>
 <p>如下图所示，红绿灯异常复杂，识别车道、人行横道与红绿灯的关联关系难度很大…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_association.png"></p>
 <p>如下图所示，除非地图可以表达所有的3D要素，否则很难自动化的计算出车道的最优Stop/Yield Point。但是表达所有的3D信息对于地图来说又是不现实的…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/stop_point.png"></p>
 <p>影响车辆行驶速度的因素有很多，道路几何、限速、文化等，难以量化，但它对Smooth Driving体验至关重要…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/smooth_driving.png"></p>
 <h1 id="Mobileye如何解决这些问题"><a href="#Mobileye如何解决这些问题" class="headerlink" title="Mobileye如何解决这些问题"></a>Mobileye如何解决这些问题</h1><p>scalability依赖众包数据生成Millions Map Agents；Accuracy不是全局的Accuracy，而是局部的Accuracy，相对于道路上的静态元素位置。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/av_map.png"></p>
 <p>REM的处理流程如下，首先从成百上千辆车获取检测信息(没有使用差分GPS，而是使用了普通的GPS)，这些数据传送到云端；每辆车Detection的角度不同，由于遮挡等原因，每辆车检测的landmark也有差异，将这些数据进行Alignment处理，生成高精度的地图数据；最后，Modeling And Semantics负责生成地图的语义数据。</p>
-<p>Harvesting<br>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/rem_process.png"></p>
+<h2 id="Harvesting"><a href="#Harvesting" class="headerlink" title="Harvesting"></a>Harvesting</h2><p>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
 <p>Mobileye Harvesting的数据量为10K/公里，这些检测的数据会被发送到云端。</p>
-<p>Aligning Drives<br>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/harvesting.png"></p>
+<h2 id="Aligning-Drives"><a href="#Aligning-Drives" class="headerlink" title="Aligning Drives"></a>Aligning Drives</h2><p>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_align_drive.png"></p>
 <p>由于GPS存在误差，每个车辆检测的道路元素位置都存在噪声，所以只依靠简单的位置求均值是不可行的。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/align_noise.png"></p>
 <p>Align之后可以明显的看到两条Driving Path(蓝色)和两侧的道路边界(红色)。对齐的过程是靠几何运算进行。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/path_align.png"></p>
 <p>仅仅靠聚类(Clustering)和Spline Fiting得到下图右上角的结果，这个结果不是特别理想。后来通过神经网络生成高精度地图，效果好了很多。</p>
-<p>为什么语义理解离不开众包<br>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/model_process.png"></p>
+<h1 id="为什么语义理解离不开众包"><a href="#为什么语义理解离不开众包" class="headerlink" title="为什么语义理解离不开众包"></a>为什么语义理解离不开众包</h1><p>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
 <p>如下右图所示，众包数据提供了复杂场景下的所有可通行路径。</p>
 <p>如下图所示，通过众包数据可以获得红绿灯与车道的关联关系、Yield Sign的Stop Point、Crosswalk与红绿灯的关联关系等。</p>
 <p>如下左图所示，通过检测哪个Drive Path的Stop Point比较多，我们可以从众包数据中获取到没有Traffic Sign情况下各个道路的路权优先级。</p>
@@ -315,7 +345,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">为什么需要高精地图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">高精地图的挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E6%A8%A1%E5%8C%96-Scale"><span class="nav-number">2.1.</span> <span class="nav-text">规模化-Scale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%B2%9C%E5%BA%A6-Fresh"><span class="nav-number">2.2.</span> <span class="nav-text">鲜度-Fresh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E5%BA%A6-Accuracy"><span class="nav-number">2.3.</span> <span class="nav-text">精度-Accuracy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE%E5%88%B6%E4%BD%9C%E6%96%B9%E6%B3%95%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="nav-number">3.</span> <span class="nav-text">通用高精地图制作方法的缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%8E%98%E7%B1%B3%E7%BA%A7%E7%B2%BE%E5%BA%A6%E4%B8%8D%E6%98%AF%E5%BF%85%E9%9C%80%E7%9A%84"><span class="nav-number">3.1.</span> <span class="nav-text">全局坐标系下厘米级精度不是必需的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%B1%82%E6%95%B0%E6%8D%AE%E7%94%9F%E4%BA%A7%E9%9A%BE%E4%BB%A5%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">语义层数据生产难以自动化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mobileye%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">Mobileye如何解决这些问题</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">为什么需要高精地图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">高精地图的挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E6%A8%A1%E5%8C%96-Scale"><span class="nav-number">2.1.</span> <span class="nav-text">规模化-Scale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%B2%9C%E5%BA%A6-Fresh"><span class="nav-number">2.2.</span> <span class="nav-text">鲜度-Fresh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E5%BA%A6-Accuracy"><span class="nav-number">2.3.</span> <span class="nav-text">精度-Accuracy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE%E5%88%B6%E4%BD%9C%E6%96%B9%E6%B3%95%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="nav-number">3.</span> <span class="nav-text">通用高精地图制作方法的缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%8E%98%E7%B1%B3%E7%BA%A7%E7%B2%BE%E5%BA%A6%E4%B8%8D%E6%98%AF%E5%BF%85%E9%9C%80%E7%9A%84"><span class="nav-number">3.1.</span> <span class="nav-text">全局坐标系下厘米级精度不是必需的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%B1%82%E6%95%B0%E6%8D%AE%E7%94%9F%E4%BA%A7%E9%9A%BE%E4%BB%A5%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">语义层数据生产难以自动化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mobileye%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">Mobileye如何解决这些问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Harvesting"><span class="nav-number">4.1.</span> <span class="nav-text">Harvesting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Aligning-Drives"><span class="nav-number">4.2.</span> <span class="nav-text">Aligning Drives</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E7%A6%BB%E4%B8%8D%E5%BC%80%E4%BC%97%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">为什么语义理解离不开众包</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
