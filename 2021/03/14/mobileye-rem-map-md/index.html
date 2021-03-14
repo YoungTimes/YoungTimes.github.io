@@ -20,28 +20,36 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="半杯茶的小酒杯">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="为什么需要高精地图理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。  高精地图的挑战规模化-Scale如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mobileye REM地图">
+<meta property="og:url" content="http://example.com/2021/03/14/mobileye-rem-map-md/index.html">
 <meta property="og:site_name" content="半杯茶的小酒杯">
+<meta property="og:description" content="为什么需要高精地图理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。  高精地图的挑战规模化-Scale如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/rem_map.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png">
+<meta property="og:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/map_challange.png">
+<meta property="article:published_time" content="2021-03-14T07:08:08.000Z">
+<meta property="article:modified_time" content="2021-03-14T07:18:42.797Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/03/14/mobileye-rem-map-md/rem_map.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/03/14/mobileye-rem-map-md/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>半杯茶的小酒杯</title>
+  <title>Mobileye REM地图 | 半杯茶的小酒杯</title>
   
 
 
@@ -154,9 +162,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -172,10 +181,9 @@
       <meta itemprop="name" content="半杯茶的小酒杯">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/14/mobileye-rem-map-md/" class="post-title-link" itemprop="url">Mobileye REM地图</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Mobileye REM地图
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -199,7 +207,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
+        <p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
 <h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
 <p><img src="/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
 <h1 id="高精地图的挑战"><a href="#高精地图的挑战" class="headerlink" title="高精地图的挑战"></a>高精地图的挑战</h1><h2 id="规模化-Scale"><a href="#规模化-Scale" class="headerlink" title="规模化-Scale"></a>规模化-Scale</h2><p>如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那就不存在规模化的问题。但是2025年之后，自动驾驶会在消费者层面全面落地，用户需要驾车到任意想去的地方，在这种场景下，Scale是一个无法规避的问题。</p>
@@ -231,208 +239,30 @@
 <p>说明： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
 <p>YouTube链接：<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/14/test/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/14/test/" class="post-title-link" itemprop="url">test</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-03-14 12:13:09 / Modified: 12:36:17" itemprop="dateCreated datePublished" datetime="2021-03-14T12:13:09+08:00">2021-03-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/2021/03/14/test/Screenshot-from-2021-01-16-10-33-55-1024x568.png" alt="test"></p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/14/test/" rel="prev" title="test">
+      <i class="fa fa-chevron-left"></i> test
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/14/map/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/14/map/" class="post-title-link" itemprop="url">map</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-03-14 12:05:03 / Modified: 12:05:44" itemprop="dateCreated datePublished" datetime="2021-03-14T12:05:03+08:00">2021-03-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="123"><a href="#123" class="headerlink" title="123"></a>123</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/14/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/14/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-14 09:22:55" itemprop="dateCreated datePublished" datetime="2021-03-14T09:22:55+08:00">2021-03-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -485,6 +315,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">为什么需要高精地图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">高精地图的挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E6%A8%A1%E5%8C%96-Scale"><span class="nav-number">2.1.</span> <span class="nav-text">规模化-Scale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%B2%9C%E5%BA%A6-Fresh"><span class="nav-number">2.2.</span> <span class="nav-text">鲜度-Fresh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E5%BA%A6-Accuracy"><span class="nav-number">2.3.</span> <span class="nav-text">精度-Accuracy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE%E5%88%B6%E4%BD%9C%E6%96%B9%E6%B3%95%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="nav-number">3.</span> <span class="nav-text">通用高精地图制作方法的缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8B%E5%8E%98%E7%B1%B3%E7%BA%A7%E7%B2%BE%E5%BA%A6%E4%B8%8D%E6%98%AF%E5%BF%85%E9%9C%80%E7%9A%84"><span class="nav-number">3.1.</span> <span class="nav-text">全局坐标系下厘米级精度不是必需的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%B1%82%E6%95%B0%E6%8D%AE%E7%94%9F%E4%BA%A7%E9%9A%BE%E4%BB%A5%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">语义层数据生产难以自动化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mobileye%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">Mobileye如何解决这些问题</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
