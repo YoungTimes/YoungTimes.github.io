@@ -141,11 +141,11 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.preprocessing.image <span class="keyword">import</span> img_to_array</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">image_to_array</span>(<span class="params">path</span>):</span></span><br><span class="line">    image = Image.<span class="built_in">open</span>(path)</span><br><span class="line">    image = image.resize((<span class="number">32</span>, <span class="number">32</span>))</span><br><span class="line">    image = img_to_array(image)</span><br><span class="line"></span><br><span class="line">    image = image.reshape([<span class="number">1</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> image</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prediction</span>(<span class="params">path</span>):</span></span><br><span class="line"></span><br><span class="line">    img = image_to_array(path)</span><br><span class="line"></span><br><span class="line">    plt.imshow(img.squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    img_gray = np.<span class="built_in">sum</span>(img / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    img_norm = (img_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">    print(img_norm.shape)</span><br><span class="line"></span><br><span class="line">    plt.imshow(img_norm.squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">    detection_model = load_model(<span class="string">&#x27;traffic_sign_weights.h5&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    predicted_classes = detection_model.predict_classes(img_norm)</span><br><span class="line"></span><br><span class="line">    print(predicted_classes)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">prediction(<span class="string">&quot;./stop.jpg&quot;</span>)</span><br><span class="line"></span><br><span class="line">prediction(<span class="string">&quot;./speed_limit_60.jpg&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <p>输入图像如下：</p>
-<p><img src="/stop.jpg"></p>
+<p><img src="/2021/03/15/cnn-sign-detection/stop.jpg"></p>
 <p>检测输出内容如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">[<span class="number">14</span>]</span><br></pre></td></tr></table></figure>
 <p>14对应Stop Sign的类型。</p>
-<p><img src="/speed_limit_60.jpg"></p>
+<p><img src="/2021/03/15/cnn-sign-detection/speed_limit_60.jpg"></p>
 <p>检测输出内容如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">[<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
 <p>3对应60KM/h的限速。</p>
@@ -157,24 +157,6 @@
       <tags>
         <tag>环境感知</tag>
         <tag>自动驾驶</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>低速自动驾驶车辆的定位与建图</title>
-    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
-    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
-<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
-<span id="more"></span>
-
-<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-      </categories>
-      <tags>
-        <tag>自动驾驶</tag>
-        <tag>高精地图</tag>
-        <tag>Mobileye</tag>
       </tags>
   </entry>
   <entry>
@@ -233,6 +215,24 @@
 <p><img src="/2021/03/14/mobileye-rem-map-md/mobileye_situation.png"></p>
 <p><strong>说明</strong>： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
 <p>YouTube链接：<br><a href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
+        <tag>Mobileye</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>低速自动驾驶车辆的定位与建图</title>
+    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
+    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
+<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
+<span id="more"></span>
+
+<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
 ]]></content>
       <categories>
         <category>自动驾驶</category>
