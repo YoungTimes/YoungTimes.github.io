@@ -300,7 +300,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/03/15/cnn-sign-detection/" class="post-title-link" itemprop="url">cnn_sign_detection</a>
+            <a href="/2021/03/15/cnn-sign-detection/" class="post-title-link" itemprop="url">深度神经网络识别交通标牌</a>
         </h2>
 
         <div class="post-meta">
@@ -317,8 +317,17 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-27 14:35:50" itemprop="dateModified" datetime="2021-03-27T14:35:50+08:00">2021-03-27</time>
+                <time title="Modified: 2021-03-27 14:43:15" itemprop="dateModified" datetime="2021-03-27T14:43:15+08:00">2021-03-27</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
 
           <br>
             <span class="post-meta-item" title="Symbols count in article">
@@ -346,7 +355,7 @@
 
       
           <h1 id="交通标牌识别"><a href="#交通标牌识别" class="headerlink" title="交通标牌识别"></a>交通标牌识别</h1><p>这里我们实现一个入门级的CNN交通标牌分类网络。</p>
-<p><img src="/cnn_sign_detection/dataset_input_output.png"></p>
+<p><img src="/dataset_input_output.png"></p>
 <p>首先导入基础依赖库。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
 
@@ -427,9 +436,9 @@
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">i = random.randint(<span class="number">1</span>, <span class="built_in">len</span>(X_train_gray))</span><br><span class="line">plt.imshow(X_train_gray[i].squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">plt.figure()</span><br><span class="line">plt.imshow(X_train[i])</span><br><span class="line">plt.figure()</span><br><span class="line">plt.imshow(X_train_gray_norm[i].squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
 <p>  灰度化和Normalization的效果如下：</p>
-<p>  <img src="/images/train_origin.png" alt="灰度图"></p>
-<p>  <img src="/images/train_gray.png" alt="原图"></p>
-<p>  <img src="/images/train_normal.png" alt="标准化"></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/train_origin.png" alt="灰度图"></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/train_gray.png" alt="原图"></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/train_normal.png" alt="标准化"></p>
 <h1 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h1><p>  <img src="/2021/03/15/cnn-sign-detection/cnn.png"></p>
 <p>  <img src="/2021/03/15/cnn-sign-detection/dropout.png"></p>
 <h2 id="构建深度神经网络"><a href="#构建深度神经网络" class="headerlink" title="构建深度神经网络"></a>构建深度神经网络</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> datasets, layers, models</span><br><span class="line"></span><br><span class="line">CNN = models.Sequential()</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Conv2D(<span class="number">6</span>, (<span class="number">5</span>, <span class="number">5</span>), activation = <span class="string">&#x27;relu&#x27;</span>, input_shape = (<span class="number">32</span>, <span class="number">32</span>, <span class="number">1</span>)))</span><br><span class="line">CNN.add(layers.AveragePooling2D())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Conv2D(<span class="number">16</span>, (<span class="number">5</span>, <span class="number">5</span>), activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.AveragePooling2D())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Dropout(<span class="number">0.2</span>))</span><br><span class="line">CNN.add(layers.Flatten())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Dense(<span class="number">120</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.Dense(<span class="number">84</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.Dense(<span class="number">43</span>, activation = <span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line"></span><br><span class="line">CNN.summary()</span><br></pre></td></tr></table></figure>
@@ -461,6 +470,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">L = <span class="number">5</span></span><br><span class="line">W = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">fig, axes = plt.subplots(L, W, figsize = (<span class="number">12</span>, <span class="number">12</span>))</span><br><span class="line">axes = axes.ravel()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">0</span>, L*W):</span><br><span class="line">    axes[i].imshow(X_test[i])</span><br><span class="line">    axes[i].set_title(<span class="string">&#x27;Prediction = &#123;&#125;\n True = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(predicted_classes[i], y_true[i]))</span><br><span class="line">    axes[i].axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.subplots_adjust(wspace = <span class="number">1</span>) </span><br></pre></td></tr></table></figure>
 
 <p><img src="/2021/03/15/cnn-sign-detection/test_result.png"></p>
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>Coursera - Traffic Sign Classification Using Deep Learning in Python/Keras</p>
 
       
     </div>
@@ -643,7 +653,7 @@
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -684,7 +694,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">11 mins.</span>
+    <span title="Reading time total">12 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
