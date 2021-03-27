@@ -27,7 +27,7 @@
 <meta property="og:site_name" content="半杯茶的小酒杯">
 <meta property="og:description" content="交通标牌识别这里我们实现一个入门级的CNN交通标牌分类网络。  首先导入基础依赖库。 1234567import matplotlib.pyplot as pltimport numpy as npimport tensorflow as tfimport pandas as pdimport seaborn as snsimport pickleimport random  数据集(Datase">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/dataset_input_output.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/dataset_input_output.png">
 <meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/traffic_sign.png">
 <meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/traffic_signs.png">
 <meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/train_origin.png">
@@ -46,7 +46,7 @@
 <meta property="article:tag" content="环境感知">
 <meta property="article:tag" content="自动驾驶">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/dataset_input_output.png">
+<meta name="twitter:image" content="http://example.com/2021/03/15/cnn-sign-detection/dataset_input_output.png">
 
 <link rel="canonical" href="http://example.com/2021/03/15/cnn-sign-detection/">
 
@@ -284,7 +284,7 @@
 
       
         <h1 id="交通标牌识别"><a href="#交通标牌识别" class="headerlink" title="交通标牌识别"></a>交通标牌识别</h1><p>这里我们实现一个入门级的CNN交通标牌分类网络。</p>
-<p><img src="/dataset_input_output.png"></p>
+<p><img src="/2021/03/15/cnn-sign-detection/dataset_input_output.png"></p>
 <p>首先导入基础依赖库。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
 
