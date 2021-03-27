@@ -20,17 +20,31 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="路要一步一步的走">
+  <meta name="description" content="交通标牌识别这里我们实现一个入门级的CNN交通标牌分类网络。  首先导入基础依赖库。 1234567import matplotlib.pyplot as pltimport numpy as npimport tensorflow as tfimport pandas as pdimport seaborn as snsimport pickleimport random  数据集(Datase">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cnn_sign_detection">
 <meta property="og:url" content="http://example.com/2021/03/15/cnn-sign-detection/index.html">
 <meta property="og:site_name" content="半杯茶的小酒杯">
-<meta property="og:description" content="路要一步一步的走">
+<meta property="og:description" content="交通标牌识别这里我们实现一个入门级的CNN交通标牌分类网络。  首先导入基础依赖库。 1234567import matplotlib.pyplot as pltimport numpy as npimport tensorflow as tfimport pandas as pdimport seaborn as snsimport pickleimport random  数据集(Datase">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/cnn_sign_detection/dataset_input_output.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/traffic_sign.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/traffic_signs.png">
+<meta property="og:image" content="http://example.com/images/train_origin.png">
+<meta property="og:image" content="http://example.com/images/train_gray.png">
+<meta property="og:image" content="http://example.com/images/train_normal.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/cnn.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/dropout.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/confusion_mask.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/loss.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/accuracy.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/matrix.png">
+<meta property="og:image" content="http://example.com/2021/03/15/cnn-sign-detection/test_result.png">
 <meta property="article:published_time" content="2021-03-15T15:42:51.000Z">
-<meta property="article:modified_time" content="2021-03-15T15:42:51.209Z">
+<meta property="article:modified_time" content="2021-03-27T06:35:50.174Z">
 <meta property="article:author" content="Young Times">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/cnn_sign_detection/dataset_input_output.png">
 
 <link rel="canonical" href="http://example.com/2021/03/15/cnn-sign-detection/">
 
@@ -218,6 +232,13 @@
 
               <time title="Created: 2021-03-15 23:42:51" itemprop="dateCreated datePublished" datetime="2021-03-15T23:42:51+08:00">2021-03-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-27 14:35:50" itemprop="dateModified" datetime="2021-03-27T14:35:50+08:00">2021-03-27</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -232,14 +253,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
+              <span>11k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>10 mins.</span>
             </span>
 
         </div>
@@ -251,7 +272,123 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h1 id="交通标牌识别"><a href="#交通标牌识别" class="headerlink" title="交通标牌识别"></a>交通标牌识别</h1><p>这里我们实现一个入门级的CNN交通标牌分类网络。</p>
+<p><img src="/cnn_sign_detection/dataset_input_output.png"></p>
+<p>首先导入基础依赖库。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
+
+<h1 id="数据集-Dataset"><a href="#数据集-Dataset" class="headerlink" title="数据集(Dataset)"></a>数据集(Dataset)</h1><p>数据集(Dataset)中包含43个不同分类的、大小为32x32的RGB图像，分类如下:</p>
+<ul>
+<li>0 = Speed limit (20km/h)</li>
+<li>1 = Speed limit (30km/h)</li>
+<li>2 = Speed limit (50km/h)</li>
+<li>3 = Speed limit (60km/h)</li>
+<li>4 = Speed limit (70km/h)</li>
+<li>5 = Speed limit (80km/h)</li>
+<li>6 = End of speed limit (80km/h)</li>
+<li>7 = Speed limit (100km/h)</li>
+<li>8 = Speed limit (120km/h)</li>
+<li>9 = No passing</li>
+<li>10 = No passing for vehicles over 3.5 metric tons</li>
+<li>11 = Right-of-way at the next intersection</li>
+<li>12 = Priority road</li>
+<li>13 = Yield</li>
+<li>14 = Stop</li>
+<li>15 = No vehicles</li>
+<li>16 = Vehicles over 3.5 metric tons prohibited</li>
+<li>17 = No entry</li>
+<li>18 = General caution</li>
+<li>19 = Dangerous curve to the left</li>
+<li>20 = Dangerous curve to the right</li>
+<li>21 = Double curve</li>
+<li>22 = Bumpy road</li>
+<li>23 = Slippery road</li>
+<li>24 = Road narrows on the right</li>
+<li>25 = Road work</li>
+<li>26 = Traffic signals</li>
+<li>27 = Pedestrians</li>
+<li>28 = Children crossing</li>
+<li>29 = Bicycles crossing</li>
+<li>30 = Beware of ice/snow</li>
+<li>31 = Wild animals crossing</li>
+<li>32 = End of all speed and passing limits</li>
+<li>33 = Turn right ahead</li>
+<li>34 = Turn left ahead</li>
+<li>35 = Ahead only</li>
+<li>36 = Go straight or right</li>
+<li>37 = Go straight or left</li>
+<li>38 = Keep right</li>
+<li>39 = Keep left</li>
+<li>40 = Roundabout mandatory</li>
+<li>41 = End of no passing</li>
+<li>42 = End of no passing by vehicles over 3.5 metric tons</li>
+</ul>
+<h2 id="数据集加载"><a href="#数据集加载" class="headerlink" title="数据集加载"></a>数据集加载</h2><p>读取训练集、验证集和测试集:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;./traffic-signs-data/train.p&quot;</span>, mode=<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> training_data:</span><br><span class="line">    train = pickle.load(training_data)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;./traffic-signs-data/valid.p&quot;</span>, mode=<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> validation_data:</span><br><span class="line">    valid = pickle.load(validation_data)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;./traffic-signs-data/test.p&quot;</span>, mode=<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> testing_data:</span><br><span class="line">    test = pickle.load(testing_data)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x_train, y_train = train[<span class="string">&quot;features&quot;</span>], train[<span class="string">&quot;labels&quot;</span>]</span><br><span class="line"></span><br><span class="line">print(x_train.shape)</span><br></pre></td></tr></table></figure>
+
+<p>(34799, 32, 32, 3)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x_validation, y_validation = valid[<span class="string">&quot;features&quot;</span>], valid[<span class="string">&quot;labels&quot;</span>]</span><br><span class="line"></span><br><span class="line">print(x_validation.shape)</span><br></pre></td></tr></table></figure>
+
+<p>(4410, 32, 32, 3)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x_test, y_test = test[<span class="string">&quot;features&quot;</span>], test[<span class="string">&quot;labels&quot;</span>]</span><br><span class="line"></span><br><span class="line">print(x_test.shape)</span><br></pre></td></tr></table></figure>
+
+<p>(12630, 32, 32, 3)</p>
+<h2 id="数据集可视化"><a href="#数据集可视化" class="headerlink" title="数据集可视化"></a>数据集可视化</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">i = np.random.randint(<span class="number">1</span>, <span class="built_in">len</span>(X_train))</span><br><span class="line"></span><br><span class="line">plt.imshow(X_train[i])</span><br><span class="line"></span><br><span class="line">y_train[i]</span><br></pre></td></tr></table></figure>
+
+<p>图片展示效果如下：</p>
+<p><img src="/2021/03/15/cnn-sign-detection/traffic_sign.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">W_grid = <span class="number">5</span></span><br><span class="line">L_grid = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">fig, axes = plt.subplots(L_grid, W_grid, figsize = (<span class="number">10</span>,<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">axes = axes.ravel() <span class="comment"># flaten the 5 x 5 matrix into 25 array</span></span><br><span class="line"></span><br><span class="line">n_training = <span class="built_in">len</span>(X_train) </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">0</span>, W_grid * L_grid):</span><br><span class="line">    <span class="comment"># Select a random number</span></span><br><span class="line">    index = np.random.randint(<span class="number">0</span>, n_training)</span><br><span class="line">    <span class="comment"># read and display an image with the selected index    </span></span><br><span class="line">    axes[i].imshow(X_train[index])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>图片展示效果如下：</p>
+<p><img src="/2021/03/15/cnn-sign-detection/traffic_signs.png"></p>
+<h1 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.utils <span class="keyword">import</span> shuffle</span><br><span class="line">X_train, y_train = shuffle(X_train, y_train)</span><br></pre></td></tr></table></figure>
+
+<h2 id="灰度化"><a href="#灰度化" class="headerlink" title="灰度化"></a>灰度化</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">X_train_gray = np.<span class="built_in">sum</span>(X_train / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">X_validation_gray = np.<span class="built_in">sum</span>(X_validation / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">X_test_gray = np.<span class="built_in">sum</span>(X_test / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">print(X_train_gray.shape)</span><br></pre></td></tr></table></figure>
+
+<p>(34799, 32, 32, 1)</p>
+<h2 id="Normalization"><a href="#Normalization" class="headerlink" title="Normalization"></a>Normalization</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">X_train_gray_norm = (X_train_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">X_validation_gray_norm = (X_validation_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">X_test_gray_norm = (X_test_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">print(X_train_gray_norm)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[[[[-0.52083333]</span><br><span class="line">   [-0.52604167]</span><br><span class="line">   [-0.51822917]</span><br><span class="line">   ...</span><br><span class="line">   [-0.48958333]</span><br><span class="line">   [-0.47916667]</span><br><span class="line">   [-0.46614583]]</span><br><span class="line"></span><br><span class="line">  [[-0.52083333]</span><br><span class="line">   [-0.52083333]</span><br><span class="line">   [-0.52864583]</span><br><span class="line">   ...</span><br><span class="line">   [-0.5       ]</span><br><span class="line">   [-0.48958333]</span><br><span class="line">   [-0.4765625 ]]</span><br><span class="line"></span><br><span class="line">  [[-0.54427083]</span><br><span class="line">   [-0.53385417]</span><br><span class="line">   [-0.53385417]</span><br><span class="line">   ...</span><br><span class="line">   [-0.50520833]</span><br><span class="line">   [-0.47916667]</span><br><span class="line">   [-0.47395833]]</span><br><span class="line"></span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">i = random.randint(<span class="number">1</span>, <span class="built_in">len</span>(X_train_gray))</span><br><span class="line">plt.imshow(X_train_gray[i].squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">plt.figure()</span><br><span class="line">plt.imshow(X_train[i])</span><br><span class="line">plt.figure()</span><br><span class="line">plt.imshow(X_train_gray_norm[i].squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>  灰度化和Normalization的效果如下：</p>
+<p>  <img src="/images/train_origin.png" alt="灰度图"></p>
+<p>  <img src="/images/train_gray.png" alt="原图"></p>
+<p>  <img src="/images/train_normal.png" alt="标准化"></p>
+<h1 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h1><p>  <img src="/2021/03/15/cnn-sign-detection/cnn.png"></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/dropout.png"></p>
+<h2 id="构建深度神经网络"><a href="#构建深度神经网络" class="headerlink" title="构建深度神经网络"></a>构建深度神经网络</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> datasets, layers, models</span><br><span class="line"></span><br><span class="line">CNN = models.Sequential()</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Conv2D(<span class="number">6</span>, (<span class="number">5</span>, <span class="number">5</span>), activation = <span class="string">&#x27;relu&#x27;</span>, input_shape = (<span class="number">32</span>, <span class="number">32</span>, <span class="number">1</span>)))</span><br><span class="line">CNN.add(layers.AveragePooling2D())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Conv2D(<span class="number">16</span>, (<span class="number">5</span>, <span class="number">5</span>), activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.AveragePooling2D())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Dropout(<span class="number">0.2</span>))</span><br><span class="line">CNN.add(layers.Flatten())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Dense(<span class="number">120</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.Dense(<span class="number">84</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.Dense(<span class="number">43</span>, activation = <span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line"></span><br><span class="line">CNN.summary()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Model: &quot;sequential_1&quot;</span><br><span class="line">_________________________________________________________________</span><br><span class="line">Layer (type)                 Output Shape              Param #   </span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">conv2d_1 (Conv2D)            (None, 28, 28, 6)         156       </span><br><span class="line">_________________________________________________________________</span><br><span class="line">average_pooling2d_1 (Average (None, 14, 14, 6)         0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">conv2d_2 (Conv2D)            (None, 10, 10, 16)        2416      </span><br><span class="line">_________________________________________________________________</span><br><span class="line">average_pooling2d_2 (Average (None, 5, 5, 16)          0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dropout (Dropout)            (None, 5, 5, 16)          0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">flatten_1 (Flatten)          (None, 400)               0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_3 (Dense)              (None, 120)               48120     </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_4 (Dense)              (None, 84)                10164     </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_5 (Dense)              (None, 43)                3655      </span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">Total params: 64,511</span><br><span class="line">Trainable params: 64,511</span><br><span class="line">Non-trainable params: 0</span><br><span class="line">_________________________________________________________________</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译和训练"><a href="#编译和训练" class="headerlink" title="编译和训练"></a>编译和训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CNN.<span class="built_in">compile</span>(optimizer = <span class="string">&#x27;Adam&#x27;</span>, loss = <span class="string">&#x27;sparse_categorical_crossentropy&#x27;</span>, metrics = [<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">history = CNN.fit(X_train_gray_norm,</span><br><span class="line">                  y_train,</span><br><span class="line">                  batch_size = <span class="number">500</span>,</span><br><span class="line">                  epochs = <span class="number">5</span>,</span><br><span class="line">                  verbose = <span class="number">1</span>,</span><br><span class="line">                  validation_data = (X_validation_gray_norm, y_validation))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Epoch 1&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 9s 136ms&#x2F;step - loss: 3.1861 - accuracy: 0.1649 - val_loss: 2.5817 - val_accuracy: 0.3082</span><br><span class="line">Epoch 2&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 9s 135ms&#x2F;step - loss: 1.6409 - accuracy: 0.5335 - val_loss: 1.2052 - val_accuracy: 0.6458</span><br><span class="line">Epoch 3&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 10s 145ms&#x2F;step - loss: 0.9414 - accuracy: 0.7220 - val_loss: 0.8685 - val_accuracy: 0.7417</span><br><span class="line">Epoch 4&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 10s 147ms&#x2F;step - loss: 0.7074 - accuracy: 0.7915 - val_loss: 0.7434 - val_accuracy: 0.7834</span><br><span class="line">Epoch 5&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 10s 145ms&#x2F;step - loss: 0.5825 - accuracy: 0.8317 - val_loss: 0.6605 - val_accuracy: 0.7955</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Epoch 45&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 115ms&#x2F;step - loss: 0.0509 - accuracy: 0.9844 - val_loss: 0.3022 - val_accuracy: 0.9220</span><br><span class="line">Epoch 46&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 114ms&#x2F;step - loss: 0.0480 - accuracy: 0.9861 - val_loss: 0.2822 - val_accuracy: 0.9254</span><br><span class="line">Epoch 47&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 110ms&#x2F;step - loss: 0.0462 - accuracy: 0.9864 - val_loss: 0.2971 - val_accuracy: 0.9259</span><br><span class="line">Epoch 48&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 111ms&#x2F;step - loss: 0.0460 - accuracy: 0.9860 - val_loss: 0.2665 - val_accuracy: 0.9268</span><br><span class="line">Epoch 49&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 118ms&#x2F;step - loss: 0.0442 - accuracy: 0.9863 - val_loss: 0.3237 - val_accuracy: 0.9218</span><br><span class="line">Epoch 50&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 112ms&#x2F;step - loss: 0.0452 - accuracy: 0.9864 - val_loss: 0.3150 - val_accuracy: 0.9161</span><br></pre></td></tr></table></figure>
+
+<h2 id="模型效果评估"><a href="#模型效果评估" class="headerlink" title="模型效果评估"></a>模型效果评估</h2><p><img src="/2021/03/15/cnn-sign-detection/confusion_mask.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = CNN.evaluate(X_test_gray_norm, y_test)</span><br><span class="line">print(<span class="string">&#x27;Test Accuracy: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(score[<span class="number">1</span>]))</span><br></pre></td></tr></table></figure>
+
+<p>395/395 [==============================] - 1s 3ms/step - loss: 0.5980 - accuracy: 0.9123<br>Test Accuracy: 0.9122723937034607</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">history.history.keys()</span><br></pre></td></tr></table></figure>
+
+<p>dict_keys([‘loss’, ‘accuracy’, ‘val_loss’, ‘val_accuracy’])</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">accuracy = history.history[<span class="string">&#x27;accuracy&#x27;</span>]</span><br><span class="line">val_accuracy = history.history[<span class="string">&#x27;val_accuracy&#x27;</span>]</span><br><span class="line">loss = history.history[<span class="string">&#x27;loss&#x27;</span>]</span><br><span class="line">val_loss = history.history[<span class="string">&#x27;val_loss&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">epochs = <span class="built_in">range</span>(<span class="built_in">len</span>(accuracy))</span><br><span class="line">plt.plot(epochs, loss, <span class="string">&#x27;ro&#x27;</span>, label = <span class="string">&#x27;Training Loss&#x27;</span>)</span><br><span class="line">plt.plot(epochs, val_loss, <span class="string">&#x27;r&#x27;</span>, label = <span class="string">&#x27;Validation Loss&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Training, And Validation Loss&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/03/15/cnn-sign-detection/loss.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">epochs = <span class="built_in">range</span>(<span class="built_in">len</span>(accuracy))</span><br><span class="line">plt.plot(epochs, accuracy, <span class="string">&#x27;ro&#x27;</span>, label = <span class="string">&#x27;Training Accuracy&#x27;</span>)</span><br><span class="line">plt.plot(epochs, val_accuracy, <span class="string">&#x27;r&#x27;</span>, label = <span class="string">&#x27;Validation Accuracy&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Training, And Validation Accuracy&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/03/15/cnn-sign-detection/accuracy.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">predicted_classes = CNN.predict_classes(X_test_gray_norm)</span><br><span class="line">y_true = y_test</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix</span><br><span class="line">cm = confusion_matrix(y_true, predicted_classes)</span><br><span class="line">plt.figure(figsize = (<span class="number">25</span>, <span class="number">25</span>))</span><br><span class="line">sns.heatmap(cm, annot = <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/03/15/cnn-sign-detection/matrix.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">L = <span class="number">5</span></span><br><span class="line">W = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">fig, axes = plt.subplots(L, W, figsize = (<span class="number">12</span>, <span class="number">12</span>))</span><br><span class="line">axes = axes.ravel()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">0</span>, L*W):</span><br><span class="line">    axes[i].imshow(X_test[i])</span><br><span class="line">    axes[i].set_title(<span class="string">&#x27;Prediction = &#123;&#125;\n True = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(predicted_classes[i], y_true[i]))</span><br><span class="line">    axes[i].axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.subplots_adjust(wspace = <span class="number">1</span>) </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/03/15/cnn-sign-detection/test_result.png"></p>
+
     </div>
 
     
@@ -331,6 +468,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%A4%E9%80%9A%E6%A0%87%E7%89%8C%E8%AF%86%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">交通标牌识别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86-Dataset"><span class="nav-number">2.</span> <span class="nav-text">数据集(Dataset)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%8A%A0%E8%BD%BD"><span class="nav-number">2.1.</span> <span class="nav-text">数据集加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">数据集可视化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">数据处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%81%B0%E5%BA%A6%E5%8C%96"><span class="nav-number">3.1.</span> <span class="nav-text">灰度化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Normalization"><span class="nav-number">3.2.</span> <span class="nav-text">Normalization</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">神经网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">4.1.</span> <span class="nav-text">构建深度神经网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%92%8C%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">编译和训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%95%88%E6%9E%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">4.3.</span> <span class="nav-text">模型效果评估</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -346,7 +484,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -391,12 +529,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">2k</span>
+    <span title="Symbols count total">13k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2 mins.</span>
+    <span title="Reading time total">11 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
