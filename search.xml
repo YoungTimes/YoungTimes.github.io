@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>低速自动驾驶车辆的定位与建图</title>
-    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
-    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
-<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
-<span id="more"></span>
-
-<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-      </categories>
-      <tags>
-        <tag>高精地图</tag>
-        <tag>自动驾驶</tag>
-        <tag>Mobileye</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>深度神经网络识别交通标牌</title>
     <url>/2021/03/15/cnn-sign-detection/</url>
     <content><![CDATA[<p>这里我们实现一个入门级的CNN交通标牌分类网络。</p>
@@ -173,8 +155,26 @@
         <category>自动驾驶</category>
       </categories>
       <tags>
-        <tag>自动驾驶</tag>
         <tag>环境感知</tag>
+        <tag>自动驾驶</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>低速自动驾驶车辆的定位与建图</title>
+    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
+    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
+<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
+<span id="more"></span>
+
+<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
+        <tag>Mobileye</tag>
       </tags>
   </entry>
   <entry>
@@ -238,8 +238,8 @@
         <category>自动驾驶</category>
       </categories>
       <tags>
-        <tag>高精地图</tag>
         <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
         <tag>Mobileye</tag>
       </tags>
   </entry>
