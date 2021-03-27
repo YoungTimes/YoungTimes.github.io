@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>低速自动驾驶车辆的定位与建图</title>
-    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
-    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
-<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
-<span id="more"></span>
-
-<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-      </categories>
-      <tags>
-        <tag>高精地图</tag>
-        <tag>自动驾驶</tag>
-        <tag>Mobileye</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>深度神经网络识别交通标牌</title>
     <url>/2021/03/15/cnn-sign-detection/</url>
     <content><![CDATA[<p>这里我们实现一个入门级的CNN交通标牌分类网络。</p>
@@ -154,7 +136,7 @@
 <p>在测试集上验证网络效果。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">L = <span class="number">5</span></span><br><span class="line">W = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">fig, axes = plt.subplots(L, W, figsize = (<span class="number">12</span>, <span class="number">12</span>))</span><br><span class="line">axes = axes.ravel()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">0</span>, L*W):</span><br><span class="line">    axes[i].imshow(X_test[i])</span><br><span class="line">    axes[i].set_title(<span class="string">&#x27;Prediction = &#123;&#125;\n True = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(predicted_classes[i], y_true[i]))</span><br><span class="line">    axes[i].axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.subplots_adjust(wspace = <span class="number">1</span>) </span><br></pre></td></tr></table></figure>
 
-<p><img src="/test_result.png"></p>
+<p><img src="/2021/03/15/cnn-sign-detection/test_result.png"></p>
 <h1 id="实际检测效果验证"><a href="#实际检测效果验证" class="headerlink" title="实际检测效果验证"></a>实际检测效果验证</h1><p>在网上找了两张图片(限速标牌和Stop标牌)试验， 图像中冗余内容越多，检测效果越差。当标牌充满图像时，检测效果还是不错的。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.preprocessing.image <span class="keyword">import</span> img_to_array</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">image_to_array</span>(<span class="params">path</span>):</span></span><br><span class="line">    image = Image.<span class="built_in">open</span>(path)</span><br><span class="line">    image = image.resize((<span class="number">32</span>, <span class="number">32</span>))</span><br><span class="line">    image = img_to_array(image)</span><br><span class="line"></span><br><span class="line">    image = image.reshape([<span class="number">1</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> image</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prediction</span>(<span class="params">path</span>):</span></span><br><span class="line"></span><br><span class="line">    img = image_to_array(path)</span><br><span class="line"></span><br><span class="line">    plt.imshow(img.squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    img_gray = np.<span class="built_in">sum</span>(img / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    img_norm = (img_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">    print(img_norm.shape)</span><br><span class="line"></span><br><span class="line">    plt.imshow(img_norm.squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">    detection_model = load_model(<span class="string">&#x27;traffic_sign_weights.h5&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    predicted_classes = detection_model.predict_classes(img_norm)</span><br><span class="line"></span><br><span class="line">    print(predicted_classes)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">prediction(<span class="string">&quot;./stop.jpg&quot;</span>)</span><br><span class="line"></span><br><span class="line">prediction(<span class="string">&quot;./speed_limit_60.jpg&quot;</span>)</span><br></pre></td></tr></table></figure>
 
@@ -173,8 +155,26 @@
         <category>自动驾驶</category>
       </categories>
       <tags>
-        <tag>自动驾驶</tag>
         <tag>环境感知</tag>
+        <tag>自动驾驶</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>低速自动驾驶车辆的定位与建图</title>
+    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
+    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
+<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
+<span id="more"></span>
+
+<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
+        <tag>Mobileye</tag>
       </tags>
   </entry>
   <entry>
@@ -238,8 +238,8 @@
         <category>自动驾驶</category>
       </categories>
       <tags>
-        <tag>高精地图</tag>
         <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
         <tag>Mobileye</tag>
       </tags>
   </entry>
