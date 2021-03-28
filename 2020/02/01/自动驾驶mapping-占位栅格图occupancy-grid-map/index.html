@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前面文章《自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。">
+  <meta name="description" content="前面文章《Post not found: %e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning 自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自动驾驶Mapping-占位栅格图(Occupancy Grid Map)">
 <meta property="og:url" content="http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/index.html">
 <meta property="og:site_name" content="半杯茶的小酒杯">
-<meta property="og:description" content="前面文章《自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。">
+<meta property="og:description" content="前面文章《Post not found: %e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning 自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-10-43-36-1024x604.png">
 <meta property="og:image" content="http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-10-54-24-1024x607.png">
@@ -42,7 +42,7 @@
 <meta property="og:image" content="http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-15-47-38-1024x511.png">
 <meta property="og:image" content="http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-15-48-41.png">
 <meta property="article:published_time" content="2020-02-01T10:34:29.000Z">
-<meta property="article:modified_time" content="2021-03-28T02:33:42.549Z">
+<meta property="article:modified_time" content="2021-03-28T04:26:17.927Z">
 <meta property="article:author" content="Young Times">
 <meta property="article:tag" content="自动驾驶">
 <meta property="article:tag" content="Mapping技术">
@@ -243,7 +243,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-28 10:33:42" itemprop="dateModified" datetime="2021-03-28T10:33:42+08:00">2021-03-28</time>
+                <time title="修改时间：2021-03-28 12:26:17" itemprop="dateModified" datetime="2021-03-28T12:26:17+08:00">2021-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -282,7 +282,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>5.3k</span>
+              <span>5.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -301,7 +301,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>前面文章《<a target="_blank" rel="noopener" href="http://young-times.bj01.bdysite.com/index.php/2020/01/18/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning/">自动驾驶运动规划(Motion Planning)</a>》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>
+        <p>前面文章《<a href="#">Post not found: %e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning 自动驾驶运动规划(Motion Planning)</a>》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>
 <span id="more"></span>
 
 <h1 id="占位栅格地图-Occupancy-Grid-Map"><a href="#占位栅格地图-Occupancy-Grid-Map" class="headerlink" title="占位栅格地图(Occupancy Grid Map)"></a>占位栅格地图(Occupancy Grid Map)</h1><p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-10-43-36-1024x604.png"></p>
