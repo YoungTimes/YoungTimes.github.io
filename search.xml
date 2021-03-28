@@ -250,6 +250,8 @@
 <p>最近在研究论文-Social LSTM: Human Trajectory Prediction in Crowded Spaces, 先从最基本的RNN模型入手看看效果。</p>
 <p>本文代码已经上传到Github:<br><a href="https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py">https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py</a></p>
 </blockquote>
+<span id="more"></span>
+
 <h1 id="行人轨迹数据集"><a href="#行人轨迹数据集" class="headerlink" title="行人轨迹数据集"></a>行人轨迹数据集</h1><p>数据集来源自[1]，每个数据目录包含一个pixel_pos.csv文件，它的文件格式如下:</p>
 <p>pixel_pose.csv包含4行，它的列数是所有行人轨迹点的数量。</p>
 <p>第一行是所有的Frame Number；</p>
