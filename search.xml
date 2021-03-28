@@ -244,6 +244,97 @@
       </tags>
   </entry>
   <entry>
+    <title>Waymo-自动驾驶长尾问题挑战</title>
+    <url>/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/</url>
+    <content><![CDATA[<p>尽管Waymo已经在开放道路上积累超过10 Million Miles，Waymo的工程师们仍然发现有层出不穷的新自动驾驶场景待解决。</p>
+<h2 id="1、自动驾驶长尾场景举例"><a href="#1、自动驾驶长尾场景举例" class="headerlink" title="1、自动驾驶长尾场景举例"></a>1、自动驾驶长尾场景举例</h2><p><strong>场景一</strong>：一个骑自行车的人手中拿着一个Stop Sign标识牌。我们不知道它何时会举起标识牌。无人车必须理解这种场景，即使他举起了Stop Sign标识牌，自动驾驶汽车也不应该停下来。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-07-22-03-14-1024x574.png"></p>
+<p><strong>场景二:</strong> 迎面而来的车辆上装载的塑料管子撒了一地，自动驾驶汽车必须学会应对这种突发情况，并且避开它们对无人车行驶的影响。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-07-22-08-44-1024x370.png"></p>
+<p><strong>场景三：</strong>由于道路施工等因素，路面布满锥桶。无人车必须正确识别这些场景，在布满路面锥桶的场景下实现合理驾驶。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_10s.gif"></p>
+<p><strong>场景四：</strong>路口绿灯，无人车拥有路权，虽然我们的无人车先到达路口，但必须为稍后到达的特种车辆让行。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_8s.gif"></p>
+<p><strong>场景五：</strong> 路口绿灯，无人车准备左转，遇到闯红灯高速通过的社会车辆，无人车需要识别这种场景，并及时停车避让违规车辆。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_5s-1.gif"></p>
+<h2 id="2、自动驾驶核心模块-Perception-Prediction和Planning"><a href="#2、自动驾驶核心模块-Perception-Prediction和Planning" class="headerlink" title="2、自动驾驶核心模块-Perception, Prediction和Planning"></a>2、自动驾驶核心模块-Perception, Prediction和Planning</h2><p>Perception、Prediction和Planning模块是自动驾驶的核心模块，每个模块都存在巨大的挑战。</p>
+<h4 id="2-1-Perception"><a href="#2-1-Perception" class="headerlink" title="2.1 Perception"></a>2.1 Perception</h4><p>Perception输入：传感器(激光雷达)输入信息以及场景的先验信息。</p>
+<p>Perception输出：道路交通对象(行人、车辆等)，对道路场景的语义分割和理解。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-08-56-17.png"></p>
+<p>Perception本身是一个非常复杂、高难度的问题，它必须能够识别各种形态各异、不同种类的对象。比如下左一图，一群穿着恐龙服的行人，感知必须能够正确识别它们。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-03-50-1024x338.png"></p>
+<p>相同的物体在不同的时间、不同的季节它们的外观表现也会有很大的差异，这会对Perception带来巨大挑战。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-12-28-1024x311.png"></p>
+<p>各种复杂场景的分割理解难度极高。如下图左一：一个搬着箱子的人；下图左三：骑马的人。Perception必须能够正确的分割识别这些场景，而不会因为遮挡导致出现识别的错误。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-16-52-1024x300.png"></p>
+<h4 id="2-2-Prediction"><a href="#2-2-Prediction" class="headerlink" title="2.2 Prediction"></a>2.2 Prediction</h4><p>Perception对检测到的物体进行下一步行为的预测，以辅助自动驾驶车辆进行合理的行为决策。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-29-49-1024x259.png"></p>
+<p>Perception要考虑物体的历史行为，比如车辆不会在短时间内实现90度的转弯，因此我们可以假设车辆在短时间内仍然按照当前的朝向和速度前进；要对场景有更高语义层面的理解；要能够关注到不同对象的属性差异和视觉线索，比如车辆大概率是会在车道上行驶上，行人会走斑马线，车辆的朝向能够大概率反应它的意图，如果行人做出停车的手势，大概率是要过马路；要能够解决待预测物体与其它物体的行为交互。</p>
+<p>如下图所示，路边有一辆静止的车辆，骑自行车的人在靠近静止车辆时，会侵入无人车车道。Perception模块需要正确理解这些场景，并生成合理的预测曲线。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_5s.gif"></p>
+<p>如何能够准确的预测社会车辆的行为仍然是一个存在巨大挑战的开放性问题。</p>
+<h4 id="2-3-Planning"><a href="#2-3-Planning" class="headerlink" title="2.3 Planning"></a>2.3 Planning</h4><p>Planning是Decision Making Machine，它基于Perception和Prediction的输出，规划车辆的行为，并输出Control模块，控制车辆的加减速、刹车等行为。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-51-50.png"></p>
+<p>Planning首要考虑的是安全(safe)，其次要考虑驾乘的舒适性(comfortable)，再次要能够与其它交通参与者正确交互，最后要保证乘客送达目的地。如何能够满足这些条件实现良好的Planning效果仍然是一个开放性的问题。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_10s-1-2.gif"></p>
+<h2 id="3-大规模机器学习技术-Machine-Learning-At-Scale"><a href="#3-大规模机器学习技术-Machine-Learning-At-Scale" class="headerlink" title="3. 大规模机器学习技术(Machine Learning At Scale)"></a>3. 大规模机器学习技术(Machine Learning At Scale)</h2><p>Machine Learning是解决自动驾驶长尾问题的一种有效工具。利用Machine Learning技术可以实现从数据采集、标注、训练、车端部署的闭环循环流程，从而实现Case的不断积累，模型的不断完善。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-22-39-1024x426.png"></p>
+<h4 id="3-1-Automated-Machine-Learning技术"><a href="#3-1-Automated-Machine-Learning技术" class="headerlink" title="3.1 Automated Machine Learning技术"></a>3.1 Automated Machine Learning技术</h4><p>Waymo使用了Automated Machine Learning技术生成和优化针对无人车的数据模型，极大提升了模型训练的效率。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-37-13-1024x530.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-39-29-1024x521.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-40-27-1024x425.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-43-04-1024x523.png"></p>
+<h4 id="3-2-机器学习技术的局限-Limits-Of-Machine-Learning"><a href="#3-2-机器学习技术的局限-Limits-Of-Machine-Learning" class="headerlink" title="3.2 机器学习技术的局限(Limits Of Machine Learning)"></a>3.2 机器学习技术的局限(Limits Of Machine Learning)</h4><p>机器学习模型不能解决所有的问题，但我们需要的是一个安全的自动驾驶系统，所以必须有其它措施来补充ML的不足。</p>
+<p>首先可以借助于冗余互补的传感器辅助解决这个问题。车辆同时配备了视觉、Lidar、Radar系统，各个系统彼此独立，相互补充，以最大限度保证无人车不会缺失任何信息。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-48-43-1024x599.png"></p>
+<p>其次，我们可以采用ML和Non-ML混合系统，利用专家系统来弥补ML的不足。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-56-06.png"></p>
+<h2 id="4、大规模的测试技术-Large-Scale-Testing"><a href="#4、大规模的测试技术-Large-Scale-Testing" class="headerlink" title="4、大规模的测试技术(Large Scale Testing)"></a>4、大规模的测试技术(Large Scale Testing)</h2><p>首先Waymo有庞大的自动驾驶车队，可以支撑大规模的测试。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-16-08-1024x494.png"></p>
+<p>有些场景在实际道路上出现的概率很低，为了测试验证这些低频问题，需要自己构建场景，进行结构化测试。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-19-08-1024x471.png"></p>
+<p>仿真是一种重要的验证测试手段，可以轻量级安全的构造各种各样的测试场景。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-22-53.png"></p>
+<p>自动驾驶仿真必须能够真实模拟车辆和行人的行为。这仅仅依靠简单的规则模型是不够的，我们需要更加复杂的模型，Waymo使用一种Mid-2-Mid的Drive Agent机器学习模型，它接收定位、感知等信息，输出更加拟人化的运动规划。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-40-00-1024x269.png"></p>
+<p>Waymo提出的ChauffeurNet将Map、交通规则、道路环境等信息转化为图像信息，从而可以最大限度的利用比较成熟的机器学习模型，最终输出Agent的Trajectory。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-46-38-1024x543.png"></p>
+<p>ChauffeurNet可以解决大部分简单场景下的Prediction和Planning问题。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/unnamed.gif"></p>
+<p>场景中红色的拖尾是Agent的历史轨迹，绿色是未来2s的预测轨迹。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/unnamed-1.gif"></p>
+<p>主车成功的通过路边静止车辆的场景</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/unnamed-2.gif"></p>
+<p>主车遇到缓慢前行的车辆后减速</p>
+<p>当然ChauffeurNet也有其局限性，比如以下复杂场景目前还不能很好的处理。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_406x306_10s.gif"></p>
+<p>主车由于视距遮挡，直接冲出了路口</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_406x306_8s.gif"></p>
+<p>车辆没有成功完成掉头操作</p>
+<h2 id="5、机器学习难以覆盖的长尾问题挑战"><a href="#5、机器学习难以覆盖的长尾问题挑战" class="headerlink" title="5、机器学习难以覆盖的长尾问题挑战"></a>5、机器学习难以覆盖的长尾问题挑战</h2><p>对自动驾驶测试来讲，最大的挑战在于很难收集到所有Corner Case。如下图所示，是人类驾驶行为分布，要经过非常长时间的积累才能得到一些Corner的驾驶行为Case。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-15-46-53.png"></p>
+<p>在自动驾驶网络的神经网络模型中，可能有上千万的参数，如果Corner Case的样本数量太少，就难以保证网络模型能够学会这些Corner场景。</p>
+<p>在神经网络模型覆盖长尾Case前，如何来解决长尾Case呢？专家系统是一个选择。专家系统融入专业的知识，通过小批量的样本就可以获得效果比较好的参数。</p>
+<p>比如我们计划得到实现一个轨迹优化机器学习模型，在基于运动控制理论和一系列的约束设计好专家模型之后，通过采集历史车辆轨迹，我们就可以调整参数最小化Cost的方法，使得专家系统的轨迹输出尽可能的逼近人类驾驶轨迹。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-15-53-40-1024x576.png"></p>
+<p>轨迹优化专家系统的另一种模型是Inverse Reinforcement Learning技术，通过历史驾驶轨迹训练模型参数，使得它的输出尽可能的逼近预期效果。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-02-30.png"></p>
+<p>如下图所示，红色的主车，蓝色的是社会车辆。左图的社会车辆更加保守，右侧的社会车辆更加激进。用保守的轨迹训练出的模型表现就趋于保守，用激进的轨迹训练出的模型表现就趋于激进。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x222_17s.gif"></p>
+<h2 id="6、Smart-Agent对于自动驾驶规模化不可或缺"><a href="#6、Smart-Agent对于自动驾驶规模化不可或缺" class="headerlink" title="6、Smart Agent对于自动驾驶规模化不可或缺"></a>6、Smart Agent对于自动驾驶规模化不可或缺</h2><p>不管是专家系统，还是神经网络，它们都在努力模拟人的驾驶行为，使Agent变得聪明起来，聪明的Agent可以辅助自动驾驶技术快速规模化。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-19-28-1024x319.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-21-58-1024x433.png"></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>waymo</tag>
+        <tag>自动驾驶长尾问题</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</title>
     <url>/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/</url>
     <content><![CDATA[<p>前面文章《自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>

@@ -20,30 +20,72 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="路要一步一步的走">
-<meta property="og:type" content="website">
-<meta property="og:title" content="半杯茶的小酒杯">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="尽管Waymo已经在开放道路上积累超过10 Million Miles，Waymo的工程师们仍然发现有层出不穷的新自动驾驶场景待解决。 1、自动驾驶长尾场景举例场景一：一个骑自行车的人手中拿着一个Stop Sign标识牌。我们不知道它何时会举起标识牌。无人车必须理解这种场景，即使他举起了Stop Sign标识牌，自动驾驶汽车也不应该停下来。  场景二: 迎面而来的车辆上装载的塑料管子撒了一地，自动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Waymo-自动驾驶长尾问题挑战">
+<meta property="og:url" content="http://example.com/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/index.html">
 <meta property="og:site_name" content="半杯茶的小酒杯">
-<meta property="og:description" content="路要一步一步的走">
+<meta property="og:description" content="尽管Waymo已经在开放道路上积累超过10 Million Miles，Waymo的工程师们仍然发现有层出不穷的新自动驾驶场景待解决。 1、自动驾驶长尾场景举例场景一：一个骑自行车的人手中拿着一个Stop Sign标识牌。我们不知道它何时会举起标识牌。无人车必须理解这种场景，即使他举起了Stop Sign标识牌，自动驾驶汽车也不应该停下来。  场景二: 迎面而来的车辆上装载的塑料管子撒了一地，自动">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-07-22-03-14-1024x574.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-07-22-08-44-1024x370.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_10s.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_8s.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_5s-1.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-08-56-17.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-03-50-1024x338.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-12-28-1024x311.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-16-52-1024x300.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-29-49-1024x259.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_5s.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-09-51-50.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x432_10s-1-2.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-22-39-1024x426.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-37-13-1024x530.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-39-29-1024x521.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-40-27-1024x425.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-43-04-1024x523.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-48-43-1024x599.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-10-56-06.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-16-08-1024x494.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-19-08-1024x471.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-22-53.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-40-00-1024x269.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-11-46-38-1024x543.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/unnamed.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/unnamed-1.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/unnamed-2.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_406x306_10s.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_406x306_8s.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-15-46-53.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-15-53-40-1024x576.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-02-30.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/gifhome_774x222_17s.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-19-28-1024x319.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-21-58-1024x433.png">
+<meta property="article:published_time" content="2020-02-08T10:27:17.000Z">
+<meta property="article:modified_time" content="2021-03-27T15:27:40.226Z">
 <meta property="article:author" content="Young Times">
+<meta property="article:tag" content="自动驾驶">
+<meta property="article:tag" content="waymo">
+<meta property="article:tag" content="自动驾驶长尾问题">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-07-22-03-14-1024x574.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>半杯茶的小酒杯</title>
+  <title>Waymo-自动驾驶长尾问题挑战 | 半杯茶的小酒杯</title>
   
 
 
@@ -184,339 +226,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/25/localization-mapping-zhixingzhe/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/25/localization-mapping-zhixingzhe/" class="post-title-link" itemprop="url">低速自动驾驶车辆的定位与建图</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-03-25 23:05:24" itemprop="dateCreated datePublished" datetime="2021-03-25T23:05:24+08:00">2021-03-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-27 10:40:30" itemprop="dateModified" datetime="2021-03-27T10:40:30+08:00">2021-03-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/03/25/localization-mapping-zhixingzhe/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/25/localization-mapping-zhixingzhe/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>25</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
 
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
-<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/03/25/localization-mapping-zhixingzhe/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/15/cnn-sign-detection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/15/cnn-sign-detection/" class="post-title-link" itemprop="url">深度神经网络识别交通标牌</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-03-15 23:42:51" itemprop="dateCreated datePublished" datetime="2021-03-15T23:42:51+08:00">2021-03-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-27 18:21:04" itemprop="dateModified" datetime="2021-03-27T18:21:04+08:00">2021-03-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/03/15/cnn-sign-detection/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/15/cnn-sign-detection/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>12k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>11 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这里我们实现一个入门级的CNN交通标牌分类网络。</p>
-<p><img src="/2021/03/15/cnn-sign-detection/dataset_input_output.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/03/15/cnn-sign-detection/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/14/mobileye-rem-map-md/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/14/mobileye-rem-map-md/" class="post-title-link" itemprop="url">Mobileye REM地图</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-03-14 15:08:08" itemprop="dateCreated datePublished" datetime="2021-03-14T15:08:08+08:00">2021-03-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-28 10:51:29" itemprop="dateModified" datetime="2021-03-28T10:51:29+08:00">2021-03-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/03/14/mobileye-rem-map-md/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/14/mobileye-rem-map-md/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
-<p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/03/14/mobileye-rem-map-md/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -532,10 +245,9 @@
       <meta itemprop="name" content="半杯茶的小酒杯">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/" class="post-title-link" itemprop="url">Waymo-自动驾驶长尾问题挑战</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Waymo-自动驾驶长尾问题挑战
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -564,6 +276,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
   <span class="post-meta-item">
     
@@ -602,7 +321,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>尽管Waymo已经在开放道路上积累超过10 Million Miles，Waymo的工程师们仍然发现有层出不穷的新自动驾驶场景待解决。</p>
+        <p>尽管Waymo已经在开放道路上积累超过10 Million Miles，Waymo的工程师们仍然发现有层出不穷的新自动驾驶场景待解决。</p>
 <h2 id="1、自动驾驶长尾场景举例"><a href="#1、自动驾驶长尾场景举例" class="headerlink" title="1、自动驾驶长尾场景举例"></a>1、自动驾驶长尾场景举例</h2><p><strong>场景一</strong>：一个骑自行车的人手中拿着一个Stop Sign标识牌。我们不知道它何时会举起标识牌。无人车必须理解这种场景，即使他举起了Stop Sign标识牌，自动驾驶汽车也不应该停下来。</p>
 <p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-07-22-03-14-1024x574.png"></p>
 <p><strong>场景二:</strong> 迎面而来的车辆上装载的塑料管子撒了一地，自动驾驶汽车必须学会应对这种突发情况，并且避开它们对无人车行驶的影响。</p>
@@ -681,246 +400,62 @@
 <p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-19-28-1024x319.png"></p>
 <p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-08-16-21-58-1024x433.png"></p>
 
-      
     </div>
 
     
     
     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/" class="post-title-link" itemprop="url">自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-02-01 18:34:29" itemprop="dateCreated datePublished" datetime="2020-02-01T18:34:29+08:00">2020-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-28 12:40:22" itemprop="dateModified" datetime="2021-03-28T12:40:22+08:00">2021-03-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>前面文章《自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Young Times
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/" title="Waymo-自动驾驶长尾问题挑战">http://example.com/2020/02/08/waymo-自动驾驶长尾问题挑战/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" rel="tag"># 自动驾驶</a>
+              <a href="/tags/waymo/" rel="tag"># waymo</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98/" rel="tag"># 自动驾驶长尾问题</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/" class="post-title-link" itemprop="url">自动驾驶运动规划(Motion Planning)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-18 22:08:02" itemprop="dateCreated datePublished" datetime="2020-01-18T22:08:02+08:00">2020-01-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-28 12:40:07" itemprop="dateModified" datetime="2021-03-28T12:40:07+08:00">2021-03-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="什么是Motion-Planning"><a href="#什么是Motion-Planning" class="headerlink" title="什么是Motion Planning"></a>什么是Motion Planning</h1><p>Motion Planning是在遵循道路交通规则的前提下，将自动驾驶车辆从当前位置导航到目的地的一种方法。</p>
-<p>在实际开放道理场景下，自动驾驶要处理的场景非常繁杂：空旷的道路场景、与行人、障碍物共用道理的场景、空旷的十字路口、繁忙的十字路口、违反交通规则的行人/车辆、正常行驶的车辆/行人等等。场景虽然复杂，但都可以拆解为一系列简单行为(behavior)的组合:</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/" rel="prev" title="自动驾驶Mapping-占位栅格图(Occupancy Grid Map)">
+      <i class="fa fa-chevron-left"></i> 自动驾驶Mapping-占位栅格图(Occupancy Grid Map)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/14/mobileye-rem-map-md/" rel="next" title="Mobileye REM地图">
+      Mobileye REM地图 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -967,6 +502,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%BE%8B"><span class="nav-number">1.</span> <span class="nav-text">1、自动驾驶长尾场景举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97-Perception-Prediction%E5%92%8CPlanning"><span class="nav-number">2.</span> <span class="nav-text">2、自动驾驶核心模块-Perception, Prediction和Planning</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Perception"><span class="nav-number">2.0.1.</span> <span class="nav-text">2.1 Perception</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-Prediction"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.2 Prediction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-Planning"><span class="nav-number">2.0.3.</span> <span class="nav-text">2.3 Planning</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF-Machine-Learning-At-Scale"><span class="nav-number">3.</span> <span class="nav-text">3. 大规模机器学习技术(Machine Learning At Scale)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-Automated-Machine-Learning%E6%8A%80%E6%9C%AF"><span class="nav-number">3.0.1.</span> <span class="nav-text">3.1 Automated Machine Learning技术</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF%E7%9A%84%E5%B1%80%E9%99%90-Limits-Of-Machine-Learning"><span class="nav-number">3.0.2.</span> <span class="nav-text">3.2 机器学习技术的局限(Limits Of Machine Learning)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E5%A4%A7%E8%A7%84%E6%A8%A1%E7%9A%84%E6%B5%8B%E8%AF%95%E6%8A%80%E6%9C%AF-Large-Scale-Testing"><span class="nav-number">4.</span> <span class="nav-text">4、大规模的测试技术(Large Scale Testing)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E9%9A%BE%E4%BB%A5%E8%A6%86%E7%9B%96%E7%9A%84%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98"><span class="nav-number">5.</span> <span class="nav-text">5、机器学习难以覆盖的长尾问题挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81Smart-Agent%E5%AF%B9%E4%BA%8E%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%A7%84%E6%A8%A1%E5%8C%96%E4%B8%8D%E5%8F%AF%E6%88%96%E7%BC%BA"><span class="nav-number">6.</span> <span class="nav-text">6、Smart Agent对于自动驾驶规模化不可或缺</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -1120,59 +656,6 @@
   
 
   
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
 
   
 
