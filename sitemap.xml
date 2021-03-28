@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/tags/index.html</loc>
+    
+    <lastmod>2021-03-28</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/</loc>
     
     <lastmod>2021-03-28</lastmod>
@@ -85,13 +92,6 @@
     
   </url>
   
-  <url>
-    <loc>http://example.com/tags/index.html</loc>
-    
-    <lastmod>2021-03-14</lastmod>
-    
-  </url>
-  
 
   <url>
     <loc>http://example.com/</loc>
@@ -124,6 +124,34 @@
   
   <url>
     <loc>http://example.com/tags/Mobileye/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/Mapping%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6Mapping/</loc>
     <lastmod>2021-03-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -194,34 +222,6 @@
   
   <url>
     <loc>http://example.com/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92%E7%BA%A6%E6%9D%9F/</loc>
-    <lastmod>2021-03-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/Mapping%E6%8A%80%E6%9C%AF/</loc>
-    <lastmod>2021-03-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/</loc>
-    <lastmod>2021-03-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/</loc>
-    <lastmod>2021-03-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6Mapping/</loc>
     <lastmod>2021-03-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
