@@ -340,9 +340,9 @@
     <title>自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</title>
     <url>/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/</url>
     <content><![CDATA[<p>前面文章《自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>
+<h1 id="占位栅格地图-Occupancy-Grid-Map"><a href="#占位栅格地图-Occupancy-Grid-Map" class="headerlink" title="占位栅格地图(Occupancy Grid Map)"></a>占位栅格地图(Occupancy Grid Map)</h1><p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-10-43-36-1024x604.png"></p>
 <span id="more"></span>
 
-<h1 id="占位栅格地图-Occupancy-Grid-Map"><a href="#占位栅格地图-Occupancy-Grid-Map" class="headerlink" title="占位栅格地图(Occupancy Grid Map)"></a>占位栅格地图(Occupancy Grid Map)</h1><p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-10-43-36-1024x604.png"></p>
 <p>如上图所示，将车辆行驶道路环境用网格(Cell)切分，并且每个网格(Cell)用二值数值0和1填充，0表示该网格(Cell)被占用，1表示该网格(Cell)没有被占用。</p>
 <p>$m^{i} \in \{0, 1\}$</p>
 <p>由此，可以得到如下所示的一张栅格占位地图。</p>
