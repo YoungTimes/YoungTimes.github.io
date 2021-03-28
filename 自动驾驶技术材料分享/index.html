@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="百度Apollo Apollo 2.0多传感器融合定位模块Apollo行为轨迹预测技术Apollo运动轨迹规划技术Apollo决策技术分享自动驾驶专用计算框架探索和实践ASU(Apollo 传感器单元)硬件详解控制在环仿真技术分享软硬一体的Valet Parking解决方案[免费]百度Apollo智能驾驶入门课程[免费]百度Apollo智能驾驶进阶课程 小马智行 L4自动驾驶中感知系统">
+<meta property="og:type" content="website">
+<meta property="og:title" content="自动驾驶技术材料分享">
+<meta property="og:url" content="http://example.com/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E6%8A%80%E6%9C%AF%E6%9D%90%E6%96%99%E5%88%86%E4%BA%AB/index.html">
+<meta property="og:site_name" content="半杯茶的小酒杯">
+<meta property="og:description" content="百度Apollo Apollo 2.0多传感器融合定位模块Apollo行为轨迹预测技术Apollo运动轨迹规划技术Apollo决策技术分享自动驾驶专用计算框架探索和实践ASU(Apollo 传感器单元)硬件详解控制在环仿真技术分享软硬一体的Valet Parking解决方案[免费]百度Apollo智能驾驶入门课程[免费]百度Apollo智能驾驶进阶课程 小马智行 L4自动驾驶中感知系统">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-06-12-01-11.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-06-11-59-01-1.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-06-12-03-14.png">
+<meta property="article:published_time" content="2020-11-06T04:21:49.000Z">
+<meta property="article:modified_time" content="2021-03-27T15:27:40.066Z">
+<meta property="article:author" content="Young Times">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-06-12-01-11.png">
+
+<link rel="canonical" href="http://example.com/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E6%8A%80%E6%9C%AF%E6%9D%90%E6%96%99%E5%88%86%E4%BA%AB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>自动驾驶技术材料分享 | 半杯茶的小酒杯
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">半杯茶的小酒杯</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">自动驾驶技术材料分享
+</h1>
+
+<div class="post-meta">
+  
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <ul>
+<li><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-06-12-01-11.png"></li>
+<li><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-06-11-59-01-1.png"></li>
+<li><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-06-12-03-14.png"></li>
+</ul>
+<hr>
+<p>百度Apollo</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630976&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwY1mWSXmvgWLE5slmyMh1oizUZMoWjArpFfosJHKvtFoEjO2mRK5f5wambJX*-8f5RSLbce-Se6CYet-OLF-Zed&new=1">Apollo 2.0多传感器融合定位模块</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630185&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwaQ0MQHrIPiWYdGID4BLzprT7Tx*-lR8lLyAfOXNrWSI9sJww-XSSUHG67cMyXZ6ShyhowJX1fHY44N3D5*vliY&new=1">Apollo行为轨迹预测技术</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630185&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwYQE4RrFusvB-mr8G3xCJGxaxs6QgoO5pFy4*25GAWmMnBHnTPzvt4tXjz2UNaVA7azrIDqJp-HZ4fjZPhak1Ml&new=1">Apollo运动轨迹规划技术</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630393&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwZGjCN3j2xw1k6UTuPsHcZh91xA*gfqjX5cqYiFwkk4n8-GJZEGlHi0qEgSVQqehVsXz9K9J9*W9fKdYMQT8A8S&new=1">Apollo决策技术分享</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630341&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwYAZZobHkMlFHTgoMXLoHp24zmXssiBABuTM6TdCH-n1h82KJWk96Gt37YmCQpx9J*limtPU59p57RYV5Dk651Z&new=1">自动驾驶专用计算框架探索和实践</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630341&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwYAZZobHkMlFHTgoMXLoHp24zmXssiBABuTM6TdCH-n1h82KJWk96Gt37YmCQpx9J*limtPU59p57RYV5Dk651Z&new=1">ASU(Apollo 传感器单元)硬件详解</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630611&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwZaujKUU33Q23o8*v-kuk9gGwssYzc4U90CXYepbAWWv3hv8CBzgpCFfHhyugesVZa0WpiuK8aA7lNM1lPP2hAp&new=1">控制在环仿真技术分享</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604630709&ver=2689&signature=QsJJFKYcPd4DLPpNJxvwVjAmSGDNYRZn744bXtMFdwYyYeRAj51*NCsJ2QIw2x-KPMR1mZqKgMAHXvMrojakSWiwLfcYubodCcJZyHeuGjrd6gvSorGUrjgr*fd6yISG&new=1">软硬一体的Valet Parking解决方案</a><br>[免费]<a href="https://apollo.auto/devcenter/coursetable_cn.html?target=1">百度Apollo智能驾驶入门课程</a><br>[免费]<a href="https://apollo.auto/devcenter/coursetable_cn.html?target=2">百度Apollo智能驾驶进阶课程</a></p>
+<p>小马智行</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604622014&ver=2689&signature=D389X5ChQO6lx-wydk*F0Nj2bdb*suCpwKTe47sm4LDlA1sj5qqFS7D45NyoxNjO3uS7-ZxMw3gkfKMu-WyxbL1zTCAiqxqgWkod5iJGyoszN7psykT7jwzKflnvj6dz&new=1">L4自动驾驶中感知系统遇到的挑战及解决方案</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604622014&ver=2689&signature=D389X5ChQO6lx-wydk*F0Nj2bdb*suCpwKTe47sm4LDlA1sj5qqFS7D45NyoxNjO3uS7-ZxMw3gkfKMu-WyxbL1zTCAiqxqgWkod5iJGyoszN7psykT7jwzKflnvj6dz&new=1">自动驾驶中轨迹规划的探索和挑战</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604622919&ver=2689&signature=D389X5ChQO6lx-wydk*F0Nj2bdb*suCpwKTe47sm4LAbGosh30gfCt0OsDkgCVIiBf-b31jPVYc9L1q1*PppE0jGf4nvqJzrJKhbMWzggckEqrG17n8Yq9o6TN-N9Nu4&new=1">自动驾驶复杂环境下高精度定位技术</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604623018&ver=2689&signature=D389X5ChQO6lx-wydk*F0Nj2bdb*suCpwKTe47sm4LBrUE*Si61G74k6MSa5Pd7oASF4vQ*pKYanC6zqExql8B4XwobyV6RlpMchyz-Q**v4ybVk*gZJpejhYhqP*d-o&new=1">Pony.ai 的基础架构挑战与实践</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604623099&ver=2689&signature=D389X5ChQO6lx-wydk*F0Nj2bdb*suCpwKTe47sm4LDHvjFx8OVDl9aX6w7h1HFGHZa7yfH33GzU5O0Rok9xhq1LhyHyFToFXJ*tRQ4Zus1gT7vxGyjmqpu8rXg-nR8X&new=1">高精地图和定位在自动驾驶的应用</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604623157&ver=2689&signature=D389X5ChQO6lx-wydk*F0Nj2bdb*suCpwKTe47sm4LCUV98dTFi8YB-djaAHg3MG0p8tyw0UoQXO0E8Fg0nltThj-d4mGxC-as3qJ78OXpwQuzXfSDvql1M4duKF7z4J&new=1">在自动驾驶研发中充分发挥数据的潜能</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604623205&ver=2689&signature=D389X5ChQO6lx-wydk*F0Nj2bdb*suCpwKTe47sm4LBsZ8F3SGw3D9i-7YHE-D-9W1d0PW*ZL8KPkZ3pHXJQ6vVM-2LaTaNg5feuyu2xS1nCXc3pTRfrorRI*VJVLw**&new=1">传统方法和深度学习结合的感知策略探索</a></p>
+<p>美团</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604623662&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkBz-SjQa*AMp6yObgtLWdfFKaoQWnVWGjOVwXTHxZaUDqceF1nQ6IFOn2jm*btQ1slYi75QX-rsvqXVAuwghgF4&new=1">自动驾驶中的激光雷达目标检测(上)</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604623662&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkChvkPO1By-KGkDcOJM7*8aAe8RSxAV*dZBF83zrSq79k2mcow92dRPz*jZ5N9eshqxWD9dx9VZGMG9TD37Z1MX&new=1">自动驾驶中的激光雷达目标检测(下)</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604625288&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkD6qlTOmevQwXtYJaR7xcxYGSrryr4Wf2Y6xh6BmmJx-43xm2eYKjg4YShDDLcSSvPI5IlFxsnO4GfXGgWvVFeg&new=1">无人车端到端驾驶模型概述</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604625355&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkBDr-uvzCQA0vsH-KCfXe5hBPTRE6lCtkPZ-BN3Vcu4-wY7WHlj2REYw1vTSecWQw5JVj4sC9*rStX-Tma-6ydn&new=1">无人车横向控制解读</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604625470&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkDYZP67yBpkGQxrnKT5*v4zFkt4bSRriLeYSK4xP9FPfxhpBNCPAxjMXUozLClL238jxPr7gg5zfenxKGAMyc5r&new=1">一文教你读懂3D目标检测</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604625524&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkDTyWJPI46A7K1tkxSnxQ9NU07nGF-DfVXiHM6El1uRbXDDctWW-91rIZfDz*llsHu1wsmSGQnSnblaU1Hyq00W&new=1">基于深度学习的计算机视觉技术在无人驾驶中的应用</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604626685&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkByAceKuOM-jrdm3LzD6sfsUWPw9DcEE60dcZLLzsiWrEC-IOuLeQMHwzUCpbEIUCb6NMUfQPQup4uLfj35-dlY&new=1">自动驾驶中的决策规划算法概述</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604626753&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkCiLwFG3u9vYJky8*tOz0c0DEOytFwn3ASqNQkZeWcG4ameQ4Li0ZwEwFw7HCV1T95Wkq57a6tBWM7qqoNk2152&new=1">基于特征点的视觉全局定位技术</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604626952&ver=2689&signature=eofs2HiJxhcSEhfIAIwdUZmZ4hOf4Dl-TTA1237kNhEvy7oiWkuhUkzIml2UTrDh3WrP6AL0HnQeUr85gpiRbnwIzMt48trC-zYTg9Qqi63QuV3rqd-0j6Jp8ZBY4LMd&new=1">自动驾驶中的障碍物行为预测</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604627033&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkDXPkoq*WnNfL0aKho7s6HXBPF-00cj7niuflIm88I2zc-elCb0WAoK2BDfVbo9l-*XseQDzrvkRDwRWdTWXioU&new=1">基于神经网络StarNet的行人轨迹交互预测算法</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604627385&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkBN2jDrievui4upLvXXR5XzDNAZTid3sIoviyL3MSjWknC5k6smMye*Z8E1kMGWEfblxgajY9HQGpgqsd612CSG&new=1">场景几何约束在视觉定位中的探索</a></p>
+<hr>
+<p>Uber</p>
+<p><a target="_blank" rel="noopener" href="https://www.uber.com/us/en/atg/research-and-development/perception-and-prediction/">Perception and prediction</a><br><a target="_blank" rel="noopener" href="https://www.uber.com/us/en/atg/research-and-development/motion-planning/">Motion planning</a><br><a target="_blank" rel="noopener" href="https://www.uber.com/us/en/atg/research-and-development/simulation/">Simulation</a><br><a href="https://link.zhihu.com/?target=https://www.uber.com/us/en/atg/research-and-development/mapping/">Map</a><a target="_blank" rel="noopener" href="https://www.uber.com/us/en/atg/research-and-development/mapping/">ping</a><br><a target="_blank" rel="noopener" href="https://www.uber.com/us/en/atg/research-and-development/localization/">Localization</a><br><a target="_blank" rel="noopener" href="https://www.uber.com/us/en/atg/research-and-development/core-ai/">Core AI tech</a></p>
+<p>技术文章</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5MjAwODM4MA==&mid=2650687935&idx=1&sn=04be7c0ba8aa1c3e7130968706b3141a&chksm=bea6386c89d1b17a40940cdb03dd93332fc45c87ca74ea5abae41597c474d0be86d345958452&mpshare=1&scene=1&srcid=0103pZ39kzudpWl6Fnxzpcki#rd">高精地图在无人驾驶中的应用</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=3&timestamp=1604620399&ver=1&signature=-cNbnLi8Lx9j1m7R*VdrpmBRrwthKoyopcZUyMnc9qD-bhC9AVO*9oEjIVmcnaVM5N9bYfD-quyWVOFJvkDssjGc64ENJQfnqUTZtZ4YzM3SxInTPSstJ3v9bcMbk7iq0R8LEDg-FgTt-L-ZxuQTsQO8sKON1Zo82aJXICUX7tA=">光学雷达（LiDAR）在无人驾驶技术中的应用</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=3&timestamp=1604620502&ver=1&signature=TuAMvlukldb23hcWJPdVOp8P8bAFnBRM-EHMq2o2BzTwh*b6r8*E7JSJse8ZwxsqZctcel*JowEMA0qOcDRdmBI6SzBLg9Cu4rNX1kLnk1g319fWPKEUSMJpU6E3kXV1betxGx5j8c*LzIz9JzdpO8ca5gyoe2EYjMR39C8BQyA=">基于ROS的无人驾驶系统</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=3&timestamp=1604620566&ver=1&signature=-cNbnLi8Lx9j1m7R*VdrpmBRrwthKoyopcZUyMnc9qApBByxfxR4k8WszCwkKHKceX4fGiEvu8nqIEh95iyHO4eSezdCl-nSC5MCwT7ZoKDYqQO8u9JIZdDniq2oFI--ly*rvQ9FmeihUTAWojEhCFUWX8LfJks5l8toBbIy*qk=">基于计算机视觉的无人驾驶感知系统</a><br><a target="_blank" rel="noopener" href="http://基于spark与ros的分布式无人驾驶模拟平台/">基于Spark与ROS分布式无人驾驶模拟平台</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=3&timestamp=1604620672&ver=1&signature=ujCr7wuPYRnx*5Rec0jb7xumpefnNSgpWXkrf85QEaFSXWWpCyjq6m9IbJ-N6xIVDUy3lbSiA2*kEoJtMrgwBGfSXdRm11-waRxYAa0h0qprrjRXyt93s98hnSJIWIX9wHUCujjcHsCcO-xwTNeYLFtSzCD7TwmNq82wp3trHVw=">GPS及惯性传感器在无人驾驶中的应用</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=3&timestamp=1604620758&ver=1&signature=hnfE5gSqelOHkKBJrHwnWQ-Xmh0l94N5-9pK-dJXorMIUVnearQCmIWQR8xoZRVfS8VrGOxsZe-nPUF6H93GIcq6Uz8UvSzoeILscdu0FKitH2PTpOKvPEITzv-uKr5ta7E1NujokOlQ0MhCuvakn7OF9mNnbzE8CH8PZTwvOmw=">增强学习在无人驾驶中的应用</a><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=3&timestamp=1604620860&ver=1&signature=ujCr7wuPYRnx*5Rec0jb7xumpefnNSgpWXkrf85QEaGTwnCCwyH30Kirb3a6hWONljTMJJRWgzIGUNs4NxGeqyEi9-AuC*60XLQZ8Twki-tYxtBs*FckCPzoAvZWYBqbMPYpe05SBhKfSgCk9-7iEYDrC2KCPgSXXuomWqISIHE=">CNN在无人驾驶中的应用</a></p>
+<p>课程</p>
+<p>[免费]<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1QE41157q1?from=search&seid=4945585795279528610">MIT深度学习系列课程中英文字幕</a><br>[免费]<a target="_blank" rel="noopener" href="https://deeplearning.mit.edu/">MIT Deep Learning and Artificial Intelligence Lectures</a></p>
+<p>论文</p>
+<p>[美团]<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604626427&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkCtQ2QRyKxOwoXJCfMVBwpSzgBsFJat2XjQ0TbCLFbZNoF*mSs-qIwzV1E9lxe9Ae*kGJPGlxnZbIk0oSkBDVvH&new=1">PointNet系列论文解读</a><br>[美团]<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604625589&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkBs6KP6TCNKvXOU8e7g1lHMkGP8X5sE2-zCuGv0RG7yLjS30cK2hxgXFmnWvcTsAKy5XbitnftIV4s6DrJv5l8z&new=1">基于光流的视频目标检测系列文章解读</a><br>[美团]<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?src=11&timestamp=1604627480&ver=2689&signature=dlolQrrpGWrEXvsFXA-ulMDFY3O6oL8-ARzlWfjfnkBP0nUnKkwfKoaotXSc9Bt-CwlhuFpFDwsBQcCI69XMHc2SC-U-MQmqMGLpX0Kb7a1bWAtSGht9GTaLqy7qRzP1&new=1">美团无人配送CVPR2020论文CenterMask解读</a><br>[Waymo]<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1812.03079">ChauffeurNet: Learning to Drive by Imitating the Best and Synthesizing the Worst</a><br>[Waymo]<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.04259">VectorNet: Encoding HD Maps and Agent Dynamics from Vectorized Representation</a></p>
+
+      </div>
+      
+      
+      
+    </div>
+    
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Young Times"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Young Times</p>
+  <div class="site-description" itemprop="description">路要一步一步的走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Young Times</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">20k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">18 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'hEvBR6pmxtoYkRhC3fnMB8Yq-gzGzoHsz',
+      appKey     : 'nIkzvtLYb1avq32c9GYfgOOW',
+      placeholder: "Please Leave Your Message Here...",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
