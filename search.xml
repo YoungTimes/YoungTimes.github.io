@@ -4,10 +4,12 @@
     <title>深度神经网络识别交通标牌</title>
     <url>/2021/03/15/cnn-sign-detection/</url>
     <content><![CDATA[<p>这里我们实现一个入门级的CNN交通标牌分类网络。</p>
-<p><img src="dataset_input_output.png" alt=""></p>
+<p><img src="/2021/03/15/cnn-sign-detection/dataset_input_output.png"></p>
 <span id="more"></span>
+
 <p>首先导入基础依赖库。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
+
 <h1 id="数据集-Dataset"><a href="#数据集-Dataset" class="headerlink" title="数据集(Dataset)"></a>数据集(Dataset)</h1><p>数据集(Dataset)中包含43个不同分类的、大小为32x32的RGB图像，分类如下:</p>
 <ul>
 <li>0 = Speed limit (20km/h)</li>
@@ -56,70 +58,94 @@
 </ul>
 <h2 id="数据集加载"><a href="#数据集加载" class="headerlink" title="数据集加载"></a>数据集加载</h2><p>读取训练集、验证集和测试集:</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;./traffic-signs-data/train.p&quot;</span>, mode=<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> training_data:</span><br><span class="line">    train = pickle.load(training_data)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;./traffic-signs-data/valid.p&quot;</span>, mode=<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> validation_data:</span><br><span class="line">    valid = pickle.load(validation_data)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;./traffic-signs-data/test.p&quot;</span>, mode=<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> testing_data:</span><br><span class="line">    test = pickle.load(testing_data)</span><br></pre></td></tr></table></figure>
+
 <p>查看训练集大小：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x_train, y_train = train[<span class="string">&quot;features&quot;</span>], train[<span class="string">&quot;labels&quot;</span>]</span><br><span class="line"></span><br><span class="line">print(x_train.shape)</span><br></pre></td></tr></table></figure>
+
 <p>(34799, 32, 32, 3)</p>
 <p>查看验证集大小：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x_validation, y_validation = valid[<span class="string">&quot;features&quot;</span>], valid[<span class="string">&quot;labels&quot;</span>]</span><br><span class="line"></span><br><span class="line">print(x_validation.shape)</span><br></pre></td></tr></table></figure>
+
 <p>(4410, 32, 32, 3)</p>
 <p>查看测试集大小：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x_test, y_test = test[<span class="string">&quot;features&quot;</span>], test[<span class="string">&quot;labels&quot;</span>]</span><br><span class="line"></span><br><span class="line">print(x_test.shape)</span><br></pre></td></tr></table></figure>
+
 <p>(12630, 32, 32, 3)</p>
 <h2 id="数据集可视化"><a href="#数据集可视化" class="headerlink" title="数据集可视化"></a>数据集可视化</h2><p>随机选取一张图片：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">i = np.random.randint(<span class="number">1</span>, <span class="built_in">len</span>(X_train))</span><br><span class="line"></span><br><span class="line">plt.imshow(X_train[i])</span><br><span class="line"></span><br><span class="line">y_train[i]</span><br></pre></td></tr></table></figure>
+
 <p>图片展示效果如下：</p>
-<p><img src="traffic_sign.png" alt=""></p>
+<p><img src="/2021/03/15/cnn-sign-detection/traffic_sign.png"></p>
 <p>多看一些数据集的数据：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">W_grid = <span class="number">5</span></span><br><span class="line">L_grid = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">fig, axes = plt.subplots(L_grid, W_grid, figsize = (<span class="number">10</span>,<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">axes = axes.ravel() <span class="comment"># flaten the 5 x 5 matrix into 25 array</span></span><br><span class="line"></span><br><span class="line">n_training = <span class="built_in">len</span>(X_train) </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">0</span>, W_grid * L_grid):</span><br><span class="line">    <span class="comment"># Select a random number</span></span><br><span class="line">    index = np.random.randint(<span class="number">0</span>, n_training)</span><br><span class="line">    <span class="comment"># read and display an image with the selected index    </span></span><br><span class="line">    axes[i].imshow(X_train[index])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>图片展示效果如下：</p>
-<p><img src="traffic_signs.png" alt=""></p>
+<p><img src="/2021/03/15/cnn-sign-detection/traffic_signs.png"></p>
 <h1 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h1><p>使用之前，先对数据进行一些预处理。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.utils <span class="keyword">import</span> shuffle</span><br><span class="line">X_train, y_train = shuffle(X_train, y_train)</span><br></pre></td></tr></table></figure>
+
 <h2 id="灰度化"><a href="#灰度化" class="headerlink" title="灰度化"></a>灰度化</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X_train_gray = np.<span class="built_in">sum</span>(X_train / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">X_validation_gray = np.<span class="built_in">sum</span>(X_validation / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">X_test_gray = np.<span class="built_in">sum</span>(X_test / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">print(X_train_gray.shape)</span><br></pre></td></tr></table></figure>
+
 <p>(34799, 32, 32, 1)</p>
 <h2 id="Normalization"><a href="#Normalization" class="headerlink" title="Normalization"></a>Normalization</h2><p>将所有图像数据归一化到[-1, 1]。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X_train_gray_norm = (X_train_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">X_validation_gray_norm = (X_validation_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">X_test_gray_norm = (X_test_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">print(X_train_gray_norm)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[[[[-0.52083333]</span><br><span class="line">   [-0.52604167]</span><br><span class="line">   [-0.51822917]</span><br><span class="line">   ...</span><br><span class="line">   [-0.48958333]</span><br><span class="line">   [-0.47916667]</span><br><span class="line">   [-0.46614583]]</span><br><span class="line"></span><br><span class="line">  [[-0.52083333]</span><br><span class="line">   [-0.52083333]</span><br><span class="line">   [-0.52864583]</span><br><span class="line">   ...</span><br><span class="line">   [-0.5       ]</span><br><span class="line">   [-0.48958333]</span><br><span class="line">   [-0.4765625 ]]</span><br><span class="line"></span><br><span class="line">  [[-0.54427083]</span><br><span class="line">   [-0.53385417]</span><br><span class="line">   [-0.53385417]</span><br><span class="line">   ...</span><br><span class="line">   [-0.50520833]</span><br><span class="line">   [-0.47916667]</span><br><span class="line">   [-0.47395833]]</span><br><span class="line"></span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
   <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">i = random.randint(<span class="number">1</span>, <span class="built_in">len</span>(X_train_gray))</span><br><span class="line">plt.imshow(X_train_gray[i].squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">plt.figure()</span><br><span class="line">plt.imshow(X_train[i])</span><br><span class="line">plt.figure()</span><br><span class="line">plt.imshow(X_train_gray_norm[i].squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>  灰度化和Normalization的效果如下，从上到下依次为：灰度图像，原图像、归一化的图像。</p>
-<p>  <img src="train_origin.png" alt="灰度图"></p>
-<p>  <img src="train_gray.png" alt="原图"></p>
-<p>  <img src="train_normal.png" alt="标准化"></p>
-<h1 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h1><p>  <img src="cnn.png" alt=""></p>
-<p>  <img src="dropout.png" alt=""></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/train_origin.png" alt="灰度图"></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/train_gray.png" alt="原图"></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/train_normal.png" alt="标准化"></p>
+<h1 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h1><p>  <img src="/2021/03/15/cnn-sign-detection/cnn.png"></p>
+<p>  <img src="/2021/03/15/cnn-sign-detection/dropout.png"></p>
 <h2 id="构建深度神经网络"><a href="#构建深度神经网络" class="headerlink" title="构建深度神经网络"></a>构建深度神经网络</h2><p>使用Keras构建CNN网络模型。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> datasets, layers, models</span><br><span class="line"></span><br><span class="line">CNN = models.Sequential()</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Conv2D(<span class="number">6</span>, (<span class="number">5</span>, <span class="number">5</span>), activation = <span class="string">&#x27;relu&#x27;</span>, input_shape = (<span class="number">32</span>, <span class="number">32</span>, <span class="number">1</span>)))</span><br><span class="line">CNN.add(layers.AveragePooling2D())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Conv2D(<span class="number">16</span>, (<span class="number">5</span>, <span class="number">5</span>), activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.AveragePooling2D())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Dropout(<span class="number">0.2</span>))</span><br><span class="line">CNN.add(layers.Flatten())</span><br><span class="line"></span><br><span class="line">CNN.add(layers.Dense(<span class="number">120</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.Dense(<span class="number">84</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">CNN.add(layers.Dense(<span class="number">43</span>, activation = <span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line"></span><br><span class="line">CNN.summary()</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Model: &quot;sequential_1&quot;</span><br><span class="line">_________________________________________________________________</span><br><span class="line">Layer (type)                 Output Shape              Param #   </span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">conv2d_1 (Conv2D)            (None, 28, 28, 6)         156       </span><br><span class="line">_________________________________________________________________</span><br><span class="line">average_pooling2d_1 (Average (None, 14, 14, 6)         0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">conv2d_2 (Conv2D)            (None, 10, 10, 16)        2416      </span><br><span class="line">_________________________________________________________________</span><br><span class="line">average_pooling2d_2 (Average (None, 5, 5, 16)          0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dropout (Dropout)            (None, 5, 5, 16)          0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">flatten_1 (Flatten)          (None, 400)               0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_3 (Dense)              (None, 120)               48120     </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_4 (Dense)              (None, 84)                10164     </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_5 (Dense)              (None, 43)                3655      </span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">Total params: 64,511</span><br><span class="line">Trainable params: 64,511</span><br><span class="line">Non-trainable params: 0</span><br><span class="line">_________________________________________________________________</span><br></pre></td></tr></table></figure>
+
 <h2 id="编译和训练"><a href="#编译和训练" class="headerlink" title="编译和训练"></a>编译和训练</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CNN.<span class="built_in">compile</span>(optimizer = <span class="string">&#x27;Adam&#x27;</span>, loss = <span class="string">&#x27;sparse_categorical_crossentropy&#x27;</span>, metrics = [<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">history = CNN.fit(X_train_gray_norm,</span><br><span class="line">                  y_train,</span><br><span class="line">                  batch_size = <span class="number">500</span>,</span><br><span class="line">                  epochs = <span class="number">50</span>,</span><br><span class="line">                  verbose = <span class="number">1</span>,</span><br><span class="line">                  validation_data = (X_validation_gray_norm, y_validation))</span><br></pre></td></tr></table></figure>
+
 <p>进行50个Epoch的训练，训练集Accuracy达到98.64%，验证集的Accuracy达到91.61%。</p>
 <p>训练过程如下：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Epoch 1&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 9s 136ms&#x2F;step - loss: 3.1861 - accuracy: 0.1649 - val_loss: 2.5817 - val_accuracy: 0.3082</span><br><span class="line">Epoch 2&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 9s 135ms&#x2F;step - loss: 1.6409 - accuracy: 0.5335 - val_loss: 1.2052 - val_accuracy: 0.6458</span><br><span class="line">Epoch 3&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 10s 145ms&#x2F;step - loss: 0.9414 - accuracy: 0.7220 - val_loss: 0.8685 - val_accuracy: 0.7417</span><br><span class="line">Epoch 4&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 10s 147ms&#x2F;step - loss: 0.7074 - accuracy: 0.7915 - val_loss: 0.7434 - val_accuracy: 0.7834</span><br><span class="line">Epoch 5&#x2F;5</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 10s 145ms&#x2F;step - loss: 0.5825 - accuracy: 0.8317 - val_loss: 0.6605 - val_accuracy: 0.7955</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Epoch 45&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 115ms&#x2F;step - loss: 0.0509 - accuracy: 0.9844 - val_loss: 0.3022 - val_accuracy: 0.9220</span><br><span class="line">Epoch 46&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 114ms&#x2F;step - loss: 0.0480 - accuracy: 0.9861 - val_loss: 0.2822 - val_accuracy: 0.9254</span><br><span class="line">Epoch 47&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 110ms&#x2F;step - loss: 0.0462 - accuracy: 0.9864 - val_loss: 0.2971 - val_accuracy: 0.9259</span><br><span class="line">Epoch 48&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 111ms&#x2F;step - loss: 0.0460 - accuracy: 0.9860 - val_loss: 0.2665 - val_accuracy: 0.9268</span><br><span class="line">Epoch 49&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 118ms&#x2F;step - loss: 0.0442 - accuracy: 0.9863 - val_loss: 0.3237 - val_accuracy: 0.9218</span><br><span class="line">Epoch 50&#x2F;50</span><br><span class="line">70&#x2F;70 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 8s 112ms&#x2F;step - loss: 0.0452 - accuracy: 0.9864 - val_loss: 0.3150 - val_accuracy: 0.9161</span><br></pre></td></tr></table></figure>
+
 <h2 id="模型保存"><a href="#模型保存" class="headerlink" title="模型保存"></a>模型保存</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CNN.save(<span class="string">&#x27;traffic_sign_weights.h5&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="模型效果评估"><a href="#模型效果评估" class="headerlink" title="模型效果评估"></a>模型效果评估</h2><p><img src="confusion_mask.png" alt=""></p>
+
+
+<h2 id="模型效果评估"><a href="#模型效果评估" class="headerlink" title="模型效果评估"></a>模型效果评估</h2><p><img src="/2021/03/15/cnn-sign-detection/confusion_mask.png"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">score = CNN.evaluate(X_test_gray_norm, y_test)</span><br><span class="line">print(<span class="string">&#x27;Test Accuracy: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(score[<span class="number">1</span>]))</span><br></pre></td></tr></table></figure>
+
 <p>395/395 [==============================] - 1s 3ms/step - loss: 0.5980 - accuracy: 0.9123<br>Test Accuracy: 0.9122723937034607</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">history.history.keys()</span><br></pre></td></tr></table></figure>
+
 <p>dict_keys([‘loss’, ‘accuracy’, ‘val_loss’, ‘val_accuracy’])</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">accuracy = history.history[<span class="string">&#x27;accuracy&#x27;</span>]</span><br><span class="line">val_accuracy = history.history[<span class="string">&#x27;val_accuracy&#x27;</span>]</span><br><span class="line">loss = history.history[<span class="string">&#x27;loss&#x27;</span>]</span><br><span class="line">val_loss = history.history[<span class="string">&#x27;val_loss&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
 <p>对训练过程中的Loss进行可视化。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">epochs = <span class="built_in">range</span>(<span class="built_in">len</span>(accuracy))</span><br><span class="line">plt.plot(epochs, loss, <span class="string">&#x27;ro&#x27;</span>, label = <span class="string">&#x27;Training Loss&#x27;</span>)</span><br><span class="line">plt.plot(epochs, val_loss, <span class="string">&#x27;r&#x27;</span>, label = <span class="string">&#x27;Validation Loss&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Training, And Validation Loss&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="loss.png" alt=""></p>
+
+<p><img src="/2021/03/15/cnn-sign-detection/loss.png"></p>
 <p>对训练过程中的Accuracy进行可视化。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">epochs = <span class="built_in">range</span>(<span class="built_in">len</span>(accuracy))</span><br><span class="line">plt.plot(epochs, accuracy, <span class="string">&#x27;ro&#x27;</span>, label = <span class="string">&#x27;Training Accuracy&#x27;</span>)</span><br><span class="line">plt.plot(epochs, val_accuracy, <span class="string">&#x27;r&#x27;</span>, label = <span class="string">&#x27;Validation Accuracy&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Training, And Validation Accuracy&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="accuracy.png" alt=""></p>
+
+<p><img src="/2021/03/15/cnn-sign-detection/accuracy.png"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predicted_classes = CNN.predict_classes(X_test_gray_norm)</span><br><span class="line">y_true = y_test</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix</span><br><span class="line">cm = confusion_matrix(y_true, predicted_classes)</span><br><span class="line">plt.figure(figsize = (<span class="number">25</span>, <span class="number">25</span>))</span><br><span class="line">sns.heatmap(cm, annot = <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="matrix.png" alt=""></p>
+
+<p><img src="/2021/03/15/cnn-sign-detection/matrix.png"></p>
 <p>在测试集上验证网络效果。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">L = <span class="number">5</span></span><br><span class="line">W = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">fig, axes = plt.subplots(L, W, figsize = (<span class="number">12</span>, <span class="number">12</span>))</span><br><span class="line">axes = axes.ravel()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">0</span>, L*W):</span><br><span class="line">    axes[i].imshow(X_test[i])</span><br><span class="line">    axes[i].set_title(<span class="string">&#x27;Prediction = &#123;&#125;\n True = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(predicted_classes[i], y_true[i]))</span><br><span class="line">    axes[i].axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.subplots_adjust(wspace = <span class="number">1</span>) </span><br></pre></td></tr></table></figure>
-<p><img src="test_result.png" alt=""></p>
+
+<p><img src="/2021/03/15/cnn-sign-detection/test_result.png"></p>
 <h1 id="实际检测效果验证"><a href="#实际检测效果验证" class="headerlink" title="实际检测效果验证"></a>实际检测效果验证</h1><p>在网上找了两张图片(限速标牌和Stop标牌)试验， 图像中冗余内容越多，检测效果越差。当标牌充满图像时，检测效果还是不错的。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.preprocessing.image <span class="keyword">import</span> img_to_array</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">image_to_array</span>(<span class="params">path</span>):</span></span><br><span class="line">    image = Image.<span class="built_in">open</span>(path)</span><br><span class="line">    image = image.resize((<span class="number">32</span>, <span class="number">32</span>))</span><br><span class="line">    image = img_to_array(image)</span><br><span class="line"></span><br><span class="line">    image = image.reshape([<span class="number">1</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> image</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prediction</span>(<span class="params">path</span>):</span></span><br><span class="line"></span><br><span class="line">    img = image_to_array(path)</span><br><span class="line"></span><br><span class="line">    plt.imshow(img.squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    img_gray = np.<span class="built_in">sum</span>(img / <span class="number">3</span>, axis = <span class="number">3</span>, keepdims = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    img_norm = (img_gray - <span class="number">128</span>) / <span class="number">128</span></span><br><span class="line"></span><br><span class="line">    print(img_norm.shape)</span><br><span class="line"></span><br><span class="line">    plt.imshow(img_norm.squeeze(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">    detection_model = load_model(<span class="string">&#x27;traffic_sign_weights.h5&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    predicted_classes = detection_model.predict_classes(img_norm)</span><br><span class="line"></span><br><span class="line">    print(predicted_classes)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">prediction(<span class="string">&quot;./stop.jpg&quot;</span>)</span><br><span class="line"></span><br><span class="line">prediction(<span class="string">&quot;./speed_limit_60.jpg&quot;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>输入图像如下：</p>
-<p><img src="stop.jpg" alt=""></p>
+<p><img src="/2021/03/15/cnn-sign-detection/stop.jpg"></p>
 <p>检测输出内容如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">[<span class="number">14</span>]</span><br></pre></td></tr></table></figure>
 <p>14对应Stop Sign的类型。</p>
-<p><img src="speed_limit_60.jpg" alt=""></p>
+<p><img src="/2021/03/15/cnn-sign-detection/speed_limit_60.jpg"></p>
 <p>检测输出内容如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">[<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
 <p>3对应60KM/h的限速。</p>
@@ -136,10 +162,11 @@
   <entry>
     <title>低速自动驾驶车辆的定位与建图</title>
     <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
-    <content><![CDATA[<p><img src="1.png" alt=""></p>
+    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
 <p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
 <span id="more"></span>
-<p><img src="2.png" alt=""><br><img src="3.png" alt=""><br><img src="4.png" alt=""><br><img src="5.png" alt=""><br><img src="6.png" alt=""><br><img src="7.png" alt=""><br><img src="8.png" alt=""><br><img src="9.png" alt=""><br><img src="10.png" alt=""><br><img src="11.png" alt=""><br><img src="12.png" alt=""><br><img src="13.png" alt=""><br><img src="14.png" alt=""><br><img src="15.png" alt=""><br><img src="16.png" alt=""><br><img src="17.png" alt=""><br><img src="18.png" alt=""><br><img src="19.png" alt=""><br><img src="20.png" alt=""><br><img src="21.png" alt=""><br><img src="22.png" alt=""><br><img src="23.png" alt=""><br><img src="24.png" alt=""><br><img src="25.png" alt=""><br><img src="26.png" alt=""><br><img src="27.png" alt=""><br><img src="28.png" alt=""><br><img src="29.png" alt=""><br><img src="30.png" alt=""><br><img src="31.png" alt=""><br><img src="32.png" alt=""><br><img src="33.png" alt=""><br><img src="34.png" alt=""><br><img src="35.png" alt=""><br><img src="36.png" alt=""><br><img src="37.png" alt=""><br><img src="38.png" alt=""><br><img src="39.png" alt=""><br><img src="40.png" alt=""><br><img src="41.png" alt=""><br><img src="42.png" alt=""></p>
+
+<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
 ]]></content>
       <categories>
         <category>自动驾驶</category>
@@ -154,55 +181,56 @@
     <title>Mobileye REM地图</title>
     <url>/2021/03/14/mobileye-rem-map-md/</url>
     <content><![CDATA[<h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
-<p><img src="rem_map.png" alt="Mobileye Rem Map"></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
 <span id="more"></span>
-<p><img src="hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
+
+<p><img src="/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
 <h1 id="高精地图的挑战"><a href="#高精地图的挑战" class="headerlink" title="高精地图的挑战"></a>高精地图的挑战</h1><h2 id="规模化-Scale"><a href="#规模化-Scale" class="headerlink" title="规模化-Scale"></a>规模化-Scale</h2><p>如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那就不存在规模化的问题。但是2025年之后，自动驾驶会在消费者层面全面落地，用户需要驾车到任意想去的地方，在这种场景下，Scale是一个无法规避的问题。</p>
 <h2 id="鲜度-Fresh"><a href="#鲜度-Fresh" class="headerlink" title="鲜度-Fresh"></a>鲜度-Fresh</h2><p>理想情况下，地图是在实时更新的。当物理环境发生变化时，需要实时反映到地图上。月级更新、甚至天级更新都是不够的，我们需要做到分钟级，甚至更短。</p>
 <h2 id="精度-Accuracy"><a href="#精度-Accuracy" class="headerlink" title="精度-Accuracy"></a>精度-Accuracy</h2><p>车载系统(OnBoard System)检测的车辆和行人需要与高精地图(High Definiation Map)实现厘米级精度的匹配，因此地图的精度至关重要。</p>
-<p><img src="map_challange.png" alt="高精地图挑战"></p>
-<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="common_approach_map.png" alt="高精地图通用制作方法"></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_challange.png" alt="高精地图挑战"></p>
+<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="/2021/03/14/mobileye-rem-map-md/common_approach_map.png" alt="高精地图通用制作方法"></p>
 <h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
-<p><img src="map_geometric.png" alt=""></p>
-<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="semantic_map.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_geometric.png"></p>
+<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="/2021/03/14/mobileye-rem-map-md/semantic_map.png"></p>
 <p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
-<p><img src="drivable_path.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/drivable_path.png"></p>
 <p>如下图所示，转向规则千奇百怪：禁止红灯右转，完全停车后允许红灯右转，绿灯禁止左转，绿灯Yield后允许左转…</p>
-<p><img src="priority_map.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/priority_map.png"></p>
 <p>如下图所示，红绿灯异常复杂，识别车道、人行横道与红绿灯的关联关系难度很大…</p>
-<p><img src="map_association.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_association.png"></p>
 <p>如下图所示，除非地图可以表达所有的3D要素，否则很难自动化的计算出车道的最优Stop/Yield Point。但是表达所有的3D信息对于地图来说又是不现实的…</p>
-<p><img src="stop_point.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/stop_point.png"></p>
 <p>影响车辆行驶速度的因素有很多，道路几何、限速、文化等，难以量化，但它对Smooth Driving体验至关重要…</p>
-<p><img src="smooth_driving.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/smooth_driving.png"></p>
 <h1 id="Mobileye如何解决这些问题"><a href="#Mobileye如何解决这些问题" class="headerlink" title="Mobileye如何解决这些问题"></a>Mobileye如何解决这些问题</h1><p>scalability依赖众包数据生成Millions Map Agents；Accuracy不是全局的Accuracy，而是局部的Accuracy，相对于道路上的静态元素位置。</p>
-<p><img src="av_map.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/av_map.png"></p>
 <p>REM的处理流程如下，首先从成百上千辆车获取检测信息(没有使用差分GPS，而是使用了普通的GPS)，这些数据传送到云端；每辆车Detection的角度不同，由于遮挡等原因，每辆车检测的landmark也有差异，将这些数据进行Alignment处理，生成高精度的地图数据；最后，Modeling And Semantics负责生成地图的语义数据。</p>
-<p><img src="rem_process.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/rem_process.png"></p>
 <h2 id="Harvesting"><a href="#Harvesting" class="headerlink" title="Harvesting"></a>Harvesting</h2><p>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
 <p>Mobileye Harvesting的数据量为10K/公里，这些检测的数据会被发送到云端。</p>
-<p><img src="harvesting.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/harvesting.png"></p>
 <h2 id="Aligning-Drives"><a href="#Aligning-Drives" class="headerlink" title="Aligning Drives"></a>Aligning Drives</h2><p>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
-<p><img src="map_align_drive.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_align_drive.png"></p>
 <p>由于GPS存在误差，每个车辆检测的道路元素位置都存在噪声，所以只依靠简单的位置求均值是不可行的。</p>
-<p><img src="align_noise.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/align_noise.png"></p>
 <p>Align之后可以明显的看到两条Driving Path(蓝色)和两侧的道路边界(红色)。对齐的过程是靠几何运算进行。</p>
-<p><img src="path_align.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/path_align.png"></p>
 <p>仅仅靠聚类(Clustering)和Spline Fiting得到下图右上角的结果，这个结果不是特别理想。后来通过神经网络生成高精度地图，效果好了很多。</p>
-<p><img src="model_process.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/model_process.png"></p>
 <h1 id="为什么语义理解离不开众包"><a href="#为什么语义理解离不开众包" class="headerlink" title="为什么语义理解离不开众包"></a>为什么语义理解离不开众包</h1><p>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
 <p>如下右图所示，众包数据提供了复杂场景下的所有可通行路径。</p>
-<p><img src="crowd_driving_path.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_driving_path.png"></p>
 <p>如下图所示，通过众包数据可以获得红绿灯与车道的关联关系、Yield Sign的Stop Point、Crosswalk与红绿灯的关联关系等。</p>
-<p><img src="crowd_assocation.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_assocation.png"></p>
 <p>如下左图所示，通过检测哪个Drive Path的Stop Point比较多，我们可以从众包数据中获取到没有Traffic Sign情况下各个道路的路权优先级。</p>
 <p>如下中图所示，我们可以从众包数据学习到在路口其它司机的停车位置。</p>
 <p>如下右图所示，从众包数据可以学习到，在无保护左转的场景下车辆的Stop Point。</p>
-<p><img src="crowd_more_info.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_more_info.png"></p>
 <p>众包数据是获得各个道路Common Speed的唯一高效的方法，Common Speed提供了当道路没有车辆时候AV车的目标行驶速度。采用这种方法可以使得无论在哪个国家、地区，或者不同的道路类型，AV车都可以自然的融入车流。</p>
-<p><img src="crowd_speed.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_speed.png"></p>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>到目前为止，Mobileye与超过6家汽车制造厂商合作，每天可以覆盖800万公里的路网更新。预计到2024年，每天覆盖的路网会达到10亿公里。</p>
-<p><img src="mobileye_situation.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/mobileye_situation.png"></p>
 <p><strong>说明</strong>： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
 <p>YouTube链接：<br><a href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
 ]]></content>
@@ -220,27 +248,28 @@
     <url>/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/</url>
     <content><![CDATA[<p>前面文章《<a href="http://young-times.bj01.bdysite.com/index.php/2020/01/18/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning/">自动驾驶运动规划(Motion Planning)</a>》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>
 <span id="more"></span>
-<h1 id="占位栅格地图-Occupancy-Grid-Map"><a href="#占位栅格地图-Occupancy-Grid-Map" class="headerlink" title="占位栅格地图(Occupancy Grid Map)"></a>占位栅格地图(Occupancy Grid Map)</h1><p><img src="Screenshot-from-2020-01-31-10-43-36-1024x604.png" alt=""></p>
+
+<h1 id="占位栅格地图-Occupancy-Grid-Map"><a href="#占位栅格地图-Occupancy-Grid-Map" class="headerlink" title="占位栅格地图(Occupancy Grid Map)"></a>占位栅格地图(Occupancy Grid Map)</h1><p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-10-43-36-1024x604.png"></p>
 <p>如上图所示，将车辆行驶道路环境用网格(Cell)切分，并且每个网格(Cell)用二值数值0和1填充，0表示该网格(Cell)被占用，1表示该网格(Cell)没有被占用。</p>
 <p>$m^{i} \in \{0, 1\}$</p>
 <p>由此，可以得到如下所示的一张栅格占位地图。</p>
-<p><img src="Screenshot-from-2020-01-31-10-54-24-1024x607.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-10-54-24-1024x607.png"></p>
 <p>要制作理想的占位栅格地图必须满足的以下几个假设条件：</p>
 <p>1）占位栅格地图是对道路行驶区域中的静态环境(Static Environment)的描述。也就意味着，我们在制图前必须将地面、动态物体(车辆、行人等)从传感器数据中移除掉；</p>
 <p>2）每个网格(Cell)与其它的所有网格的状态是相互独立的，即它的状态不受周围其它网格状态的影响；</p>
 <p>3）在每个时刻，车辆的位置是精确的、已知的。</p>
 <h1 id="概率占位栅格地图-Probabilistic-Occupancy-Grid-Map"><a href="#概率占位栅格地图-Probabilistic-Occupancy-Grid-Map" class="headerlink" title="概率占位栅格地图(Probabilistic Occupancy Grid Map)"></a>概率占位栅格地图(Probabilistic Occupancy Grid Map)</h1><p>在实际的应用中，车辆传感器的数据测量是存在误差的，车辆的定位结果也是存在误差的，动态障碍物的识别也是存在误差的，因此用概率表示一个网格(Cell)被占用的可能性是一个更加可行的方案。每个网格存储一个[0, 1]之间的概率值，这个值越大，表示网格被占用的可能性越大；这个值越小，表示网格被占用的可能性越小。</p>
-<p><img src="Screenshot-from-2020-01-31-11-32-38.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-11-32-38.png"></p>
 <h1 id="概率占位栅格图-Probabilistic-Occupancy-Grid-Map-制图"><a href="#概率占位栅格图-Probabilistic-Occupancy-Grid-Map-制图" class="headerlink" title="概率占位栅格图(Probabilistic Occupancy Grid Map)制图"></a>概率占位栅格图(Probabilistic Occupancy Grid Map)制图</h1><p>栅格地图的每个Cell的概率值计算公式如下：</p>
 <p>$bel_t(m^i) = p(m^i (y, x)_{1:t})$</p>
 <p>其中$(y, x)_{1:t}$是1到t时刻的车辆位置和传感器测量结果，通过历史信息的累计，可以提升制作的地图的准确性。</p>
 <p>如何将1到t时刻的所有传感器测量结果融合起来呢？贝叶斯理论(Bayes Theorem)是一个不错的选择。</p>
 <p>$bel_t(m^i) = \eta p(y_t m^i) bel_{t-1}(m^i)$</p>
 <p>其中$\eta$是归一化参数, $p(y_t m^i)$是传感器的测量模型。通过贝叶斯理论(Bayes Theorem)将多次传感器测量结果融合到同一个Cell中，从而获得高可信度的网格占用概率。</p>
-<h2 id="贝叶斯理论-Bayes-Theorem-更新存在的问题"><a href="#贝叶斯理论-Bayes-Theorem-更新存在的问题" class="headerlink" title="贝叶斯理论(Bayes Theorem)更新存在的问题"></a>贝叶斯理论(Bayes Theorem)更新存在的问题</h2><p><img src="Screenshot-from-2020-01-31-18-37-34.png" alt=""></p>
+<h2 id="贝叶斯理论-Bayes-Theorem-更新存在的问题"><a href="#贝叶斯理论-Bayes-Theorem-更新存在的问题" class="headerlink" title="贝叶斯理论(Bayes Theorem)更新存在的问题"></a>贝叶斯理论(Bayes Theorem)更新存在的问题</h2><p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-01-31-18-37-34.png"></p>
 <p>重复的浮点数乘法运算导致计算结果的数值变得很小而难以精确表达和运算。Logit函数可以把自变量从(0,1)连续单调地映射到正负无穷。logit函数的定义如下：</p>
 <p>$f(x) = log {\frac{x}{1 - x}}$</p>
-<p><img src="20180901104349204.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/20180901104349204.png"></p>
 <p>所以我们使用Logit函数替代标准的Bayes更新过程。</p>
 <h2 id="贝叶斯更新过程的推导"><a href="#贝叶斯更新过程的推导" class="headerlink" title="贝叶斯更新过程的推导"></a>贝叶斯更新过程的推导</h2><p>贝叶斯理论(Bayes Theorem)更新网格(Cell)占用概率的公式如下：</p>
 <p>$<br>p\left(m^{i} y_{1: t}\right)=\frac{p\left(y_{t} y_{1: t-1}, m^{i}\right) p\left(m^{i} y_{1: t-1}\right)}{p\left(y_{t} y_{1: t-1}\right)} \tag{1}<br>$</p>
@@ -266,33 +295,37 @@
 <p>下面来看看Inverse Measurement Model如何计算？下面以二维激光雷达扫描模型来说明(注意：实际应用的激光雷达是3D的，这里用2D Lidar是为了简化模型，所用理论可以很好推广到3D模型)。</p>
 <p><strong>2D Lidar模型</strong></p>
 <p>它在2D平面上进行扫描，包含两个参数：Scanner bearing和Scanner rangers。Scanner bearing均匀的分布在[$-{\phi_{max}}^s, {\phi_{max}}^s$]之间，一般的我们可以认为它们均匀分布在360度的各个方向上。Scanner rangers是从Lidar中心到障碍物的距离，Lidar发出激光、接收回波，从而计算出到周围障碍物的距离；为了简化期间，我们也假设Lidar发送激光后立即收到回波，不存在时间延迟。</p>
-<p><img src="Screenshot-from-2020-02-01-12-06-50-1024x362.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-12-06-50-1024x362.png"></p>
 <p><strong>Map坐标系&amp;Vehicle坐标系&amp;传感器坐标系</strong></p>
 <p>数学模型构建过程中<strong>坐标系</strong>是不可或缺的。这里主要涉及到三个坐标系：Map坐标系、Vehicle坐标系以及传感器坐标系。2D Lidar的测量结果都是相对于自身传感器中心的，即以2D Lidar中心为坐标原点；所有的测量结果最终都要转换到Map坐标系，完成地图制作的计算。</p>
 <p>假设2D Lidar在Map坐标系中的姿态为$(x_{1,t}, x_{2,t}, x_{3,t})$，其中$x_{1,t}$和$x_{2,t}$是x和y坐标，$x_{3,t}$是传感器朝向。通过该姿态，可以将2D Lidar测量结果转换到Map坐标系。</p>
-<p><img src="Screenshot-from-2020-02-01-12-21-57-1024x755.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-12-21-57-1024x755.png"></p>
 <p><strong>Lidar测量结果与Map Cell关联匹配</strong></p>
 <p>如何将2D Lidar模型与Map Cell关联起来呢？如下图所示，第i个Map Cell用$(r^{i}, {\phi}^i)$表示。</p>
-<p><img src="Screenshot-from-2020-02-01-12-38-07-1024x461.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-12-38-07-1024x461.png"></p>
 <p>然后通过2D Lidar bearing与Map Cell相对于传感器的方位进行最小误差匹配，得到影响当前Map Cell的激光束。</p>
 <p>$k = argmin({\phi}_i - {\phi}_i^s)$</p>
 <p>匹配的过程如下：首先定义两个值$\alpha$和$\beta$，各个网格Cell的概率计算如下：</p>
 <p>1）如果$r^i &gt; {r_{max}}^s$或者$\phi^i - \phi_k^s &gt; \beta /2$， 表示为探测区域，没有信息，这些区域的概率值一般为0.5，表示不确定是否被占用。</p>
-<p>1) 如果$r_k^s &lt; r_{max}^s$并且$r^i - r_k^s &lt; \alpha / 2$，表示该区域大概率被占用，因此要赋予一个大于0.5的概率值。</p>
-<p>2) 如果$r^i - r_k^s &gt; \alpha / 2$，这些网格被占用的概率较低，因此要赋予一个小于0.5的概率值。</p>
-<p><img src="creenshot-from-2020-02-01-12-50-41-1024x462.png" alt=""></p>
+<ol>
+<li><p>如果$r_k^s &lt; r_{max}^s$并且$r^i - r_k^s &lt; \alpha / 2$，表示该区域大概率被占用，因此要赋予一个大于0.5的概率值。</p>
+</li>
+<li><p>如果$r^i - r_k^s &gt; \alpha / 2$，这些网格被占用的概率较低，因此要赋予一个小于0.5的概率值。</p>
+</li>
+</ol>
+<p><img src="/creenshot-from-2020-02-01-12-50-41-1024x462.png"></p>
 <p>如下图所示，红色区域为高概率被占用区域，灰色区域为未知区域，其余区域为低概率被占用区域。</p>
-<p><img src="Screenshot-from-2020-02-01-14-59-27-1024x472.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-14-59-27-1024x472.png"></p>
 <p>至此，有了Inverse Measurement Model，Bayes更新的过程可以正常进行了。</p>
 <p><strong>更高效的Inverse Measurement Model计算方法</strong></p>
 <p>采用光线跟踪(Ray Tracing)的Bresenham’s Line Algorithm可以大大减少复杂的浮点数计算，提升计算效率。</p>
-<p><img src="Screenshot-from-2020-02-01-15-20-01.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-15-20-01.png"></p>
 <h1 id="移除Lidar中地面和动态物体"><a href="#移除Lidar中地面和动态物体" class="headerlink" title="移除Lidar中地面和动态物体"></a>移除Lidar中地面和动态物体</h1><p>实际应用中的激光雷达(Lidar)是3D的，会扫描到大量的地面点，这些地面点如果不被移除，按照计算匹配模型，会被当做障碍物处理。所以需要将地面点点云数据从激光雷达点云中移除掉。如何移除呢？一种可行的方法是，通过自动化识别算法从Lidar点云中将地面识别并剔除。</p>
-<p><img src="Screenshot-from-2020-02-01-15-43-18-1024x652.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-15-43-18-1024x652.png"></p>
 <p>地面识别的难度是比较高的，因为很多道路路面内外的界限在点云中是不明确的，自动化识别算法会误把道路边界外的区域识别为道路路面，从而导致错误的地图信息等。通过视觉分割算法辅助点云识别可以提升路面的识别率。</p>
-<p><img src="Screenshot-from-2020-02-01-15-47-38-1024x511.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-15-47-38-1024x511.png"></p>
 <p>动态物体(行人、车辆等)也需要从点云数据中移除，这依赖于基于点云和图像的感知技术。但同样也存在很多技术难题，比如如何提升识别的准确率，如何将静止的车辆识别出来等等。</p>
-<p><img src="Screenshot-from-2020-02-01-15-48-41.png" alt=""></p>
+<p><img src="/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/Screenshot-from-2020-02-01-15-48-41.png"></p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>本文主要整理自Coursera自动驾驶课程：Motion Planning for Self-Driving Cars第二周课程的学习笔记。</p>
 ]]></content>
       <categories>

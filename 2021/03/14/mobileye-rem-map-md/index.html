@@ -309,55 +309,56 @@
 
       
         <h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
-<p><img src="rem_map.png" alt="Mobileye Rem Map"></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
 <span id="more"></span>
-<p><img src="hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
+
+<p><img src="/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
 <h1 id="高精地图的挑战"><a href="#高精地图的挑战" class="headerlink" title="高精地图的挑战"></a>高精地图的挑战</h1><h2 id="规模化-Scale"><a href="#规模化-Scale" class="headerlink" title="规模化-Scale"></a>规模化-Scale</h2><p>如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那就不存在规模化的问题。但是2025年之后，自动驾驶会在消费者层面全面落地，用户需要驾车到任意想去的地方，在这种场景下，Scale是一个无法规避的问题。</p>
 <h2 id="鲜度-Fresh"><a href="#鲜度-Fresh" class="headerlink" title="鲜度-Fresh"></a>鲜度-Fresh</h2><p>理想情况下，地图是在实时更新的。当物理环境发生变化时，需要实时反映到地图上。月级更新、甚至天级更新都是不够的，我们需要做到分钟级，甚至更短。</p>
 <h2 id="精度-Accuracy"><a href="#精度-Accuracy" class="headerlink" title="精度-Accuracy"></a>精度-Accuracy</h2><p>车载系统(OnBoard System)检测的车辆和行人需要与高精地图(High Definiation Map)实现厘米级精度的匹配，因此地图的精度至关重要。</p>
-<p><img src="map_challange.png" alt="高精地图挑战"></p>
-<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="common_approach_map.png" alt="高精地图通用制作方法"></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_challange.png" alt="高精地图挑战"></p>
+<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="/2021/03/14/mobileye-rem-map-md/common_approach_map.png" alt="高精地图通用制作方法"></p>
 <h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
-<p><img src="map_geometric.png" alt=""></p>
-<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="semantic_map.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_geometric.png"></p>
+<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="/2021/03/14/mobileye-rem-map-md/semantic_map.png"></p>
 <p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
-<p><img src="drivable_path.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/drivable_path.png"></p>
 <p>如下图所示，转向规则千奇百怪：禁止红灯右转，完全停车后允许红灯右转，绿灯禁止左转，绿灯Yield后允许左转…</p>
-<p><img src="priority_map.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/priority_map.png"></p>
 <p>如下图所示，红绿灯异常复杂，识别车道、人行横道与红绿灯的关联关系难度很大…</p>
-<p><img src="map_association.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_association.png"></p>
 <p>如下图所示，除非地图可以表达所有的3D要素，否则很难自动化的计算出车道的最优Stop/Yield Point。但是表达所有的3D信息对于地图来说又是不现实的…</p>
-<p><img src="stop_point.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/stop_point.png"></p>
 <p>影响车辆行驶速度的因素有很多，道路几何、限速、文化等，难以量化，但它对Smooth Driving体验至关重要…</p>
-<p><img src="smooth_driving.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/smooth_driving.png"></p>
 <h1 id="Mobileye如何解决这些问题"><a href="#Mobileye如何解决这些问题" class="headerlink" title="Mobileye如何解决这些问题"></a>Mobileye如何解决这些问题</h1><p>scalability依赖众包数据生成Millions Map Agents；Accuracy不是全局的Accuracy，而是局部的Accuracy，相对于道路上的静态元素位置。</p>
-<p><img src="av_map.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/av_map.png"></p>
 <p>REM的处理流程如下，首先从成百上千辆车获取检测信息(没有使用差分GPS，而是使用了普通的GPS)，这些数据传送到云端；每辆车Detection的角度不同，由于遮挡等原因，每辆车检测的landmark也有差异，将这些数据进行Alignment处理，生成高精度的地图数据；最后，Modeling And Semantics负责生成地图的语义数据。</p>
-<p><img src="rem_process.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/rem_process.png"></p>
 <h2 id="Harvesting"><a href="#Harvesting" class="headerlink" title="Harvesting"></a>Harvesting</h2><p>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
 <p>Mobileye Harvesting的数据量为10K/公里，这些检测的数据会被发送到云端。</p>
-<p><img src="harvesting.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/harvesting.png"></p>
 <h2 id="Aligning-Drives"><a href="#Aligning-Drives" class="headerlink" title="Aligning Drives"></a>Aligning Drives</h2><p>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
-<p><img src="map_align_drive.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_align_drive.png"></p>
 <p>由于GPS存在误差，每个车辆检测的道路元素位置都存在噪声，所以只依靠简单的位置求均值是不可行的。</p>
-<p><img src="align_noise.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/align_noise.png"></p>
 <p>Align之后可以明显的看到两条Driving Path(蓝色)和两侧的道路边界(红色)。对齐的过程是靠几何运算进行。</p>
-<p><img src="path_align.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/path_align.png"></p>
 <p>仅仅靠聚类(Clustering)和Spline Fiting得到下图右上角的结果，这个结果不是特别理想。后来通过神经网络生成高精度地图，效果好了很多。</p>
-<p><img src="model_process.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/model_process.png"></p>
 <h1 id="为什么语义理解离不开众包"><a href="#为什么语义理解离不开众包" class="headerlink" title="为什么语义理解离不开众包"></a>为什么语义理解离不开众包</h1><p>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
 <p>如下右图所示，众包数据提供了复杂场景下的所有可通行路径。</p>
-<p><img src="crowd_driving_path.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_driving_path.png"></p>
 <p>如下图所示，通过众包数据可以获得红绿灯与车道的关联关系、Yield Sign的Stop Point、Crosswalk与红绿灯的关联关系等。</p>
-<p><img src="crowd_assocation.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_assocation.png"></p>
 <p>如下左图所示，通过检测哪个Drive Path的Stop Point比较多，我们可以从众包数据中获取到没有Traffic Sign情况下各个道路的路权优先级。</p>
 <p>如下中图所示，我们可以从众包数据学习到在路口其它司机的停车位置。</p>
 <p>如下右图所示，从众包数据可以学习到，在无保护左转的场景下车辆的Stop Point。</p>
-<p><img src="crowd_more_info.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_more_info.png"></p>
 <p>众包数据是获得各个道路Common Speed的唯一高效的方法，Common Speed提供了当道路没有车辆时候AV车的目标行驶速度。采用这种方法可以使得无论在哪个国家、地区，或者不同的道路类型，AV车都可以自然的融入车流。</p>
-<p><img src="crowd_speed.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_speed.png"></p>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>到目前为止，Mobileye与超过6家汽车制造厂商合作，每天可以覆盖800万公里的路网更新。预计到2024年，每天覆盖的路网会达到10亿公里。</p>
-<p><img src="mobileye_situation.png" alt=""></p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/mobileye_situation.png"></p>
 <p><strong>说明</strong>： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
 <p>YouTube链接：<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
 
