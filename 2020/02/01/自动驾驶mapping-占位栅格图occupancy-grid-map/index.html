@@ -303,27 +303,27 @@
 
       
         <p>前面文章《<a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/18/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning/">自动驾驶运动规划(Motion Planning)</a>》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>
-<h2 id="1、占位栅格地图-Occupancy-Grid-Map"><a href="#1、占位栅格地图-Occupancy-Grid-Map" class="headerlink" title="1、占位栅格地图(Occupancy Grid Map)"></a>1、占位栅格地图(Occupancy Grid Map)</h2><p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-10-43-36-1024x604.png"></p>
+<h2 id="1、占位栅格地图-Occupancy-Grid-Map"><a href="#1、占位栅格地图-Occupancy-Grid-Map" class="headerlink" title="1、占位栅格地图(Occupancy Grid Map)"></a>1、占位栅格地图(Occupancy Grid Map)</h2><p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-10-43-36-1024x604.png" alt=""></p>
 <p>如上图所示，将车辆行驶道路环境用网格(Cell)切分，并且每个网格(Cell)用二值数值0和1填充，0表示该网格(Cell)被占用，1表示该网格(Cell)没有被占用。</p>
 <p>$m^{i} \in \{0, 1\}$</p>
 <p>由此，可以得到如下所示的一张栅格占位地图。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-10-54-24-1024x607.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-10-54-24-1024x607.png" alt=""></p>
 <p>要制作理想的占位栅格地图必须满足的以下几个假设条件：</p>
 <p>1）占位栅格地图是对道路行驶区域中的静态环境(Static Environment)的描述。也就意味着，我们在制图前必须将地面、动态物体(车辆、行人等)从传感器数据中移除掉；</p>
 <p>2）每个网格(Cell)与其它的所有网格的状态是相互独立的，即它的状态不受周围其它网格状态的影响；</p>
 <p>3）在每个时刻，车辆的位置是精确的、已知的。</p>
 <h2 id="2、概率占位栅格地图-Probabilistic-Occupancy-Grid-Map"><a href="#2、概率占位栅格地图-Probabilistic-Occupancy-Grid-Map" class="headerlink" title="2、概率占位栅格地图(Probabilistic Occupancy Grid Map)"></a>2、概率占位栅格地图(Probabilistic Occupancy Grid Map)</h2><p>在实际的应用中，车辆传感器的数据测量是存在误差的，车辆的定位结果也是存在误差的，动态障碍物的识别也是存在误差的，因此用概率表示一个网格(Cell)被占用的可能性是一个更加可行的方案。每个网格存储一个[0, 1]之间的概率值，这个值越大，表示网格被占用的可能性越大；这个值越小，表示网格被占用的可能性越小。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-11-32-38.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-11-32-38.png" alt=""></p>
 <h2 id="3、概率占位栅格图-Probabilistic-Occupancy-Grid-Map-制图"><a href="#3、概率占位栅格图-Probabilistic-Occupancy-Grid-Map-制图" class="headerlink" title="3、概率占位栅格图(Probabilistic Occupancy Grid Map)制图"></a>3、概率占位栅格图(Probabilistic Occupancy Grid Map)制图</h2><p>栅格地图的每个Cell的概率值计算公式如下：</p>
 <p>$bel_t(m^i) = p(m^i (y, x)_{1:t})$</p>
 <p>其中$(y, x)_{1:t}$是1到t时刻的车辆位置和传感器测量结果，通过历史信息的累计，可以提升制作的地图的准确性。</p>
 <p>如何将1到t时刻的所有传感器测量结果融合起来呢？贝叶斯理论(Bayes Theorem)是一个不错的选择。</p>
 <p>$bel_t(m^i) = \eta p(y_t m^i) bel_{t-1}(m^i)$</p>
 <p>其中$\eta$是归一化参数, $p(y_t m^i)$是传感器的测量模型。通过贝叶斯理论(Bayes Theorem)将多次传感器测量结果融合到同一个Cell中，从而获得高可信度的网格占用概率。</p>
-<h4 id="3-1-贝叶斯理论-Bayes-Theorem-更新存在的问题"><a href="#3-1-贝叶斯理论-Bayes-Theorem-更新存在的问题" class="headerlink" title="3.1 贝叶斯理论(Bayes Theorem)更新存在的问题"></a>3.1 贝叶斯理论(Bayes Theorem)更新存在的问题</h4><p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-18-37-34.png"></p>
+<h4 id="3-1-贝叶斯理论-Bayes-Theorem-更新存在的问题"><a href="#3-1-贝叶斯理论-Bayes-Theorem-更新存在的问题" class="headerlink" title="3.1 贝叶斯理论(Bayes Theorem)更新存在的问题"></a>3.1 贝叶斯理论(Bayes Theorem)更新存在的问题</h4><p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-31-18-37-34.png" alt=""></p>
 <p>重复的浮点数乘法运算导致计算结果的数值变得很小而难以精确表达和运算。Logit函数可以把自变量从(0,1)连续单调地映射到正负无穷。logit函数的定义如下：</p>
 <p>$f(x) = log {\frac{x}{1 - x}}$</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/20180901104349204.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/20180901104349204.png" alt=""></p>
 <p>所以我们使用Logit函数替代标准的Bayes更新过程。</p>
 <h4 id="3-2-贝叶斯更新过程的推导"><a href="#3-2-贝叶斯更新过程的推导" class="headerlink" title="3.2 贝叶斯更新过程的推导"></a>3.2 贝叶斯更新过程的推导</h4><p>贝叶斯理论(Bayes Theorem)更新网格(Cell)占用概率的公式如下：</p>
 <p>$<br>p\left(m^{i} y_{1: t}\right)=\frac{p\left(y_{t} y_{1: t-1}, m^{i}\right) p\left(m^{i} y_{1: t-1}\right)}{p\left(y_{t} y_{1: t-1}\right)} \tag{1}<br>$</p>
@@ -349,39 +349,35 @@
 <p>下面来看看Inverse Measurement Model如何计算？下面以二维激光雷达扫描模型来说明(注意：实际应用的激光雷达是3D的，这里用2D Lidar是为了简化模型，所用理论可以很好推广到3D模型)。</p>
 <p><strong>2D Lidar模型</strong></p>
 <p>它在2D平面上进行扫描，包含两个参数：Scanner bearing和Scanner rangers。Scanner bearing均匀的分布在[$-{\phi_{max}}^s, {\phi_{max}}^s$]之间，一般的我们可以认为它们均匀分布在360度的各个方向上。Scanner rangers是从Lidar中心到障碍物的距离，Lidar发出激光、接收回波，从而计算出到周围障碍物的距离；为了简化期间，我们也假设Lidar发送激光后立即收到回波，不存在时间延迟。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-06-50-1024x362.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-06-50-1024x362.png" alt=""></p>
 <p><strong>Map坐标系&amp;Vehicle坐标系&amp;传感器坐标系</strong></p>
 <p>数学模型构建过程中<strong>坐标系</strong>是不可或缺的。这里主要涉及到三个坐标系：Map坐标系、Vehicle坐标系以及传感器坐标系。2D Lidar的测量结果都是相对于自身传感器中心的，即以2D Lidar中心为坐标原点；所有的测量结果最终都要转换到Map坐标系，完成地图制作的计算。</p>
 <p>假设2D Lidar在Map坐标系中的姿态为$(x_{1,t}, x_{2,t}, x_{3,t})$，其中$x_{1,t}$和$x_{2,t}$是x和y坐标，$x_{3,t}$是传感器朝向。通过该姿态，可以将2D Lidar测量结果转换到Map坐标系。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-21-57-1024x755.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-21-57-1024x755.png" alt=""></p>
 <p><strong>Lidar测量结果与Map Cell关联匹配</strong></p>
 <p>如何将2D Lidar模型与Map Cell关联起来呢？如下图所示，第i个Map Cell用$(r^{i}, {\phi}^i)$表示。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-38-07-1024x461.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-38-07-1024x461.png" alt=""></p>
 <p>然后通过2D Lidar bearing与Map Cell相对于传感器的方位进行最小误差匹配，得到影响当前Map Cell的激光束。</p>
 <p>$k = argmin({\phi}_i - {\phi}_i^s)$</p>
 <p>匹配的过程如下：首先定义两个值$\alpha$和$\beta$，各个网格Cell的概率计算如下：</p>
 <p>1）如果$r^i &gt; {r_{max}}^s$或者$\phi^i - \phi_k^s &gt; \beta /2$， 表示为探测区域，没有信息，这些区域的概率值一般为0.5，表示不确定是否被占用。</p>
-<ol start="2">
-<li><p>如果$r_k^s &lt; r_{max}^s$并且$r^i - r_k^s &lt; \alpha / 2$，表示该区域大概率被占用，因此要赋予一个大于0.5的概率值。</p>
-</li>
-<li><p>如果$r^i - r_k^s &gt; \alpha / 2$，这些网格被占用的概率较低，因此要赋予一个小于0.5的概率值。</p>
-</li>
-</ol>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-50-41-1024x462.png"></p>
+<p>2) 如果$r_k^s &lt; r_{max}^s$并且$r^i - r_k^s &lt; \alpha / 2$，表示该区域大概率被占用，因此要赋予一个大于0.5的概率值。</p>
+<p>3) 如果$r^i - r_k^s &gt; \alpha / 2$，这些网格被占用的概率较低，因此要赋予一个小于0.5的概率值。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-50-41-1024x462.png" alt=""></p>
 <p>如下图所示，红色区域为高概率被占用区域，灰色区域为未知区域，其余区域为低概率被占用区域。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-14-59-27-1024x472.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-14-59-27-1024x472.png" alt=""></p>
 <p>至此，有了Inverse Measurement Model，Bayes更新的过程可以正常进行了。</p>
 <p><strong>更高效的Inverse Measurement Model计算方法</strong></p>
 <p>采用光线跟踪(Ray Tracing)的Bresenham’s Line Algorithm可以大大减少复杂的浮点数计算，提升计算效率。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-20-01.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-20-01.png" alt=""></p>
 <h2 id="4、移除Lidar中地面和动态物体"><a href="#4、移除Lidar中地面和动态物体" class="headerlink" title="4、移除Lidar中地面和动态物体"></a>4、移除Lidar中地面和动态物体</h2><p>实际应用中的激光雷达(Lidar)是3D的，会扫描到大量的地面点，这些地面点如果不被移除，按照计算匹配模型，会被当做障碍物处理。所以需要将地面点点云数据从激光雷达点云中移除掉。如何移除呢？一种可行的方法是，通过自动化识别算法从Lidar点云中将地面识别并剔除。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-43-18-1024x652.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-43-18-1024x652.png" alt=""></p>
 <p>地面识别的难度是比较高的，因为很多道路路面内外的界限在点云中是不明确的，自动化识别算法会误把道路边界外的区域识别为道路路面，从而导致错误的地图信息等。通过视觉分割算法辅助点云识别可以提升路面的识别率。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-47-38-1024x511.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-47-38-1024x511.png" alt=""></p>
 <p>动态物体(行人、车辆等)也需要从点云数据中移除，这依赖于基于点云和图像的感知技术。但同样也存在很多技术难题，比如如何提升识别的准确率，如何将静止的车辆识别出来等等。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-48-41.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-15-48-41.png" alt=""></p>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>本文主要整理自Coursera自动驾驶课程：Motion Planning for Self-Driving Cars第二周课程的学习笔记。</p>
-<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-09-25-33-734x1024.png"></p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-09-25-33-734x1024.png" alt=""></p>
 <h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><p><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/27/%e6%97%a0%e4%ba%ba%e9%a9%be%e9%a9%b6%e8%b7%af%e5%be%84%e8%a7%84%e5%88%92%e6%8a%80%e6%9c%af-%e4%b8%89%e6%ac%a1%e6%a0%b7%e6%9d%a1%e6%8f%92%e5%80%bccubic-spline-interpolation%e6%9b%b2%e7%ba%bf%e5%8f%8a/">无人驾驶路径规划技术-三次样条插值(Cubic Spline Interpolation)曲线及Python代码实现</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/18/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning/">自动驾驶运动规划(Motion Planning)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/30/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e5%ae%9a%e4%bd%8d%e7%ae%97%e6%b3%95%e5%8d%81%e4%ba%94%e5%9f%ba%e4%ba%8e%e5%a4%9a%e4%bc%a0%e6%84%9f%e5%99%a8%e8%9e%8d%e5%90%88%e7%9a%84%e7%8a%b6%e6%80%81%e4%bc%b0/">自动驾驶定位算法(十五)基于多传感器融合的状态估计(muti-Sensors Fusion)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/11/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e4%b8%ad%e7%9a%84%e8%bd%a6%e8%be%86%e8%bf%90%e5%8a%a8%e5%ad%a6%e6%a8%a1%e5%9e%8b/">自动驾驶中的车辆运动学模型</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/01/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%b7%af%e5%be%84%e8%a7%84%e5%88%92%e5%99%a8-lattice-planner%e8%af%a6%e8%a7%a3/">自动驾驶路径规划器-Lattice Planner详解</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/22/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e5%ae%9a%e4%bd%8d%e7%ae%97%e6%b3%95%e5%8d%81%e4%b8%89-%e7%b2%92%e5%ad%90%e6%bb%a4%e6%b3%a2particle-filter/">自动驾驶定位算法(十三)-粒子滤波(Particle Filter)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/15/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e7%a1%ac%e4%bb%b6%e7%b3%bb%e7%bb%9f%e5%8d%81%e4%ba%8c-%e6%bf%80%e5%85%89%e9%9b%b7%e8%be%belidar%e6%b5%8b%e9%87%8f%e6%a8%a1%e5%9e%8b/">自动驾驶硬件系统(十二)-激光雷达(Lidar)测量模型</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/14/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e7%a1%ac%e4%bb%b6%e7%b3%bb%e7%bb%9f%e5%8d%81%e4%b8%80-global-navigation-satellite-systems-gnss/">自动驾驶硬件系统(十一)-Global Navigation Satellite Systems (GNSS)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/07/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e5%ae%9a%e4%bd%8d%e7%ae%97%e6%b3%95%e4%b9%9d-%e7%9b%b4%e6%96%b9%e5%9b%be%e6%bb%a4%e6%b3%a2histogram-filter%e5%ae%9a%e4%bd%8d/">自动驾驶定位算法(九)-直方图滤波(Histogram Filter)定位</a></p>
 
     </div>
@@ -613,6 +609,8 @@
 
 
 
+
+  
 
   
 
