@@ -247,6 +247,8 @@
     <title>Waymo-自动驾驶长尾问题挑战</title>
     <url>/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/</url>
     <content><![CDATA[<p>尽管Waymo已经在开放道路上积累超过10 Million Miles，Waymo的工程师们仍然发现有层出不穷的新自动驾驶场景待解决。</p>
+<span id="more"></span>
+
 <h1 id="自动驾驶长尾场景举例"><a href="#自动驾驶长尾场景举例" class="headerlink" title="自动驾驶长尾场景举例"></a>自动驾驶长尾场景举例</h1><p><strong>场景一</strong>：一个骑自行车的人手中拿着一个Stop Sign标识牌。我们不知道它何时会举起标识牌。无人车必须理解这种场景，即使他举起了Stop Sign标识牌，自动驾驶汽车也不应该停下来。</p>
 <p><img src="/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/Screenshot-from-2020-02-07-22-03-14-1024x574.png"></p>
 <p><strong>场景二:</strong> 迎面而来的车辆上装载的塑料管子撒了一地，自动驾驶汽车必须学会应对这种突发情况，并且避开它们对无人车行驶的影响。</p>
