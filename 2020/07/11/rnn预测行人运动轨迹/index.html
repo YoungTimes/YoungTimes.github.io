@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近在研究论文-Social LSTM: Human Trajectory Prediction in Crowded Spaces, 先从最基本的RNN模型入手看看效果。 本文代码已经上传到Github:https:&#x2F;&#x2F;github.com&#x2F;YoungTimes&#x2F;GNN&#x2F;blob&#x2F;master&#x2F;Social-LSTM&#x2F;train.py  行人轨迹数据集数据集来源自[1]，每个数据目录包含一个p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RNN预测行人运动轨迹">
+<meta property="og:url" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/index.html">
+<meta property="og:site_name" content="半杯茶的小酒杯">
+<meta property="og:description" content="最近在研究论文-Social LSTM: Human Trajectory Prediction in Crowded Spaces, 先从最基本的RNN模型入手看看效果。 本文代码已经上传到Github:https:&#x2F;&#x2F;github.com&#x2F;YoungTimes&#x2F;GNN&#x2F;blob&#x2F;master&#x2F;Social-LSTM&#x2F;train.py  行人轨迹数据集数据集来源自[1]，每个数据目录包含一个p">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/315ft-jpfdw.gif">
+<meta property="og:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-8f7cdefd76e7c3a3bc9260eee986f828_720w.jpg">
+<meta property="og:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-79fae3377250006a5521fb82983b7e62_720w.jpg">
+<meta property="og:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-2c6eca62a722134c41825e200e8bfe51_720w.jpg">
+<meta property="og:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-7464b730afec00a99d8d4cc9738819a1_720w.jpg">
+<meta property="og:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-a0b714e1f20cc24717b90d795fc605ea_720w.jpg">
+<meta property="og:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-fd8e403ac5d3c4a411d8e2d2f497368e_720w.jpg">
+<meta property="article:published_time" content="2020-07-11T10:39:38.000Z">
+<meta property="article:modified_time" content="2021-03-28T14:31:47.461Z">
+<meta property="article:author" content="Young Times">
+<meta property="article:tag" content="LSTM">
+<meta property="article:tag" content="RNN">
+<meta property="article:tag" content="行人轨迹预测">
+<meta property="article:tag" content="轨迹预测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/315ft-jpfdw.gif">
+
+<link rel="canonical" href="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RNN预测行人运动轨迹 | 半杯茶的小酒杯</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">半杯茶的小酒杯</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RNN预测行人运动轨迹
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-11 18:39:38" itemprop="dateCreated datePublished" datetime="2020-07-11T18:39:38+08:00">2020-07-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-28 22:31:47" itemprop="dateModified" datetime="2021-03-28T22:31:47+08:00">2021-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>最近在研究论文-Social LSTM: Human Trajectory Prediction in Crowded Spaces, 先从最基本的RNN模型入手看看效果。</p>
+<p>本文代码已经上传到Github:<br><a target="_blank" rel="noopener" href="https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py">https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py</a></p>
+</blockquote>
+<h1 id="行人轨迹数据集"><a href="#行人轨迹数据集" class="headerlink" title="行人轨迹数据集"></a>行人轨迹数据集</h1><p>数据集来源自[1]，每个数据目录包含一个pixel_pos.csv文件，它的文件格式如下:</p>
+<p>pixel_pose.csv包含4行，它的列数是所有行人轨迹点的数量。</p>
+<p>第一行是所有的Frame Number；</p>
+<p>第二行是所有行人的ID；</p>
+<p>第三行是所有的y坐标；</p>
+<p>第四行是所有的x坐标。</p>
+<p>先看下数据集的内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">directory = <span class="string">&quot;./data/eth/univ&quot;</span></span><br><span class="line"></span><br><span class="line">file_path = os.path.join(directory, <span class="string">&#x27;pixel_pos.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line">data = np.genfromtxt(file_path, delimiter=<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the number of pedestrians in the current dataset</span></span><br><span class="line">pedIDs = np.unique(data[<span class="number">1</span>, :])</span><br><span class="line">numPeds = np.size(pedIDs)</span><br><span class="line"></span><br><span class="line">pedIndexLookup = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ped_index, ped_id <span class="keyword">in</span> <span class="built_in">enumerate</span>(pedIDs):</span><br><span class="line">    pedIndexLookup[ped_id] = ped_index</span><br><span class="line"></span><br><span class="line">frameIDs = np.unique(data[<span class="number">0</span>, :])</span><br><span class="line">numFrames = np.size(frameIDs)</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;number of pedestrians is: &#123;&#125;, number of frames is &#123;&#125;&quot;</span>.<span class="built_in">format</span>(numPeds, numFrames))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>将data/eth/univ数据场景的数据可视化如下图所示，每个不同颜色的圆点都是一个运动的行人。</p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/315ft-jpfdw.gif"></p>
+<h1 id="RNN模型"><a href="#RNN模型" class="headerlink" title="RNN模型"></a>RNN模型</h1><p>RNN模型参考了[1][2][3]，大概分为三层: 输入层(Embedding)、RNN层(LSTM/GRU)、输出层。</p>
+<p>Embedding层将坐标(x,y)嵌入到64维的向量空间；输出层输出每个预测点的二维高斯分布参数(包含5个参数:mux, muy, sx, sy, corr), 时刻t的预测坐标点最后通过$({x}^{t}, {y}^{t}) \sim \mathcal{N}(\mu_i^t, \sigma_i^t, \rho_i^t)$获取。</p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-8f7cdefd76e7c3a3bc9260eee986f828_720w.jpg" alt="TensorFlow Tutorial-RNN文本生成"></p>
+<p>模型代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model</span>(<span class="params">args</span>):</span></span><br><span class="line">    output_size = <span class="number">5</span></span><br><span class="line">    model = tf.keras.Sequential([</span><br><span class="line">        tf.keras.layers.Dense(args.embedding_size, activation = tf.keras.activations.relu,</span><br><span class="line">            batch_input_shape = [args.batch_size, <span class="literal">None</span>, <span class="number">2</span>]),</span><br><span class="line">        tf.keras.layers.GRU(args.rnn_size,</span><br><span class="line">                            return_sequences=<span class="literal">True</span>,</span><br><span class="line">                            stateful=<span class="literal">True</span>,</span><br><span class="line">                            recurrent_initializer=<span class="string">&#x27;glorot_uniform&#x27;</span>),</span><br><span class="line">        tf.keras.layers.Dense(output_size)</span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+
+<h1 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h1><h2 id="Loss函数"><a href="#Loss函数" class="headerlink" title="Loss函数"></a>Loss函数</h2><p>模型的Loss函数为所有待预测轨迹点的负对数似然估计之和，模型训练的过程就是最小化所有待预测轨迹的Loss的过程。</p>
+<p>$$<br>L^{i}=-\sum_{t=T_{obs}+1}^{T_{pred}} \log \left(\mathbb{P}\left(x_{t}^{i}, y_{t}^{i} \mid \sigma_{t}^{i}, \mu_{t}^{i}, \rho_{t}^{i}\right)\right)<br>$$</p>
+<p>loss代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_lossfunc</span>(<span class="params">z_mux, z_muy, z_sx, z_sy, z_corr, x_data, y_data</span>):</span></span><br><span class="line"></span><br><span class="line">    result0 = tf_2d_normal(x_data, y_data, z_mux, z_muy, z_sx, z_sy, z_corr)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># For numerical stability purposes</span></span><br><span class="line">    epsilon = <span class="number">1e-20</span></span><br><span class="line"></span><br><span class="line">    result1 = -tf.math.log(tf.math.maximum(result0, epsilon))  <span class="comment"># Numerical stability</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Sum up all log probabilities for each data point</span></span><br><span class="line">    <span class="keyword">return</span> tf.reduce_sum(result1)</span><br></pre></td></tr></table></figure>
+<h2 id="轨迹预测效果的Metric"><a href="#轨迹预测效果的Metric" class="headerlink" title="轨迹预测效果的Metric"></a>轨迹预测效果的Metric</h2><p>轨迹预测效果的衡量指标为:<strong>Average Displacement Error</strong>和<strong>Final Displacement Error</strong>。</p>
+<p>Average Displacement Error = 所有预测轨迹点与GroundTruth对应轨迹点的空间距离之和/预测轨迹点个数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_mean_error</span>(<span class="params">pred_traj, true_traj, observed_length</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># The data structure to store all errors</span></span><br><span class="line">    error = np.zeros(<span class="built_in">len</span>(true_traj) - observed_length)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(observed_length, <span class="built_in">len</span>(true_traj)):</span><br><span class="line">        <span class="comment"># The predicted position</span></span><br><span class="line">        pred_pos = pred_traj[i, :]</span><br><span class="line">        <span class="comment"># The true position</span></span><br><span class="line">        true_pos = true_traj[i, :]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># The euclidean distance is the error</span></span><br><span class="line">        error[i-observed_length] = np.linalg.norm(true_pos - pred_pos)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> np.mean(error)</span><br></pre></td></tr></table></figure>
+
+<p>Final Displacement Error = 最后一个预测轨迹点与GroundTruth对应轨迹点的空间距离；</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_final_error</span>(<span class="params">pred_traj, true_traj</span>):</span></span><br><span class="line">    error = np.linalg.norm(pred_traj[-<span class="number">1</span>, :] - true_traj[-<span class="number">1</span>, :])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error</span><br></pre></td></tr></table></figure>
+<h2 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span>(<span class="params">args</span>):</span></span><br><span class="line">    datasets = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">    data_loader = DataLoader(args.batch_size, args.seq_length, datasets, forcePreProcess=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    model = build_model(args)</span><br><span class="line"></span><br><span class="line">    optimizer = tf.keras.optimizers.RMSprop(args.learning_rate)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(args.num_epochs):</span><br><span class="line">        data_loader.reset_batch_pointer()</span><br><span class="line">        model.reset_states()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> batch <span class="keyword">in</span> <span class="built_in">range</span>(data_loader.num_batches):</span><br><span class="line">            start = time.time()</span><br><span class="line"></span><br><span class="line">             x, y = data_loader.next_batch()</span><br><span class="line"></span><br><span class="line">            base_pos = np.array([[e_x[<span class="number">0</span>] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_x))] <span class="keyword">for</span> e_x <span class="keyword">in</span> x])</span><br><span class="line"></span><br><span class="line">            x_offset = x - base_pos</span><br><span class="line">            y_offset = y - base_pos</span><br><span class="line"></span><br><span class="line">            <span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> tape:</span><br><span class="line">                tensor_x = tf.convert_to_tensor(x_offset, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">                logits = model(tensor_x)</span><br><span class="line"></span><br><span class="line">                [o_mux, o_muy, o_sx, o_sy, o_corr] = get_coef(logits)</span><br><span class="line"></span><br><span class="line">                tensor_y = tf.convert_to_tensor(y_offset, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">                [x_data, y_data] = tf.split(tensor_y, <span class="number">2</span>, -<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Compute the loss function</span></span><br><span class="line">                loss = get_lossfunc(o_mux, o_muy, o_sx, o_sy, o_corr, x_data, y_data)</span><br><span class="line"></span><br><span class="line">                mean_error, final_error = calc_prediction_error(o_mux, o_muy, o_sx, o_sy, o_corr, tensor_y, args)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Compute the cost</span></span><br><span class="line">                loss = tf.math.divide(loss, (args.batch_size * args.seq_length))</span><br><span class="line"></span><br><span class="line">                grads = tape.gradient(loss, model.trainable_variables)</span><br><span class="line"></span><br><span class="line">                optimizer.lr.assign(args.learning_rate * (args.decay_rate ** e))</span><br><span class="line">                optimizer.apply_gradients(<span class="built_in">zip</span>(grads, model.trainable_variables))</span><br></pre></td></tr></table></figure>
+
+<p>training过程:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">5195&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.898, time&#x2F;batch &#x3D; 0.583, mean error &#x3D; 0.019682016324174278, final\_error &#x3D; 0.019766580550931393</span><br><span class="line">5196&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.707, time&#x2F;batch &#x3D; 0.583, mean error &#x3D; 0.01821616107675557, final\_error &#x3D; 0.018569258209317922</span><br><span class="line">5197&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.726, time&#x2F;batch &#x3D; 0.581, mean error &#x3D; 0.021631291888964673, final\_error &#x3D; 0.024468516283668577</span><br><span class="line">5198&#x2F;5200 (epoch 199), train\_loss &#x3D; -6.308, time&#x2F;batch &#x3D; 0.595, mean error &#x3D; 0.02178817719841997, final\_error &#x3D; 0.024148114868439735</span><br><span class="line">5199&#x2F;5200 (epoch 199), train\_loss &#x3D; -2.924, time&#x2F;batch &#x3D; 0.603, mean error &#x3D; 0.035233428867844245, final\_error &#x3D; 0.036289180340245364</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-79fae3377250006a5521fb82983b7e62_720w.jpg"></p>
+<p>最后放一些测试效果的图吧，绿色是Ground Truth Trajectory，红色是Prediction Trajectory。</p>
+<p>最终效果中，预测Trajectory与Ground Truth Trajectory的绝对偏差并不大，因为行人的运动速度通常不会太快。但最终的预测趋势与真实的运动意图个人感觉还比较大，不确定是模型的问题，还是行人运动预测难度比较大，单凭LSTM很难搞定。后面再尝试下Social LSTM，看看效果。</p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-2c6eca62a722134c41825e200e8bfe51_720w.jpg"></p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-7464b730afec00a99d8d4cc9738819a1_720w.jpg"></p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-a0b714e1f20cc24717b90d795fc605ea_720w.jpg"></p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-fd8e403ac5d3c4a411d8e2d2f497368e_720w.jpg"></p>
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>1.<a target="_blank" rel="noopener" href="https://github.com/xuerenlv/social-lstm-tf">https://github.com/xuerenlv/social-lstm-tf</a><br>2.<a target="_blank" rel="noopener" href="https://github.com/quancore/social-lstm">https://github.com/quancore/social-lstm</a><br>3.<a target="_blank" rel="noopener" href="https://www.tensorflow.org/tutorials/text/text/_generation?hl=zh-cn">https://www.tensorflow.org/tutorials/text/text\_generation?hl=zh-cn</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Young Times
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/" title="RNN预测行人运动轨迹">http://example.com/2020/07/11/rnn预测行人运动轨迹/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LSTM/" rel="tag"># LSTM</a>
+              <a href="/tags/RNN/" rel="tag"># RNN</a>
+              <a href="/tags/%E8%A1%8C%E4%BA%BA%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/" rel="tag"># 行人轨迹预测</a>
+              <a href="/tags/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/" rel="tag"># 轨迹预测</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/" rel="prev" title="Waymo-自动驾驶长尾问题挑战">
+      <i class="fa fa-chevron-left"></i> Waymo-自动驾驶长尾问题挑战
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/14/mobileye-rem-map-md/" rel="next" title="Mobileye REM地图">
+      Mobileye REM地图 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%8C%E4%BA%BA%E8%BD%A8%E8%BF%B9%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">行人轨迹数据集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RNN%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">RNN模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">3.</span> <span class="nav-text">模型训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Loss%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">Loss函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B%E6%95%88%E6%9E%9C%E7%9A%84Metric"><span class="nav-number">3.2.</span> <span class="nav-text">轨迹预测效果的Metric</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="nav-number">3.3.</span> <span class="nav-text">训练过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%9D%90%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">参考材料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Young Times"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Young Times</p>
+  <div class="site-description" itemprop="description">路要一步一步的走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Young Times</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">31k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">28 分钟</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'hEvBR6pmxtoYkRhC3fnMB8Yq-gzGzoHsz',
+      appKey     : 'nIkzvtLYb1avq32c9GYfgOOW',
+      placeholder: "Please Leave Your Message Here...",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

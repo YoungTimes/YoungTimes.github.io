@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/</loc>
+    
+    <lastmod>2021-03-28</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/</loc>
     
     <lastmod>2021-03-28</lastmod>
@@ -137,6 +144,34 @@
   </url>
   
   <url>
+    <loc>http://example.com/tags/LSTM/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/RNN/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/%E8%A1%8C%E4%BA%BA%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/tags/waymo/</loc>
     <lastmod>2021-03-28</lastmod>
     <changefreq>daily</changefreq>
@@ -252,6 +287,13 @@
   
   <url>
     <loc>http://example.com/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</loc>
+    <lastmod>2021-03-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2021-03-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
