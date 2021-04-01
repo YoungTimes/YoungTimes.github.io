@@ -648,4 +648,176 @@
         <tag>运动规划约束</tag>
       </tags>
   </entry>
+  <entry>
+    <title>自动驾驶定位算法-直方图滤波(Histogram Filter)定位</title>
+    <url>/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/</url>
+    <content><![CDATA[<h1 id="直方图滤波-Histogram-Filter-的算法思想"><a href="#直方图滤波-Histogram-Filter-的算法思想" class="headerlink" title="直方图滤波(Histogram Filter)的算法思想"></a>直方图滤波(Histogram Filter)的算法思想</h1><p>直方图滤波的算法思想在于：它把整个状态空间dom(x(t))切分为互不相交的部分$b_1、b_2、…,b_{n-1}$，使得：</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/1524143870919032686cb02" alt="无人驾驶高精度定位技术(1)-直方图滤波Histogram Filter"></p>
+<p>然后定义一个新的状态空间$y_t \in \{0,…,n−1\}$，当且仅当$x(t)∈b_i$时，$y_t=i$,由于$y_t$是一个离散的状态空间，我们就可以采用离散贝叶斯算法计算$bel(y_t)$。$bel(y_t)$是对$bel(x_t)$的近似，它给出x(t)在每一个$b_i$的概率，$b_i$划分的越精细，计算的结果就越精确，当然精确的代价是计算成本的上升。</p>
+<h1 id="1D直方图滤波在自动驾驶定位的应用"><a href="#1D直方图滤波在自动驾驶定位的应用" class="headerlink" title="1D直方图滤波在自动驾驶定位的应用"></a>1D直方图滤波在自动驾驶定位的应用</h1><p>如下图所示，无人驾驶汽车在一维的宽度为5m的世界重复循环，因为世界是循环的，所以如果无人驾驶汽车到了最右侧，再往前走一步，它就又回到了最左侧的位置。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/11/15242324358146dc9241c7f.png"></p>
+<p>自动驾驶汽车上安装有Sensor可以检测车辆当前所在位置的颜色，但Sensor本身的存在一定检测错误率，即Sensor对颜色的检测不是100%准确的；</p>
+<p>无人驾驶汽车以自认为1m/step的恒定速度向右运动，车辆运动本身也存在误差，即向车辆发出的控制命令是向右移动2m，而实际的车辆运动结果可能是待在原地不动，可能向右移动1m，也可能向右移动3m。</p>
+<h2 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><strong>数学模型</strong></h2><p>从数学的语言来描述这个问题：机器人只有一个状态变量：位置，$pos(t) \in [0,5)$。应用直方图滤波(Histogram Filter)，对状态空间做如下分解:</p>
+<p>$$<br>b_0 \in [0,1),<br>b_1 \in [1,2),<br>b_2 \in [2,3),<br>b_3 \in [3,4),<br>b_4 \in [4,5)<br>$$</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/15242324358146dc9241c7f" alt="无人驾驶高精度定位技术(1)-直方图滤波Histogram Filter"></p>
+<p>于是得到一个新的状态空间$y(t) \in {0,…,4}$，它是对连续状态空间的近似，在某一时刻车辆只能在这些离散状态中的一个。</p>
+<p>虽然车辆自认为在向右运动，每一步运动1m，我们假设存在5%的概率，无人驾驶汽车仍待在原地没动；存在90%的概率车辆在向右移动1m；存在5%的概率无人驾驶汽车在向右运动2m。</p>
+<p>$$<br>\begin{aligned}<br>\text{P}(y_t &amp;= (x+2) mod 5 y_{t-1} = x) = 0.05 \\<br>\text{P}(y_t &amp;= (x+1) mod 5 y_{t-1} = x = 0.9 \\<br>\text{P}(y_t &amp;= xy_{t-1} = x)=0.05 \\<br>\end{aligned}<br>$$</p>
+<p>无人驾驶汽车的Sensor假设90%的概率感知结果是正确的，还有10%的情况下它感知的结果是错误的。</p>
+<p>$$<br>\begin{aligned}<br>\text{P}(\text{MeasuredColor}_t = \text{Blue} y_t = 0,2,3) &amp;= 0.9 \\<br>\text{P}(\text{MeasuredColor}_t = \text{Orange} y_t = 0,2,3) &amp;= 0.1 \\<br>\text{P}(\text{MeasuredColor}_t = \text{Blue} y_t = 1,4) &amp;= 0.1 \\<br>\text{P}(\text{MeasuredColor}_t = \text{Orange} y_t = 1,4) &amp;= 0.9 \\<br>\end{aligned}<br>$$</p>
+<h2 id="利用直方图滤波-Histogram-Filter-进行车辆定位的过程"><a href="#利用直方图滤波-Histogram-Filter-进行车辆定位的过程" class="headerlink" title="利用直方图滤波(Histogram Filter)进行车辆定位的过程"></a>利用直方图滤波(Histogram Filter)进行车辆定位的过程</h2><p>我们用一个5维的向量来描述t时刻，无人驾驶汽车位于第1个格子、第2个格子、第3个格子、第4个格子、第5个格子的概率。</p>
+<p>$$\text{bel}(y_t) = (\text{bel}_{t,1}, \text{bel}_{t,2}, \text{bel}_{t,3}, \text{bel}_{t,4}, \text{bel}_{t,5})$$</p>
+<p>无人驾驶汽车对自己所在位置一无所知，假设它连续三次【运动-向右走一步】-【观测】,三次观测结果分别是orange、blue、orange，我们一步步无人驾驶汽车是如何通过【运动】-【观测】过程逐步确认自己的位置的。</p>
+<p><strong>t=0时刻</strong></p>
+<p>没有任何先验知识，无人车不知道自己在哪里,所以在各个位置概率相等：</p>
+<p>$$\text{bel}(y_0) = (0.2, 0.2, 0.2, 0.2, 0.2)$$</p>
+<p><strong>t=1时刻</strong></p>
+<p>首先向右走1m，用运动模型进行位置预测</p>
+<p>$$<br>\begin{aligned}<br>\overline{\text{bel}}(y_1) &amp;= \sum_{y_0} \text{P}(y_1 y_0) P(y_0) \\<br>&amp;=(0.05,0.9,0.05,0,0) * 0.2+(0,0.05,0.9,0.05,0) * 0.2 \\<br>&amp;+(0,0.05,0.9,0.05) * 0.2+(0.05,0,0,0.05,0.9) * 0.2 \\<br>&amp;+(0.9,0.05,0,0,0.05) * 0.2 \\<br>&amp;=(0.2,0.2,0.2,0.2,0.2)<br>\end{aligned}<br>$$</p>
+<p>可以看出无人车虽然向前运动一步，但它仍然对自己所在位置一无所知。这也和我们的认知相同，刚开始完全不知道自己在哪里，走了一步自然也完全不知道自己在哪里。</p>
+<p>再用更新模型通过Sensor感知环境，更新当前位置的置信度。</p>
+<p>$$<br>\begin{aligned}<br>\text{bel}(y_1) &amp;= \eta \text{P}(\text {MeasuredColor}_1 = \text{orange} {y_1}) \overline {\text {bel}} (y_1) \\<br>&amp; = \eta (0.1,0.9,0.1,0.1,0.9) {*} (0.2,0.2,0.2,0.2,0.2) \\<br>&amp; = \eta (0.02,0.18,0.02,0.02,0.18) \\<br>&amp; = (0.04762,0.42857,0.04762,0.04761,0.42857)<br>\end{aligned}<br>$$</p>
+<p>orange的颜色感知信息使得传感器认为自己很可能位于第二个和第五个方格中。</p>
+<p><strong>t=2时刻</strong>  </p>
+<p>运动模型-向右走1m</p>
+<p>$$<br>\begin{aligned}<br>\overline{\text{bel}}(y_2) &amp;= \sum_{y_1} \text{P}(y_2 y_1) \text{P}(y_1) \\<br>&amp;= (0.39048,0.08571,0.39048,0.06667,0.06667) \\<br>\end{aligned}<br>$$</p>
+<p>更新模型-sensor环境感知</p>
+<p>$$<br>\begin{aligned}<br>\text{bel}(y_2) &amp;= \eta \text{P}(\text{MeasuredColor}_2 = \text{blue} y_2) \overline{\text{bel}}(y_2) \\<br>&amp;=\eta (0.1,0.9,0.1,0.1,0.9) {*} (0.39048,0.08571,0.39048,0.06667,0.06667) \\<br>&amp;=(0.45165,0.01102,0.45165,0.07711,0.00857) \\<br>\end{aligned}<br>$$</p>
+<p><strong>t=3时刻</strong></p>
+<p>运动模型-向右走1m</p>
+<p>$$<br>\begin{aligned}<br>\overline{\text{bel}}(y_3) &amp;= \sum_{y_2} \text{P}(y_3 y_2) \text{P}(y_2) \\<br>&amp;= =(0.03415,0.40747,0.05508,0.41089,0.09241) \\<br>\end{aligned}<br>$$</p>
+<p>感知更新模型-sensor环境感知</p>
+<p>$$<br>\begin{aligned}<br>\text{bel}(y_3) &amp;= \eta \text{P}(\text{MeasuredColor}_3 = \text{orange} y_3) \overline{\text{bel}}(y_3) \\<br>&amp;= \eta(0.1,0.9,0.1,0.1,0.9){*}(0.03415,0.40747,0.05508,0.41089,0.09241) \\<br>&amp;= (0.00683,0.73358,0.01102,0.08219,0.16637) \\<br>\end{aligned}<br>$$</p>
+<p>可以看到经过三次的运动和观测后，无人驾驶汽车已经有73%的概率确认自己位于第二个网格中，事实再经过三次的运动观测，无人驾驶汽车可以有94%的概率确认自己的位置。</p>
+<h1 id="2D直方图滤波在自动驾驶定位中的应用-一"><a href="#2D直方图滤波在自动驾驶定位中的应用-一" class="headerlink" title="2D直方图滤波在自动驾驶定位中的应用(一)"></a>2D直方图滤波在自动驾驶定位中的应用(一)</h1><p>1D的直方图滤波可以很好的帮助我们理解直方图滤波的原理以及在如何应用在自动驾驶的定位过程中。但是1D的直方图滤波在实际应用中几乎是不存在的，所以我们从更偏向应用的角度，看看2D直方图滤波在自动驾驶定位中是如何工作的。</p>
+<h2 id="定义二维地图"><a href="#定义二维地图" class="headerlink" title="定义二维地图"></a>定义二维地图</h2><p>首先定义一张二维地图，R和G代表地图块的颜色：R为红色，G为绿色。每个地图块的大小根据实际应用而定，比如0.0125m*0.125m、0.025m*0.025m等。地图块越小，定位精度越高，但是地图数据量和计算量也就越大；反之，地图块越大，定位精度越低，但数据量和计算量也相应较低。</p>
+<p>grid = [<br>    [R,G,G,G,R,R,R],<br>    [G,G,R,G,R,G,R],<br>    [G,R,G,G,G,G,R],<br>    [R,R,G,R,G,G,G],<br>    [R,G,R,G,R,R,R],<br>    [G,R,R,R,G,R,G],<br>    [R,R,R,G,R,G,G],<br>]</p>
+<p>t=0时刻，车辆不知道自己处于地图中的具体位置，转化为数学表述，就是车辆在各个地图块的置信度相同，代码如下:</p>
+<p>def initialize_beliefs(grid):<br>    height = len(grid)<br>    width = len(grid[0])<br>    area = height * width<br>    belief_per_cell = 1.0 / area<br>    beliefs = []<br>    for i in range(height):<br>        row = []<br>        for j in range(width):<br>            row.append(belief_per_cell)<br>        beliefs.append(row)<br>    return beliefs</p>
+<p>初始置信度如下:</p>
+<p>0.020  0.020  0.020  0.020  0.020  0.020  0.020<br>0.020  0.020  0.020  0.020  0.020  0.020  0.020<br>0.020  0.020  0.020  0.020  0.020  0.020  0.020<br>0.020  0.020  0.020  0.020  0.020  0.020  0.020<br>0.020  0.020  0.020  0.020  0.020  0.020  0.020<br>0.020  0.020  0.020  0.020  0.020  0.020  0.020<br>0.020  0.020  0.020  0.020  0.020  0.020  0.020 </p>
+<p>置信度的可视化如下，红色星星位置为车辆的真实初始实际位置，蓝色圈大小代表置信度的高低，蓝色圈越大，置信度越高，蓝色圈越小，置信度越低。t=0时刻，车辆不确定自己的位置，所以各个位置的置信度相等。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/Screenshot-from-2019-12-06-22-50-31.png"></p>
+<h2 id="运动更新"><a href="#运动更新" class="headerlink" title="运动更新"></a>运动更新</h2><p>车辆运动模型简化为x、y两个方向的运动，同时由于运动的不确定性，需要对运动后的位置增加概率性信息。</p>
+<p>代码如下:</p>
+<p>def move(dy, dx, beliefs, blurring):<br>    height = len(beliefs)<br>    width = len(beliefs[0])<br>    new_G = [[0.0 for i in range(width)] for j in range(height)]<br>    for i, row in enumerate(beliefs):<br>        for j, cell in enumerate(row):<br>            new_i = (i + dy ) % height<br>            new_j = (j + dx ) % width<br>            new_G[int(new_i)][int(new_j)] = cell<br>    return blur(new_G, blurring)</p>
+<h2 id="观测更新"><a href="#观测更新" class="headerlink" title="观测更新"></a>观测更新</h2><p>观测更新的过程中，当观测的Color等于地图块的Color时，hit=1， bel=beliefs[i][j] * p_hit；当观测到的Color不等于地图块的Color时，hit=0， bel=beliefs[i][j] * p_miss。</p>
+<p>代码如下:</p>
+<p>def sense(color, grid, beliefs, p_hit, p_miss):<br>    new_beliefs = []</p>
+<pre><code>height = len(grid)
+width = len(grid\[0\])
+
+# loop through all grid cells
+for i in range(height):
+    row = \[\]
+    for j in range(width):
+        hit = (color == grid\[i\]\[j\])
+        row.append(beliefs\[i\]\[j\] \* (hit \* p\_hit + (1-hit) \* p\_miss))
+    new\_beliefs.append(row)
+    
+s = sum(map(sum, new\_beliefs))
+
+for i in range(height):
+    for j in range(width):
+        new\_beliefs\[i\]\[j\] = new\_beliefs\[i\]\[j\] / s
+        
+return new\_beliefs
+</code></pre>
+<h2 id="运行定位流程"><a href="#运行定位流程" class="headerlink" title="运行定位流程"></a>运行定位流程</h2><p>单次直方图滤波定位过程中，先进行观测更新，再进行运动更新。</p>
+<p>def run(self, num_steps=1):<br>    for i in range(num_steps):<br>self.sense()<br>dy, dx = self.random_move()<br>self.move(dy,dx)</p>
+<p>设置运动更新的不确定度为0.1，观测更新的错误率：每隔100次观测出现一次观测错误，车辆的真实初始位置为(3,3),注意，这个真实位置车辆自己并不知道，我们只是为了仿真而设置的值。</p>
+<p>blur = 0.1<br>p_hit = 100.0<br>init_pos = (3,3)<br>simulation = sim.Simulation(grid, blur, p_hit, init_pos)</p>
+<p>simulation.run(1)<br>simulation.show_beliefs()<br>show_rounded_beliefs(simulation.beliefs)</p>
+<p>经过一次直方图滤波定位之后，各个位置的置信度已经发生了变化。</p>
+<p>0.003  0.002  0.036  0.002  0.037  0.003  0.038<br>0.003  0.037  0.002  0.002  0.001  0.002  0.037<br>0.038  0.038  0.003  0.036  0.002  0.002  0.003<br>0.038  0.004  0.038  0.003  0.037  0.038  0.038<br>0.003  0.038  0.039  0.038  0.003  0.037  0.003<br>0.038  0.038  0.038  0.003  0.037  0.003  0.003<br>0.038  0.003  0.002  0.002  0.038  0.038  0.038 </p>
+<p>置信度的可视化效果如下。可以看到，车辆已经对自己的置信度有了一定的认知，但是还是有大量的可能位置需要进一步确认。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/Screenshot-from-2019-12-06-23-25-12.png"></p>
+<p>连续执行直方图滤波100次，各个位置置信度的数值如下:</p>
+<p>0.008  0.000  0.000  0.000  0.000  0.016  0.016<br>0.032  0.001  0.000  0.000  0.001  0.032  0.833<br>0.016  0.000  0.000  0.000  0.000  0.025  0.017<br>0.001  0.000  0.000  0.000  0.000  0.000  0.000<br>0.000  0.000  0.000  0.000  0.000  0.000  0.000<br>0.000  0.000  0.000  0.000  0.000  0.000  0.000<br>0.000  0.000  0.000  0.000  0.000  0.000  0.000</p>
+<p>置信度的可视化效果如下,可以看到，车辆已经83.3%的概率可以确定自己所处的位置了。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/Screenshot-from-2019-12-06-23-32-51.png"></p>
+<h1 id="2D直方图滤波在自动驾驶定位中的应用-二"><a href="#2D直方图滤波在自动驾驶定位中的应用-二" class="headerlink" title="2D直方图滤波在自动驾驶定位中的应用(二)"></a>2D直方图滤波在自动驾驶定位中的应用(二)</h1><p>车辆状态的定义如下：</p>
+<p>$$<br>\begin{aligned}<br>\mathbf_{t} &amp;=<br>\begin{bmatrix}<br>\text{x} \\<br>\text{y} \\<br>\theta \\<br>\text{v}<br>\end{bmatrix}\\<br>\end{aligned}<br>$$</p>
+<p>其中，(x,y)是车辆的位置，$\theta$是车辆的朝向，v是车辆的运动速度，我们假设车辆是匀速运动的，$\omega$是车辆运动的角速度。</p>
+<p>车辆运动方程如下，其实就是:</p>
+<p>$x_{t+1} = x_t + v * cos(\theta) * \Delta t$<br>$y_{t+1} = y_t + v * sin(\theta) * \Delta t$<br>$\theta_{t+1} = \theta_t + \omega * \Delta t$</p>
+<p>写成矩阵形式:</p>
+<p>$$<br>x_{t+1} =<br>\begin{bmatrix}<br>1.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 \\<br>0.0 &amp; 1.0 &amp; 0.0 &amp; 0.0 \\<br>0.0 &amp; 0.0 &amp; 1.0 &amp; 0.0 \\<br>0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 \\<br>\end{bmatrix} *<br>\begin{bmatrix}<br>\text{x} \\<br>\text{y} \\<br>\theta \\<br>\text{v}<br>\end{bmatrix}  </p>
+<ul>
+<li>\begin{bmatrix}<br>\Delta t cos(\theta) &amp; 0.0 \\<br>\Delta t sin(\theta) &amp; 0.0 \\  </li>
+</ul>
+<p>0.0 &amp; \Delta t \\<br>1.0 &amp; 0.0 \\<br>\end{bmatrix} *<br>\begin{bmatrix}<br>v \\<br>\omega \\<br>\end{bmatrix}<br>$$</p>
+<p>车辆的运动模型代码如下:</p>
+<p>def motion_model(x, u):<br>    F = np.array([[1.0, 0, 0, 0],<br>                  [0, 1.0, 0, 0],<br>                  [0, 0, 1.0, 0],<br>                  [0, 0, 0, 0]])</p>
+<pre><code>B = np.array(\[\[DT \* math.cos(x\[2, 0\]), 0\],
+              \[DT \* math.sin(x\[2, 0\]), 0\],
+              \[0.0, DT\],
+              \[1.0, 0.0\]\])
+
+x = F @ x + B @ u
+
+return x
+</code></pre>
+<h2 id="运动更新-1"><a href="#运动更新-1" class="headerlink" title="运动更新"></a>运动更新</h2><p>运动更新的过程与前面谈到的车辆运动模型一致，车辆运动有不确定性，所以增加了Gaussian Filter用来处理不确定性。还有一个细节，就是车辆运动距离和直方图滤波的分块地图之间的转换关系：</p>
+<p>x_shift = $\Delta$ x / map_x_resolution</p>
+<p>y_shift = $\Delta$ y / map_y_resolution</p>
+<p>代码如下:</p>
+<p># grid_map是网格地图，u=(v,w)是车辆运动的控制参数，yaw是车辆朝向<br>def motion_update(grid_map, u, yaw):<br>    # DT是时间间隔<br>    grid_map.dx += DT * math.cos(yaw) * u[0]<br>    grid_map.dy += DT * math.sin(yaw) * u[0]<br>    # grid_map.xy_reso是地图分辨率<br>    x_shift = grid_map.dx // grid_map.xy_reso<br>    y_shift = grid_map.dy // grid_map.xy_reso</p>
+<pre><code>if abs(x\_shift) &gt;= 1.0 or abs(y\_shift) &gt;= 1.0:  # map should be shifted
+    grid\_map = map\_shift(grid\_map, int(x\_shift), int(y\_shift))
+    grid\_map.dx -= x\_shift \* grid\_map.xy\_reso
+    grid\_map.dy -= y\_shift \* grid\_map.xy\_reso
+# MOTION\_STD是车辆运动不确定性的标准差
+grid\_map.data = gaussian\_filter(grid\_map.data, sigma=MOTION\_STD)
+
+return grid\_map
+</code></pre>
+<h2 id="观测更新-1"><a href="#观测更新-1" class="headerlink" title="观测更新"></a>观测更新</h2><p>这个例子中通过测量车辆到LandMark的距离来确定自身的位置，LandMark的位置都是已知的。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/Screenshot-from-2019-12-07-11-55-06.png"></p>
+<p>2D 直方图滤波定位算法</p>
+<p>def calc_gaussian_observation_pdf(gmap, z, iz, ix, iy, std):<br>    # predicted range<br>    x = ix * gmap.xy_reso + gmap.minx<br>    y = iy * gmap.xy_reso + gmap.miny<br>    d = math.sqrt((x - z[iz, 1]) ** 2 + (y - z[iz, 2]) ** 2)</p>
+<pre><code># likelihood
+pdf = (1.0 - norm.cdf(abs(d - z\[iz, 0\]), 0.0, std))
+
+return pdf
+
+#z=\[(车辆到Landmark的测量距离，Landmark的x坐标，Landmark的y坐标),...\]，z是所有Landmark测量距离和位置的集合，std是测量误差的标准差
+</code></pre>
+<p>def observation_update(gmap, z, std):<br>    for iz in range(z.shape[0]):<br>        for ix in range(gmap.xw):<br>            for iy in range(gmap.yw):<br>                gmap.data[ix][iy] *= calc_gaussian_observation_pdf(<br>                    gmap, z, iz, ix, iy, std)</p>
+<pre><code># 概率归一化
+gmap = normalize\_probability(gmap)
+
+return gmap
+</code></pre>
+<h2 id="运行定位流程-1"><a href="#运行定位流程-1" class="headerlink" title="运行定位流程"></a>运行定位流程</h2><p>设置地图和测量相关参数:</p>
+<p>DT = 0.1  # time tick [s]<br>MAX_RANGE = 10.0  # maximum observation range<br>MOTION_STD = 1.0  # standard deviation for motion gaussian distribution<br>RANGE_STD = 3.0  # standard deviation for observation gaussian distribution</p>
+<h1 id="grid-map-param"><a href="#grid-map-param" class="headerlink" title="grid map param"></a>grid map param</h1><p>XY_RESO = 0.5  # xy grid resolution<br>MINX = -15.0<br>MINY = -5.0<br>MAXX = 15.0<br>MAXY = 25.0</p>
+<h1 id="Landmark-Position"><a href="#Landmark-Position" class="headerlink" title="Landmark Position"></a>Landmark Position</h1><p>RF_ID = np.array([[10.0, 0.0],<br>                 [10.0, 10.0],<br>                 [0.0, 15.0],<br>                 [-5.0, 20.0]])</p>
+<h1 id="车辆的初始位置-for-simulation"><a href="#车辆的初始位置-for-simulation" class="headerlink" title="车辆的初始位置(for simulation)"></a>车辆的初始位置(for simulation)</h1><p>xTrue = np.zeros((4, 1))</p>
+<p>通过Observation模拟自动驾驶车辆对各个LandMark的观测结果和车辆速度的误差。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">observation</span>(<span class="params">xTrue, u, RFID</span>):</span></span><br><span class="line">    xTrue = motion_model(xTrue, u)</span><br><span class="line"></span><br><span class="line">    z = np.zeros((<span class="number">0</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(RFID[:, <span class="number">0</span>])):</span><br><span class="line"></span><br><span class="line">        dx = xTrue[<span class="number">0</span>, <span class="number">0</span>] - RFID[i, <span class="number">0</span>]</span><br><span class="line">        dy = xTrue[<span class="number">1</span>, <span class="number">0</span>] - RFID[i, <span class="number">1</span>]</span><br><span class="line">        d = math.sqrt(dx ** <span class="number">2</span> + dy ** <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">if</span> d &lt;= MAX_RANGE:</span><br><span class="line">            <span class="comment"># add noise to range observation</span></span><br><span class="line">            dn = d + np.random.randn() * NOISE_RANGE</span><br><span class="line">            zi = np.array([dn, RFID[i, <span class="number">0</span>], RFID[i, <span class="number">1</span>]])</span><br><span class="line">            z = np.vstack((z, zi))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># add noise to speed</span></span><br><span class="line">    ud = u[:, :]</span><br><span class="line">    ud[<span class="number">0</span>] += np.random.randn() * NOISE_SPEED</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> xTrue, z, ud</span><br></pre></td></tr></table></figure>
+
+<p>执行车辆定位流程:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> SIM_TIME &gt;= time:</span><br><span class="line">    time += DT</span><br><span class="line">    print(<span class="string">&quot;Time:&quot;</span>, time)</span><br><span class="line"></span><br><span class="line">    u = calc_input()</span><br><span class="line"></span><br><span class="line">    yaw = xTrue[<span class="number">2</span>, <span class="number">0</span>]  <span class="comment"># Orientation is known</span></span><br><span class="line">    xTrue, z, ud = observation(xTrue, u, RF_ID)</span><br><span class="line"></span><br><span class="line">    grid_map = histogram_filter_localization(grid_map, u, z, yaw)</span><br></pre></td></tr></table></figure>
+
+<p>定位效果如下:</p>
+<p><img src="https://github.com/AtsushiSakai/PythonRoboticsGifs/raw/master/Localization/histogram_filter/animation.gif" alt="3"></p>
+<p>图片来源:<a href="https://github.com/AtsushiSakai/PythonRobotics">https://github.com/AtsushiSakai/PythonRobotics</a></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1.<a href="http://www.deepideas.net/robot-localization-histogram-filter/">http://www.deepideas.net/robot-localization-histogram-filter/</a><br>2.<a href="https://github.com/AtsushiSakai/PythonRobotics">https://github.com/AtsushiSakai/PythonRobotics</a></p>
+<p>文中完整代码路径:</p>
+<p>第3节中的代码github路径:<a href="https://github.com/iamshnoo/localization">https://github.com/iamshnoo/localization</a>，如果无法访问，可以直接通过以下链接下载。</p>
+<p><a href="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/2D_Histogram_Filter.zip">2D_Histogram_Filter</a><a href="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/2D_Histogram_Filter.zip">下载</a></p>
+<p>第4节中的代码的github路径:<a href="https://github.com/AtsushiSakai/PythonRobotics/blob/master/Localization/histogram_filter/histogram_filter.py">https://github.com/AtsushiSakai/PythonRobotics/blob/master/Localization/histogram_filter/histogram_filter.py</a> 如果github无法访问，可以通过以下链接下载:</p>
+<p><a href="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/histogram_filter.zip">histogram_filter</a><a href="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2019/12/histogram_filter.zip">下载</a></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>直方图滤波</tag>
+        <tag>自动驾驶定位</tag>
+      </tags>
+  </entry>
 </search>
