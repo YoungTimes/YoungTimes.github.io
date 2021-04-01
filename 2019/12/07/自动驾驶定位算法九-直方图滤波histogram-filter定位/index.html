@@ -36,7 +36,7 @@
 <meta property="og:image" content="http://example.com/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/Screenshot-from-2019-12-07-11-55-06.png">
 <meta property="og:image" content="http://example.com/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/animation.gif">
 <meta property="article:published_time" content="2019-12-07T05:10:08.000Z">
-<meta property="article:modified_time" content="2021-04-01T16:09:25.351Z">
+<meta property="article:modified_time" content="2021-04-01T16:11:48.760Z">
 <meta property="article:author" content="Young Times">
 <meta property="article:tag" content="自动驾驶">
 <meta property="article:tag" content="直方图滤波">
@@ -235,7 +235,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-02 00:09:25" itemprop="dateModified" datetime="2021-04-02T00:09:25+08:00">2021-04-02</time>
+                <time title="修改时间：2021-04-02 00:11:48" itemprop="dateModified" datetime="2021-04-02T00:11:48+08:00">2021-04-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -309,7 +309,7 @@
 <p>无人驾驶汽车的Sensor假设90%的概率感知结果是正确的，还有10%的情况下它感知的结果是错误的。</p>
 <p>$$<br>\begin{aligned}<br>\text{P}(\text{MeasuredColor}_t = \text{Blue} y_t = 0,2,3) &amp;= 0.9 \\<br>\text{P}(\text{MeasuredColor}_t = \text{Orange} y_t = 0,2,3) &amp;= 0.1 \\<br>\text{P}(\text{MeasuredColor}_t = \text{Blue} y_t = 1,4) &amp;= 0.1 \\<br>\text{P}(\text{MeasuredColor}_t = \text{Orange} y_t = 1,4) &amp;= 0.9 \\<br>\end{aligned}<br>$$</p>
 <h2 id="利用直方图滤波-Histogram-Filter-进行车辆定位的过程"><a href="#利用直方图滤波-Histogram-Filter-进行车辆定位的过程" class="headerlink" title="利用直方图滤波(Histogram Filter)进行车辆定位的过程"></a>利用直方图滤波(Histogram Filter)进行车辆定位的过程</h2><p>我们用一个5维的向量来描述t时刻，无人驾驶汽车位于第1个格子、第2个格子、第3个格子、第4个格子、第5个格子的概率。</p>
-<p>$\text{bel}(y_t) = (\text{bel}<em>{t,1}, \text{bel}</em>{t,2}, \text{bel}<em>{t,3}, \text{bel}</em>{t,4}, \text{bel}_{t,5})$</p>
+<p>$$\text{bel}(y_t) = (\text{bel}_{t,1}, \text{bel}_{t,2}, \text{bel}_{t,3}, \text{bel}_{t,4}, \text{bel}_{t,5})$$</p>
 <p>无人驾驶汽车对自己所在位置一无所知，假设它连续三次【运动-向右走一步】-【观测】,三次观测结果分别是orange、blue、orange，我们一步步无人驾驶汽车是如何通过【运动】-【观测】过程逐步确认自己的位置的。</p>
 <p><strong>t=0时刻</strong></p>
 <p>没有任何先验知识，无人车不知道自己在哪里,所以在各个位置概率相等：</p>
