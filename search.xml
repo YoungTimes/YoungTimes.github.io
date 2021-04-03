@@ -653,6 +653,8 @@
     <url>/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/</url>
     <content><![CDATA[<h4 id="1、像素坐标系与图像坐标系之间的关系"><a href="#1、像素坐标系与图像坐标系之间的关系" class="headerlink" title="1、像素坐标系与图像坐标系之间的关系"></a>1、像素坐标系与图像坐标系之间的关系</h4><p>假设每一个像素在u轴和v轴方向上的物理尺寸为dx和dy</p>
 <p><img src="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/4ad600029917f48fb5be.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<span id="more"></span>
+
 <h4 id="2、图像坐标系到相机坐标系"><a href="#2、图像坐标系到相机坐标系" class="headerlink" title="2、图像坐标系到相机坐标系"></a>2、图像坐标系到相机坐标系</h4><p><img src="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/4ad800028bebb494b0ce.jpg" alt="计算机视觉-Camera标定(1)"></p>
 <h4 id="3、世界坐标系到相机坐标系"><a href="#3、世界坐标系到相机坐标系" class="headerlink" title="3、世界坐标系到相机坐标系"></a>3、世界坐标系到相机坐标系</h4><p><img src="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/4ad70000db53d3553707.jpg" alt="计算机视觉-Camera标定(1)"></p>
 <p><img src="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/4ad900013a3bb610ed89.jpg" alt="计算机视觉-Camera标定(1)"></p>
