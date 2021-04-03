@@ -435,7 +435,7 @@
 
 <p>Inverse Scanner Model的测量结果如下图所示：</p>
 <p><img src="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/cv1uj-nhp9b.gif"></p>
-<h4 id="４、生成概率占位栅格地图-Probabilistic-Occupancy-Grid"><a href="#４、生成概率占位栅格地图-Probabilistic-Occupancy-Grid" class="headerlink" title="４、生成概率占位栅格地图(Probabilistic Occupancy Grid)"></a>４、生成概率占位栅格地图(Probabilistic Occupancy Grid)</h4><p>生成概率占位地图的过程就是循环对激光雷达(lidar)的测量结果应用Inverse Scanner Model，然后更新各个Map Cell的Log Odds的过程(详细推导过程参见：<a href="http://www.banbeichadexiaojiubei.com/index.php/2020/02/01/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6mapping-%e5%8d%a0%e4%bd%8d%e6%a0%85%e6%a0%bc%e5%9b%beoccupancy-grid-map/">自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</a>):</p>
+<h4 id="４、生成概率占位栅格地图-Probabilistic-Occupancy-Grid"><a href="#４、生成概率占位栅格地图-Probabilistic-Occupancy-Grid" class="headerlink" title="４、生成概率占位栅格地图(Probabilistic Occupancy Grid)"></a>４、生成概率占位栅格地图(Probabilistic Occupancy Grid)</h4><p>生成概率占位地图的过程就是循环对激光雷达(lidar)的测量结果应用Inverse Scanner Model，然后更新各个Map Cell的Log Odds的过程详细推导过程参见：&lt;&lt;自动驾驶Mapping-占位栅格图(Occupancy Grid Map)&gt;&gt;:</p>
 <p>$l_{t, i}=\operatorname{logit}\left(p\left(m^{i} y_{t}\right)\right)+l_{t-1, i}-l_{0, i}$</p>
 <p>其中: $\operatorname{logit}\left(p\left(m^{i} y_{t}\right)\right)$是Inverse Measurement Model，$l_{t-1, i}$是网格i在t-1时刻的置信度(belif)，$l_{0,i}$是Initial belief。</p>
 <p>最后，将log odds还原为真实概率，得到每个网格的占位概率值。</p>
@@ -448,7 +448,6 @@
 <p>最终生成的概率占用栅格地图如下图所示。可以看看它基本反应了真实的实际车辆运行环境。</p>
 <p><img src="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/Screenshot-from-2020-02-13-07-53-05.png"></p>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>Coursera自动驾驶课程：Motion Planning for Self-Driving Cars的Weekly Assignment: Occupancy Grid Generation</p>
-<p><img src="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/Screenshot-from-2020-02-01-09-25-33-734x1024.png"></p>
 ]]></content>
       <categories>
         <category>自动驾驶</category>
