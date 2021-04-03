@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="自动驾驶Mapping-占位栅格图(Occupancy Grid Map)中介绍了概率占位栅格地图(Probabilistic Occupancy Grid)的原理，并推导了如何利用贝叶斯理论(Bayes Theorem)更新生成概率占位栅格地图。下面看看如何用Python代码实现未知环境中的运动车辆上安装的激光雷达(lidar)生成概率占位栅格图。 １、构建环境地图和车辆运动模型在生成栅格地图之">
+<meta property="og:type" content="article">
+<meta property="og:title" content="未知环境下的Lidar概率占位栅格图(Occupancy Grid Map) Python代码实现">
+<meta property="og:url" content="http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="半杯茶的小酒杯">
+<meta property="og:description" content="自动驾驶Mapping-占位栅格图(Occupancy Grid Map)中介绍了概率占位栅格地图(Probabilistic Occupancy Grid)的原理，并推导了如何利用贝叶斯理论(Bayes Theorem)更新生成概率占位栅格地图。下面看看如何用Python代码实现未知环境中的运动车辆上安装的激光雷达(lidar)生成概率占位栅格图。 １、构建环境地图和车辆运动模型在生成栅格地图之">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/i2bis-0v5o3.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-38-07-1-1024x461.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-14-59-27-1-1024x472.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/cv1uj-nhp9b.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/ut3rg-81b5y.gif">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-13-07-53-05.png">
+<meta property="og:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-09-25-33-734x1024.png">
+<meta property="article:published_time" content="2020-02-15T12:43:51.000Z">
+<meta property="article:modified_time" content="2021-03-27T15:27:40.230Z">
+<meta property="article:author" content="Young Times">
+<meta property="article:tag" content="Occupancy Grid Map">
+<meta property="article:tag" content="概率占位栅格地图">
+<meta property="article:tag" content="自动驾驶Planning">
+<meta property="article:tag" content="自动驾驶路径规划">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/i2bis-0v5o3.gif">
+
+<link rel="canonical" href="http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>未知环境下的Lidar概率占位栅格图(Occupancy Grid Map) Python代码实现 | 半杯茶的小酒杯</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">半杯茶的小酒杯</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          未知环境下的Lidar概率占位栅格图(Occupancy Grid Map) Python代码实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-15 20:43:51" itemprop="dateCreated datePublished" datetime="2020-02-15T20:43:51+08:00">2020-02-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-27 23:27:40" itemprop="dateModified" datetime="2021-03-27T23:27:40+08:00">2021-03-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/02/01/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6mapping-%e5%8d%a0%e4%bd%8d%e6%a0%85%e6%a0%bc%e5%9b%beoccupancy-grid-map/">自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</a>中介绍了概率占位栅格地图(Probabilistic Occupancy Grid)的原理，并推导了如何利用贝叶斯理论(Bayes Theorem)更新生成概率占位栅格地图。下面看看如何用Python代码实现未知环境中的运动车辆上安装的激光雷达(lidar)生成概率占位栅格图。</p>
+<h4 id="１、构建环境地图和车辆运动模型"><a href="#１、构建环境地图和车辆运动模型" class="headerlink" title="１、构建环境地图和车辆运动模型"></a>１、构建环境地图和车辆运动模型</h4><p>在生成栅格地图之前，首先需要构造一个用于车辆运动的环境地图(这个地图是用于仿真的真值，对于车辆来说是未知的环境)。我们用０和１值来构造Ｍ*N的环境地图，０表示可行驶区域，１表示占用区域。</p>
+<p>M = 50<br>N = 60<br>true_map = np.zeros((M, N))<br>true_map[0:10, 0:10] = 1<br>true_map[30:35, 40:45] = 1<br>true_map[3:6,40:60] = 1;<br>true_map[20:30,25:29] = 1;<br>true_map[40:50,5:25] = 1;</p>
+<p>然后构建车辆的运动模型。这里实现了一个简单的运动模型：车辆遇到障碍物或者到达地图边界之前，沿一个方向一直行驶；遇到障碍物或者到达地图边界之后，调整方向继续行驶。</p>
+<p># Initializing the robot’s location.<br>x_0 = [30, 30, 0]</p>
+<h1 id="The-sequence-of-robot-motions"><a href="#The-sequence-of-robot-motions" class="headerlink" title="The sequence of robot motions."></a>The sequence of robot motions.</h1><p>u = np.array([[3, 0, -3, 0], [0, 3, 0, -3]])<br>u_i = 1</p>
+<h1 id="Initialize-the-vector-of-states-for-our-simulation"><a href="#Initialize-the-vector-of-states-for-our-simulation" class="headerlink" title="Initialize the vector of states for our simulation."></a>Initialize the vector of states for our simulation.</h1><p>x = np.zeros((3, len(time_steps)))<br>x[:, 0] = x_0</p>
+<p>while(Some Conditon…) :<br>　　# Perform robot motion.<br>    move = np.add(x[0:2, t-1], u[:, u_i])<br>    # If we hit the map boundaries, or a collision would occur, remain still.<br>    if (move[0] &gt;= M - 1) or (move[1] &gt;= N - 1) or (move[0] &lt;= 0) or (move[1] &lt;= 0) or true_map[int(round(move[0])), int(round(move[1]))] == 1:<br>        x[:, t] = x[:, t-1]<br>        u_i = (u_i + 1) % 4<br>    else:<br>        x[0:2, t] = move</p>
+<p>车辆的运动效果如下所示：</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/i2bis-0v5o3.gif"></p>
+<p>最后要构建激光雷达(Lidar)的旋转模型。这里假设在车辆运动过程中，激光雷达(lidar)以0.3/Step的速度持续旋转，对周围的环境进行扫描。</p>
+<pre><code>x\[2, t\] = (x\[2, t-1\] + w\[t\]) % (2 \* math.pi)
+</code></pre>
+<h4 id="２、生成激光雷达-Lidar-测量数据"><a href="#２、生成激光雷达-Lidar-测量数据" class="headerlink" title="２、生成激光雷达(Lidar)测量数据"></a>２、生成激光雷达(Lidar)测量数据</h4><p>有了地图和车辆运动模型，我们看看如何生成运动车辆上的激光雷达(lidar)扫描数据。</p>
+<p>首先，我们需要搞清楚激光雷达的外参和内参，并以此推导出激光雷达(lidar)在Map坐标系下的姿态(x, y, $\theta$)和激光雷达(lidar)的激光束的水平和垂直角度分布(激光束的水平和垂直角度分布跟激光雷达自身的硬件属性相关，一般可以从Lidar产品说明书中获取)。</p>
+<p>其次，我们需要知道激光雷达(Lidar)的最大扫描范围，超出该范围的区域不能被当前位置的Lidar扫描到，因而是定义为未知区域。最大扫描范围其实也是跟激光雷达自身属性相关的参数</p>
+<p># Parameters for the sensor model.<br>meas_phi = np.arange(-0.4, 0.4, 0.05)<br>rmax = 30 # Max beam range.<br>alpha = 1 # Width of an obstacle (distance about measurement to fill in).<br>beta = 0.05 # Angular width of a beam.</p>
+<p>基于已知环境地图、车辆位置、Lidar激光束分布和Lidar最大扫描范围获取Lidar扫描数据的详细的代码如下：</p>
+<p>def get_ranges(true_map, X, meas_phi, rmax):<br>    (M, N) = np.shape(true_map)<br>    x = X[0]<br>    y = X[1]<br>    theta = X[2]<br>    meas_r = rmax * np.ones(meas_phi.shape)</p>
+<pre><code># Iterate for each measurement bearing.
+for i in range(len(meas\_phi)):
+    # Iterate over each unit step up to and including rmax.
+    for r in range(1, rmax+1):
+        # Determine the coordinates of the cell.
+        xi = int(round(x + r \* math.cos(theta + meas\_phi\[i\])))
+        yi = int(round(y + r \* math.sin(theta + meas\_phi\[i\])))
+        
+        # If not in the map, set measurement there and stop going further.
+        if (xi &lt;= 0 or xi &gt;= M-1 or yi &lt;= 0 or yi &gt;= N-1):
+            meas\_r\[i\] = r
+            break
+        # If in the map, but hitting an obstacle, set the measurement range
+        # and stop ray tracing.
+        elif true\_map\[int(round(xi)), int(round(yi))\] == 1:
+            meas\_r\[i\] = r
+            break
+            
+return meas\_r
+</code></pre>
+<h4 id="３、计算Inverse-Scanner-Model"><a href="#３、计算Inverse-Scanner-Model" class="headerlink" title="３、计算Inverse Scanner Model"></a>３、计算Inverse Scanner Model</h4><p>获取激光雷达(Lidar)的测量数据之后，下一步就是将其关联匹配到地图的Map Cell上。主要流程是：</p>
+<p>1）将 Lidar bearing与Map Cell相对于传感器的方位进行最小误差匹配，得到影响当前Map Cell的激光束；</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-12-38-07-1-1024x461.png"></p>
+<p>匹配的代码如下:</p>
+<p>r = math.sqrt((i - x)**2 + (j - y)**2)<br>phi = (math.atan2(j - y, i - x) - theta + math.pi) % (2 * math.pi) - math.pi</p>
+<h1 id="Find-the-range-measurement-associated-with-the-relative-bearing"><a href="#Find-the-range-measurement-associated-with-the-relative-bearing" class="headerlink" title="Find the range measurement associated with the relative bearing."></a>Find the range measurement associated with the relative bearing.</h1><p>k = np.argmin(np.abs(np.subtract(phi, meas_phi)))</p>
+<ol start="2">
+<li>计算每个Cell被占用的概率。计算完成之后，得到三种不同类型的区域：未探测区域、障碍物区域和非障碍物区域，并赋给它们不同的占用概率。这里将未探测区域的占用概率设为0.5，表示不确定是否占用；障碍物区域占用概率等于0.7，表示大概率被占用；可行驶区域占用概率0.3，表示小概率被占用。</li>
+</ol>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-14-59-27-1-1024x472.png"></p>
+<p>完整的Inverse Scanner Model的实现代码如下：</p>
+<p>def inverse_scanner(num_rows, num_cols, x, y, theta, meas_phi, meas_r, rmax, alpha, beta):<br>    m = np.zeros((M, N))<br>    for i in range(num_rows):<br>        for j in range(num_cols):<br>            # Find range and bearing relative to the input state (x, y, theta).<br>            r = math.sqrt((i - x)**2 + (j - y)**2)<br>            phi = (math.atan2(j - y, i - x) - theta + math.pi) % (2 * math.pi) - math.pi</p>
+<pre><code>        # Find the range measurement associated with the relative bearing.
+        k = np.argmin(np.abs(np.subtract(phi, meas\_phi)))
+        
+        # If the range is greater than the maximum sensor range, or behind our range
+        # measurement, or is outside of the field of view of the sensor, then no
+        # new information is available.
+        if (r &gt; min(rmax, meas\_r\[k\] + alpha / 2.0)) or (abs(phi - meas\_phi\[k\]) &gt; beta / 2.0):
+            m\[i, j\] = 0.5
+        
+        # If the range measurement lied within this cell, it is likely to be an object.
+        elif (meas\_r\[k\] &lt; rmax) and (abs(r - meas\_r\[k\]) &lt; alpha / 2.0):
+            m\[i, j\] = 0.7
+        
+        # If the cell is in front of the range measurement, it is likely to be empty.
+        elif r &lt; meas\_r\[k\]:
+            m\[i, j\] = 0.3
+            
+return m
+</code></pre>
+<p>Inverse Scanner Model的测量结果如下图所示：</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/cv1uj-nhp9b.gif"></p>
+<h4 id="４、生成概率占位栅格地图-Probabilistic-Occupancy-Grid"><a href="#４、生成概率占位栅格地图-Probabilistic-Occupancy-Grid" class="headerlink" title="４、生成概率占位栅格地图(Probabilistic Occupancy Grid)"></a>４、生成概率占位栅格地图(Probabilistic Occupancy Grid)</h4><p>生成概率占位地图的过程就是循环对激光雷达(lidar)的测量结果应用Inverse Scanner Model，然后更新各个Map Cell的Log Odds的过程(详细推导过程参见：<a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/02/01/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6mapping-%e5%8d%a0%e4%bd%8d%e6%a0%85%e6%a0%bc%e5%9b%beoccupancy-grid-map/">自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</a>):</p>
+<p>$l_{t, i}=\operatorname{logit}\left(p\left(m^{i} y_{t}\right)\right)+l_{t-1, i}-l_{0, i}$</p>
+<p>其中: $\operatorname{logit}\left(p\left(m^{i} y_{t}\right)\right)$是Inverse Measurement Model，$l_{t-1, i}$是网格i在t-1时刻的置信度(belif)，$l_{0,i}$是Initial belief。</p>
+<p>最后，将log odds还原为真实概率，得到每个网格的占位概率值。</p>
+<p>$p = e^{l_{t}} / (1 + e^{1_{t}})$</p>
+<p>生成概率占位地图的代码如下：</p>
+<p>meas_rs = []<br>meas_r = get_ranges(true_map, x[:, 0], meas_phi, rmax)<br>meas_rs.append(meas_r)<br>invmods = []<br>invmod = inverse_scanner(M, N, x[0, 0], x[1, 0], x[2, 0], meas_phi, meas_r, rmax, alpha, beta)<br>invmods.append(invmod)<br>ms = []<br>ms.append(m)</p>
+<h1 id="Main-simulation-loop"><a href="#Main-simulation-loop" class="headerlink" title="Main simulation loop."></a>Main simulation loop.</h1><p>for t in range(1, len(time_steps)):<br>    # Perform robot motion.<br>    move = np.add(x[0:2, t-1], u[:, u_i])<br>    # If we hit the map boundaries, or a collision would occur, remain still.<br>    if (move[0] &gt;= M - 1) or (move[1] &gt;= N - 1) or (move[0] &lt;= 0) or (move[1] &lt;= 0) or true_map[int(round(move[0])), int(round(move[1]))] == 1:<br>        x[:, t] = x[:, t-1]<br>        u_i = (u_i + 1) % 4<br>    else:<br>        x[0:2, t] = move<br>    x[2, t] = (x[2, t-1] + w[t]) % (2 * math.pi)</p>
+<pre><code># Gather the measurement range data, which we will convert to occupancy probabilities
+meas\_r = get\_ranges(true\_map, x\[:, t\], meas\_phi, rmax)
+meas\_rs.append(meas\_r)
+
+# Given our range measurements and our robot location, apply inverse scanner model
+invmod = inverse\_scanner(M, N, x\[0, t\], x\[1, t\], x\[2, t\], meas\_phi, meas\_r, rmax, alpha, beta)
+invmods.append(invmod)
+
+# Calculate and update the log odds of our occupancy grid, given our measured occupancy probabilities from the inverse model.
+L = np.log(np.divide(invmod, np.subtract(1, invmod))) + L - L0
+
+
+# Calculate a grid of probabilities from the log odds.
+m = np.divide(np.exp(L), np.add(1, np.exp(L)))
+ms.append(m)
+</code></pre>
+<p>生成概率占用地图的过程如下：</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/ut3rg-81b5y.gif"></p>
+<p>最终生成的概率占用栅格地图如下图所示。可以看看它基本反应了真实的实际车辆运行环境。</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-13-07-53-05.png"></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>Coursera自动驾驶课程：Motion Planning for Self-Driving Cars的Weekly Assignment: Occupancy Grid Generation</p>
+<p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/02/Screenshot-from-2020-02-01-09-25-33-734x1024.png"></p>
+<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><p><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/02/01/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6mapping-%e5%8d%a0%e4%bd%8d%e6%a0%85%e6%a0%bc%e5%9b%beoccupancy-grid-map/">自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/27/%e6%97%a0%e4%ba%ba%e9%a9%be%e9%a9%b6%e8%b7%af%e5%be%84%e8%a7%84%e5%88%92%e6%8a%80%e6%9c%af-%e4%b8%89%e6%ac%a1%e6%a0%b7%e6%9d%a1%e6%8f%92%e5%80%bccubic-spline-interpolation%e6%9b%b2%e7%ba%bf%e5%8f%8a/">无人驾驶路径规划技术-三次样条插值(Cubic Spline Interpolation)曲线及Python代码实现</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/18/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%bf%90%e5%8a%a8%e8%a7%84%e5%88%92motion-planning/">自动驾驶运动规划(Motion Planning)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/30/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e5%ae%9a%e4%bd%8d%e7%ae%97%e6%b3%95%e5%8d%81%e4%ba%94%e5%9f%ba%e4%ba%8e%e5%a4%9a%e4%bc%a0%e6%84%9f%e5%99%a8%e8%9e%8d%e5%90%88%e7%9a%84%e7%8a%b6%e6%80%81%e4%bc%b0/">自动驾驶定位算法(十五)基于多传感器融合的状态估计(muti-Sensors Fusion)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/11/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e4%b8%ad%e7%9a%84%e8%bd%a6%e8%be%86%e8%bf%90%e5%8a%a8%e5%ad%a6%e6%a8%a1%e5%9e%8b/">自动驾驶中的车辆运动学模型</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2020/01/01/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e8%b7%af%e5%be%84%e8%a7%84%e5%88%92%e5%99%a8-lattice-planner%e8%af%a6%e8%a7%a3/">自动驾驶路径规划器-Lattice Planner详解</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/22/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e5%ae%9a%e4%bd%8d%e7%ae%97%e6%b3%95%e5%8d%81%e4%b8%89-%e7%b2%92%e5%ad%90%e6%bb%a4%e6%b3%a2particle-filter/">自动驾驶定位算法(十三)-粒子滤波(Particle Filter)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/15/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e7%a1%ac%e4%bb%b6%e7%b3%bb%e7%bb%9f%e5%8d%81%e4%ba%8c-%e6%bf%80%e5%85%89%e9%9b%b7%e8%be%belidar%e6%b5%8b%e9%87%8f%e6%a8%a1%e5%9e%8b/">自动驾驶硬件系统(十二)-激光雷达(Lidar)测量模型</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/14/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e7%a1%ac%e4%bb%b6%e7%b3%bb%e7%bb%9f%e5%8d%81%e4%b8%80-global-navigation-satellite-systems-gnss/">自动驾驶硬件系统(十一)-Global Navigation Satellite Systems (GNSS)</a><br><a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/07/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e5%ae%9a%e4%bd%8d%e7%ae%97%e6%b3%95%e4%b9%9d-%e7%9b%b4%e6%96%b9%e5%9b%be%e6%bb%a4%e6%b3%a2histogram-filter%e5%ae%9a%e4%bd%8d/">自动驾驶定位算法(九)-直方图滤波(Histogram Filter)定位</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Young Times
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/" title="未知环境下的Lidar概率占位栅格图(Occupancy Grid Map) Python代码实现">http://example.com/2020/02/15/未知环境下的lidar概率占位栅格图occupancy-grid-map-python代码实现/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Occupancy-Grid-Map/" rel="tag"># Occupancy Grid Map</a>
+              <a href="/tags/%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/" rel="tag"># 概率占位栅格地图</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6Planning/" rel="tag"># 自动驾驶Planning</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/" rel="tag"># 自动驾驶路径规划</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/08/waymo-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%95%BF%E5%B0%BE%E9%97%AE%E9%A2%98%E6%8C%91%E6%88%98/" rel="prev" title="Waymo-自动驾驶长尾问题挑战">
+      <i class="fa fa-chevron-left"></i> Waymo-自动驾驶长尾问题挑战
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/" rel="next" title="RNN预测行人运动轨迹">
+      RNN预测行人运动轨迹 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%91%E3%80%81%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%9C%B0%E5%9B%BE%E5%92%8C%E8%BD%A6%E8%BE%86%E8%BF%90%E5%8A%A8%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">１、构建环境地图和车辆运动模型</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#The-sequence-of-robot-motions"><span class="nav-number"></span> <span class="nav-text">The sequence of robot motions.</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Initialize-the-vector-of-states-for-our-simulation"><span class="nav-number"></span> <span class="nav-text">Initialize the vector of states for our simulation.</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%92%E3%80%81%E7%94%9F%E6%88%90%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE-Lidar-%E6%B5%8B%E9%87%8F%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">２、生成激光雷达(Lidar)测量数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%93%E3%80%81%E8%AE%A1%E7%AE%97Inverse-Scanner-Model"><span class="nav-number">2.</span> <span class="nav-text">３、计算Inverse Scanner Model</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Find-the-range-measurement-associated-with-the-relative-bearing"><span class="nav-number"></span> <span class="nav-text">Find the range measurement associated with the relative bearing.</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%94%E3%80%81%E7%94%9F%E6%88%90%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE-Probabilistic-Occupancy-Grid"><span class="nav-number">1.</span> <span class="nav-text">４、生成概率占位栅格地图(Probabilistic Occupancy Grid)</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Main-simulation-loop"><span class="nav-number"></span> <span class="nav-text">Main simulation loop.</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number"></span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%96%87%E7%AB%A0"><span class="nav-number"></span> <span class="nav-text">相关文章</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Young Times"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Young Times</p>
+  <div class="site-description" itemprop="description">路要一步一步的走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Young Times</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">53k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">48 分钟</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'hEvBR6pmxtoYkRhC3fnMB8Yq-gzGzoHsz',
+      appKey     : 'nIkzvtLYb1avq32c9GYfgOOW',
+      placeholder: "Please Leave Your Message Here...",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
