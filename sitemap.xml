@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/</loc>
+    
+    <lastmod>2021-04-03</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/</loc>
     
     <lastmod>2021-04-03</lastmod>
@@ -68,13 +75,6 @@
     <loc>http://example.com/2021/03/14/mobileye-rem-map-md/</loc>
     
     <lastmod>2021-03-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/</loc>
-    
-    <lastmod>2021-03-27</lastmod>
     
   </url>
   
