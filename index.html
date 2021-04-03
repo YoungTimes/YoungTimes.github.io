@@ -1079,6 +1079,121 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/" class="post-title-link" itemprop="url">计算机视觉-Camera标定</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-13 22:17:53" itemprop="dateCreated datePublished" datetime="2019-12-13T22:17:53+08:00">2019-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-03 10:43:47" itemprop="dateModified" datetime="2021-04-03T10:43:47+08:00">2021-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>217</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、像素坐标系与图像坐标系之间的关系"><a href="#1、像素坐标系与图像坐标系之间的关系" class="headerlink" title="1、像素坐标系与图像坐标系之间的关系"></a>1、像素坐标系与图像坐标系之间的关系</h4><p>假设每一个像素在u轴和v轴方向上的物理尺寸为dx和dy</p>
+<p><img src="/%5D4ad600029917f48fb5be.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<h4 id="2、图像坐标系到相机坐标系"><a href="#2、图像坐标系到相机坐标系" class="headerlink" title="2、图像坐标系到相机坐标系"></a>2、图像坐标系到相机坐标系</h4><p><img src="/%5D4ad800028bebb494b0ce.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<h4 id="3、世界坐标系到相机坐标系"><a href="#3、世界坐标系到相机坐标系" class="headerlink" title="3、世界坐标系到相机坐标系"></a>3、世界坐标系到相机坐标系</h4><p><img src="/%5D4ad70000db53d3553707.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<p><img src="/%5D4ad900013a3bb610ed89.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<p>于是，从世界坐标系到像素坐标系的转换关系：</p>
+<p><img src="/%5D4ad900013b9553cafc2f.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<h4 id="4、其他情况"><a href="#4、其他情况" class="headerlink" title="4、其他情况"></a>4、其他情况</h4><p>考虑像素坐标系坐标轴不垂直的情况(实际相机由于制造工艺上的问题，导致物理成像坐标轴不是绝对垂直)，如下图所示，假设O1在UV坐标系下的坐标为(u0, v0),像素的物理尺寸仍然为dx，dy，则有</p>
+<p><img src="/%5D472b0002dfc7ab409f46.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<p><img src="/%5D47290002d8c8c581f478.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<p>矩阵形式如下：</p>
+<p><img src="/%5D47290002d94419e50800.jpg" alt="计算机视觉-Camera标定(1)"></p>
+<p>世界坐标系与像素坐标系转换关系：</p>
+<p><img src="/%5D4ad600029ca1c9969969.jpg" alt="计算机视觉-Camera标定(1)"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1254,7 +1369,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1267,7 +1382,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
