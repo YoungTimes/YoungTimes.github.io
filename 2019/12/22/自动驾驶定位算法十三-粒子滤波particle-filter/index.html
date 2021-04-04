@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="自动驾驶对定位的精度的要求在厘米级的，如何实现厘米级的高精度定位呢？一种众所周知的定位方法是利用全球定位系统(GPS)，利用多颗卫星的测量结果，通过三角测量(Triangulation)机制确定目标的位置，GPS定位的原理见自动驾驶硬件系统(十一)-Global Navigation Satellite Systems，但是GPS并不总是提供高精度定位数据，在GPS信号强的情况下，定位精度在13m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动驾驶定位算法(十三)-粒子滤波(Particle Filter)">
+<meta property="og:url" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/index.html">
+<meta property="og:site_name" content="半杯茶的小酒杯">
+<meta property="og:description" content="自动驾驶对定位的精度的要求在厘米级的，如何实现厘米级的高精度定位呢？一种众所周知的定位方法是利用全球定位系统(GPS)，利用多颗卫星的测量结果，通过三角测量(Triangulation)机制确定目标的位置，GPS定位的原理见自动驾驶硬件系统(十一)-Global Navigation Satellite Systems，但是GPS并不总是提供高精度定位数据，在GPS信号强的情况下，定位精度在13m">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Particle_filters.gif">
+<meta property="og:image" content="http://p1.pstatp.com/large/pgc-image/1525514459134fc35d872c9">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/particle-filter-localization-algorithm-1024x576.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/prediction-equations-1024x431.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/robot_axes_definition.jpg">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_uR0dYxOKWHhEPUT6YMGXGg-1024x207.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_nB_6uUWjDKC-pGWToRTQDQ.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/0_l09z27QssoJvqHLj.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_y92MO5zzieuqxH5-uHD0YQ-1024x514.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_C8vytZC_jE0unb2TSKRUGw.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Screenshot-from-2019-12-22-09-06-34.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Screenshot-from-2019-12-22-09-52-27.png">
+<meta property="og:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/particle_filter.gif">
+<meta property="article:published_time" content="2019-12-22T05:05:38.000Z">
+<meta property="article:modified_time" content="2021-04-04T03:52:23.368Z">
+<meta property="article:author" content="Young Times">
+<meta property="article:tag" content="多传感器融合">
+<meta property="article:tag" content="自动驾驶定位">
+<meta property="article:tag" content="Particle Filter">
+<meta property="article:tag" content="粒子滤波">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Particle_filters.gif">
+
+<link rel="canonical" href="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>自动驾驶定位算法(十三)-粒子滤波(Particle Filter) | 半杯茶的小酒杯</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">半杯茶的小酒杯</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自动驾驶定位算法(十三)-粒子滤波(Particle Filter)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-22 13:05:38" itemprop="dateCreated datePublished" datetime="2019-12-22T13:05:38+08:00">2019-12-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-04 11:52:23" itemprop="dateModified" datetime="2021-04-04T11:52:23+08:00">2021-04-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>自动驾驶对定位的精度的要求在厘米级的，如何实现厘米级的高精度定位呢？一种众所周知的定位方法是利用全球定位系统(GPS)，利用多颗卫星的测量结果，通过三角测量(Triangulation)机制确定目标的位置，GPS定位的原理见<a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/14/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e7%a1%ac%e4%bb%b6%e7%b3%bb%e7%bb%9f%e5%8d%81%e4%b8%80-global-navigation-satellite-systems-gnss/">自动驾驶硬件系统(十一)-Global Navigation Satellite Systems</a>，但是GPS并不总是提供高精度定位数据，在GPS信号强的情况下，定位精度在1<del>3m范围内，在GPS信号弱的情况下，定位精度下降到10</del>50m范围内。虽然依赖于RTK，可以将卫星定位的精度提高到厘米级，但是在GPS信号弱的场景下，定位精度仍然不能满足应用需求。所以仅仅使用GPS不能实现高可靠的高精度定位的。</p>
+<p>为了达到厘米级(3-10cm)的定位精度，除了GPS之外，还需要借助于其它传感器，如激光传感器(LIDAR)、径向距离和角度传感器(Radial distance and angle sensor，RADAR)、视觉传感器(Camera)等，然后利用特定的算法将这些信息融合起来。粒子滤波(Particle Filter)就是利用这些传感器产生的数据进行高精定位的一种常用方法。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Particle_filters.gif" alt="Particle Filters From Udacity Lecture"></p>
+<h2 id="1-粒子滤波-Particle-Filter-的算法思想"><a href="#1-粒子滤波-Particle-Filter-的算法思想" class="headerlink" title="1.粒子滤波(Particle Filter)的算法思想"></a>1.粒子滤波(Particle Filter)的算法思想</h2><p>相对之前提到的<a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/10/05/%e4%bb%8e%e9%9b%b6%e5%bc%80%e5%a7%8b%e5%ad%a6%e4%b9%a0%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e7%b3%bb%e7%bb%9f%e5%9b%9b-%e5%8d%a1%e5%b0%94%e6%9b%bc%e6%bb%a4%e6%b3%a2kalman-filter/">标准卡尔曼滤波</a>，粒子滤波(Particle Filter)没有线性高斯分布的假设；相对于<a target="_blank" rel="noopener" href="http://www.banbeichadexiaojiubei.com/index.php/2019/12/07/%e8%87%aa%e5%8a%a8%e9%a9%be%e9%a9%b6%e5%ae%9a%e4%bd%8d%e7%ae%97%e6%b3%95%e4%b9%9d-%e7%9b%b4%e6%96%b9%e5%9b%be%e6%bb%a4%e6%b3%a2histogram-filter%e5%ae%9a%e4%bd%8d/">直方图滤波</a>，粒子滤波(Particle Filter)不需要对状态空间进行区间划分。粒子滤波算法采用很多粒子对置信度$\text{bel}(x_t)$进行近似,每个粒子都是对t时刻机器人实际状态的一个猜测。</p>
+<p>$\chi_t := \{ \text{p}_t^{[1]}, \text{p}_t^{[2]}, …, \text{p}_t^{[n]} \}$,其中$\text{p}_t^{[i]} \in \text{dom}(x_t)$</p>
+<p>越接近t时刻的Ground Truth状态描述的粒子，权重越高。</p>
+<p>粒子更新的过程类似于达尔文的自然选择(Natural Selection)机制，与当前Sensor测量状态越匹配的粒子，有更大的机会生存下来，与Sensor测量结果不符的粒子会被淘汰掉，最终粒子都会集中在正确的状态附近。</p>
+<h2 id="2、粒子滤波算法在自动驾驶定位中的应用"><a href="#2、粒子滤波算法在自动驾驶定位中的应用" class="headerlink" title="2、粒子滤波算法在自动驾驶定位中的应用"></a>2、粒子滤波算法在自动驾驶定位中的应用</h2><p>以放置在封闭环境(Close Environment)中的自动驾驶车辆(Kidnapped Vehicle)为例，看它是如何通过粒子滤波(Particle Filter)确定自己所在的位置的。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/1525514459134fc35d872c9" alt="无人驾驶高精度定位技术(3)-粒子滤波"></p>
+<h4 id="2-1-先看看自动驾驶车辆有什么？"><a href="#2-1-先看看自动驾驶车辆有什么？" class="headerlink" title="2.1 先看看自动驾驶车辆有什么？"></a>2.1 先看看自动驾驶车辆有什么？</h4><p>1)地图(Map)。每一辆自动驾驶汽车都配备了一幅高精度的地图，地图中包含了大量的地标(Landmark)的位置信息。地标(Landmark)是特定区域内的稳定特征，它们能够在相当长的一段时间内都保持不变，比如路边建筑物、杆状物等。</p>
+<p>2)GPS。使用安装在车辆内部的GPS传感器设备，可以提供车辆在地图中的大概的位置范围。基于此局部性范围，仅选择全局地图的一部分用以匹配计算，从而避免大量的冗余计算，提升计算的时效性，从而达到实时定位的目的。</p>
+<p>3)Lidar/Radar等传感器。安装在车辆上的Lidar/Radar传感器将测量其与地图路标(Landmark)之间的距离，从而进一步确定车辆的位置。但是Lidar/Radar的测量结果也不准确，存在测量噪声。</p>
+<h4 id="2-2-将所有传感器信息组合起来"><a href="#2-2-将所有传感器信息组合起来" class="headerlink" title="2.2 将所有传感器信息组合起来"></a>2.2 将所有传感器信息组合起来</h4><p>通过粒子滤波(Particle Filter)将这些所有信息组合在一起，用于实现实时的高精度定位。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/particle-filter-localization-algorithm-1024x576.png"></p>
+<p>图片来源:<a target="_blank" rel="noopener" href="https://github.com/sohonisaurabh/CarND-Kidnapped-Vehicle-Project">https://github.com/sohonisaurabh/CarND-Kidnapped-Vehicle-Project</a></p>
+<p>粒子滤波(Particle Filter)的主要步骤如下:</p>
+<p>1）Initialisation Step：在初始化步骤中，根据GPS坐标输入估算位置，估算位置是存在噪声的，但是可以提供一个范围约束。</p>
+<p>2）Prediction Step：在Prediction过程中，对所有粒子(Particles)增加车辆的控制输入(速度、角速度等)，预测所有粒子的下一步位置。</p>
+<p>3）Update Step：在Update过程中，根据地图中的Landmark位置和对应的测量距离来更新所有粒子(Particles)的权重。</p>
+<p>4）Resample Step：根据粒子(Particles)的权重，对所有粒子(Particles)进行重采样，权重越高的粒子有更大的概率生存下来，权重越小的例子生存下来的概率就越低，从而达到优胜劣汰的目的。</p>
+<h4 id="2-3-粒子滤波代码实现"><a href="#2-3-粒子滤波代码实现" class="headerlink" title="2.3 粒子滤波代码实现"></a>2.3 粒子滤波代码实现</h4><p><strong>1）Initialisation Step：</strong></p>
+<p>初始化阶段，车辆接收到来自GPS的带噪声的测量值，并将其用于初始化车辆的位置。GPS的测量值包括车辆的位置P(x,y)和朝向$\theta$，并且假设测量结果的噪声服从正态分布。</p>
+<p>我们创建100个粒子，并用GPS的测量值初始化这些粒子的位置和朝向。粒子的个数是一个可调参数，可根据实际效果和实际需求调整。初始化时，所有粒子的权重相同。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">void ParticleFilter::init(double x, double y, double theta, double std[]) &#123;</span><br><span class="line">  // TODO: Set the number of particles. Initialize <span class="built_in">all</span> particles to first</span><br><span class="line">  // position (based on estimates of</span><br><span class="line">  //   x, y, theta <span class="keyword">and</span> their uncertainties <span class="keyword">from</span> GPS) <span class="keyword">and</span> <span class="built_in">all</span> weights to <span class="number">1.</span></span><br><span class="line">  // Add random Gaussian noise to each particle.</span><br><span class="line">  // NOTE: Consult particle_filter.h <span class="keyword">for</span> more information about this method (<span class="keyword">and</span></span><br><span class="line">  // others <span class="keyword">in</span> this file).</span><br><span class="line">  // TODO Complete</span><br><span class="line"></span><br><span class="line">  /*Number <span class="keyword">is</span> particles are chosen <span class="keyword">in</span> order to run the algorithm <span class="keyword">in</span> almost real</span><br><span class="line">  time <span class="keyword">and</span> introduce lowest possible error <span class="keyword">in</span> localization. This <span class="keyword">is</span> a tunable</span><br><span class="line">  parameter.*/</span><br><span class="line">  num_particles = <span class="number">20</span>;</span><br><span class="line">  default_random_engine gen;</span><br><span class="line"></span><br><span class="line">  normal_distribution&lt;double&gt; dist_x(x, std[<span class="number">0</span>]);</span><br><span class="line">  normal_distribution&lt;double&gt; dist_y(y, std[<span class="number">1</span>]);</span><br><span class="line">  normal_distribution&lt;double&gt; dist_theta(theta, std[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">int</span> i;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; num_particles; i++) &#123;</span><br><span class="line">    Particle current_particle;</span><br><span class="line">    current_particle.<span class="built_in">id</span> = i;</span><br><span class="line">    current_particle.x = dist_x(gen);</span><br><span class="line">    current_particle.y = dist_y(gen);</span><br><span class="line">    current_particle.theta = dist_theta(gen);</span><br><span class="line">    current_particle.weight = <span class="number">1.0</span>;</span><br><span class="line"></span><br><span class="line">    particles.push_back(current_particle);</span><br><span class="line">    weights.push_back(current_particle.weight);</span><br><span class="line">  &#125;</span><br><span class="line">  is_initialized = true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2）Prediction Step</strong></p>
+<p>初始化完成之后，对所有粒子执行车辆运动模型，预测每个粒子下一步出现的位置。粒子的位置更新是通过以下公式完成:</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/prediction-equations-1024x431.png"></p>
+<p>车辆运动过程同样存在噪声，前面的文章提到到，比如车辆发出控制指令velocity=10m/s，但是由于设备测量误差、车轮打滑等原因，实际的运动速度可能大于10m/s，也可能小于10m/s，我们同样假设车辆运动噪声服从正态分布。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">void ParticleFilter::prediction(double delta_t, double std_pos[],</span><br><span class="line">                                double velocity, double yaw_rate) &#123;</span><br><span class="line">  // TODO: Add measurements to each particle <span class="keyword">and</span> add random Gaussian noise.</span><br><span class="line">  // NOTE: When adding noise you may find std::normal_distribution <span class="keyword">and</span></span><br><span class="line">  // std::default_random_engine useful.</span><br><span class="line">  //  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution</span><br><span class="line">  //  http://www.cplusplus.com/reference/random/default_random_engine/</span><br><span class="line">  // TODO complete</span><br><span class="line"></span><br><span class="line">  default_random_engine gen;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">int</span> i;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; num_particles; i++) &#123;</span><br><span class="line">    double particle_x = particles[i].x;</span><br><span class="line">    double particle_y = particles[i].y;</span><br><span class="line">    double particle_theta = particles[i].theta;</span><br><span class="line"></span><br><span class="line">    double pred_x;</span><br><span class="line">    double pred_y;</span><br><span class="line">    double pred_theta;</span><br><span class="line">    // Instead of a hard check of <span class="number">0</span>, adding a check <span class="keyword">for</span> very low value of</span><br><span class="line">    // yaw_rate</span><br><span class="line">    <span class="keyword">if</span> (fabs(yaw_rate) &lt; <span class="number">0.0001</span>) &#123;</span><br><span class="line">      pred_x = particle_x + velocity * cos(particle_theta) * delta_t;</span><br><span class="line">      pred_y = particle_y + velocity * sin(particle_theta) * delta_t;</span><br><span class="line">      pred_theta = particle_theta;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      pred_x = particle_x + (velocity / yaw_rate) *</span><br><span class="line">                                (sin(particle_theta + (yaw_rate * delta_t)) -</span><br><span class="line">                                 sin(particle_theta));</span><br><span class="line">      pred_y = particle_y + (velocity / yaw_rate) *</span><br><span class="line">                                (cos(particle_theta) -</span><br><span class="line">                                 cos(particle_theta + (yaw_rate * delta_t)));</span><br><span class="line">      pred_theta = particle_theta + (yaw_rate * delta_t);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    normal_distribution&lt;double&gt; dist_x(pred_x, std_pos[<span class="number">0</span>]);</span><br><span class="line">    normal_distribution&lt;double&gt; dist_y(pred_y, std_pos[<span class="number">1</span>]);</span><br><span class="line">    normal_distribution&lt;double&gt; dist_theta(pred_theta, std_pos[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">    particles[i].x = dist_x(gen);</span><br><span class="line">    particles[i].y = dist_y(gen);</span><br><span class="line">    particles[i].theta = dist_theta(gen);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3）Update Step</strong></p>
+<p>在预测过程中，我们将车辆的速度和角速度合并到粒子滤波器中，在更新过程中，我们将激光雷达(Lidar)/Radar对于Landmark的测量结果集成到粒子滤波(Particle Filter)中，用于更新所有粒子的权重。</p>
+<p>Update Step包含三个主要步骤: a）Transformation；b）Association；c) Update Weights。</p>
+<p>Transformation(坐标变换)：Lidar/Radar对Landmark的测量都是相对于车辆自身坐标系统的，需要先转换到地图坐标系。传感器设备都安装在车上，所以传感器的测量结果都是以车辆为坐标原点，X轴沿车辆方向，Y轴沿垂直于X轴的左侧方向。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/robot_axes_definition.jpg"></p>
+<p>假设粒子(Particle)的坐标为$(x_p, y_p)$，Landmark在车辆坐标系中的坐标为$(x_c, y_c)$，Landmark转换到地图(Map)坐标系的坐标为$(x_m, y_m)$，车辆的Heading为$theta$，则从车辆坐标系到地图坐标系的变换矩阵如下:</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_uR0dYxOKWHhEPUT6YMGXGg-1024x207.png"></p>
+<p>写成非矩阵形式:</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_nB_6uUWjDKC-pGWToRTQDQ.png"></p>
+<p>通过Transformation我们已经将观测值的坐标转换到地图的坐标空间，下一步是将每个转换后的观测值与Map中的LandMark相关联。Associations主要将LandMark的测量结果匹配到Map中的LandMark。</p>
+<p>如下图所示，L1，L2，…，L5是地图(Map)中的Landmark；OBS1、OBS2、OBS3是车辆的Observation。红色方块是车辆的GroundTruth位置，蓝色方块是车辆的预测位置。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/0_l09z27QssoJvqHLj.png"></p>
+<p>我们可以看到地图有5个LandMark，它们分别被标识为L1、L2、L3、L4、L5，并且每个LandMark都有已知的地图位置。我们需要将每个转换后的观测值TOBS1、TOBS2、TOBS3与这5个标识符中的一个相关联。其中一个直观的做法就是每个转换后的观测LandMark坐标与最近的Map LandMark相关联。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_y92MO5zzieuqxH5-uHD0YQ-1024x514.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">void ParticleFilter::dataAssociation(std::vector&lt;LandmarkObs&gt; predicted,</span><br><span class="line">                                     std::vector&lt;LandmarkObs&gt; &amp;observations,</span><br><span class="line">                                     double sensor_range) &#123;</span><br><span class="line">  // TODO: Find the predicted measurement that <span class="keyword">is</span> closest to each observed</span><br><span class="line">  // measurement <span class="keyword">and</span> assign the</span><br><span class="line">  //   observed measurement to this particular landmark.</span><br><span class="line">  // NOTE: this method will NOT be called by the grading code. But you will</span><br><span class="line">  // probably find it useful to</span><br><span class="line">  //   implement this method <span class="keyword">and</span> use it <span class="keyword">as</span> a helper during the updateWeights</span><br><span class="line">  //   phase.</span><br><span class="line">  // TODO complete</span><br><span class="line"></span><br><span class="line">  /*Associate observations <span class="keyword">in</span> <span class="built_in">map</span> co-ordinates to predicted landmarks using</span><br><span class="line">nearest neighbor algorithm. Here, the number of observations may be less than</span><br><span class="line">the total number of landmarks <span class="keyword">as</span> some of the landmarks may be outside the <span class="built_in">range</span></span><br><span class="line">of vehicle<span class="string">&#x27;s sensor.*/</span></span><br><span class="line"><span class="string">  int i, j;</span></span><br><span class="line"><span class="string">  for (i = 0; i &lt; observations.size(); i++) &#123;</span></span><br><span class="line"><span class="string">    // Maximum distance can be square root of 2 times the range of sensor.</span></span><br><span class="line"><span class="string">    double lowest_dist = sensor_range * sqrt(2);</span></span><br><span class="line"><span class="string">    int closest_landmark_id = -1;</span></span><br><span class="line"><span class="string">    double obs_x = observations[i].x;</span></span><br><span class="line"><span class="string">    double obs_y = observations[i].y;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    for (j = 0; j &lt; predicted.size(); j++) &#123;</span></span><br><span class="line"><span class="string">      double pred_x = predicted[j].x;</span></span><br><span class="line"><span class="string">      double pred_y = predicted[j].y;</span></span><br><span class="line"><span class="string">      int pred_id = predicted[j].id;</span></span><br><span class="line"><span class="string">      double current_dist = dist(obs_x, obs_y, pred_x, pred_y);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">      if (current_dist &lt; lowest_dist) &#123;</span></span><br><span class="line"><span class="string">        lowest_dist = current_dist;</span></span><br><span class="line"><span class="string">        closest_landmark_id = pred_id;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    observations[i].id = closest_landmark_id;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Update Weights：完成观测LandMark坐标转换之后和地图匹配之后，就可以更新粒子的权重了。由于粒子(Particle)对所有LandMark的观测都是独立的，所以粒子的总权重是所有观测LandMark的多元高斯概率密度的乘积。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/1_C8vytZC_jE0unb2TSKRUGw.png"></p>
+<p>多元高斯概率密度函数</p>
+<p>其中:$\theta_x$和$\theta_y$是x方向和y方向上传感器测量结果的标准差，x和y是Observation LandMark的x和y坐标，$\mu_x$和$\mu_y$是Map LandMark的x和y坐标。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line">void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],</span><br><span class="line">                                   std::vector&lt;LandmarkObs&gt; observations,</span><br><span class="line">                                   Map map_landmarks) &#123;</span><br><span class="line">  // TODO: Update the weights of each particle using a mult-variate Gaussian</span><br><span class="line">  // distribution. You can read</span><br><span class="line">  //   more about this distribution here:</span><br><span class="line">  //   https://en.wikipedia.org/wiki/Multivariate_normal_distribution</span><br><span class="line">  // NOTE: The observations are given <span class="keyword">in</span> the VEHICLE<span class="string">&#x27;S coordinate system. Your</span></span><br><span class="line"><span class="string">  // particles are located</span></span><br><span class="line"><span class="string">  //   according to the MAP&#x27;</span>S coordinate system. You will need to transform</span><br><span class="line">  //   between the two systems. Keep <span class="keyword">in</span> mind that this transformation requires</span><br><span class="line">  //   both rotation AND translation (but no scaling). The following <span class="keyword">is</span> a good</span><br><span class="line">  //   resource <span class="keyword">for</span> the theory:</span><br><span class="line">  //   https://www.willamette.edu/~gorr/classes/GeneralGraphics/Transforms/transforms2d.htm</span><br><span class="line">  //   <span class="keyword">and</span> the following <span class="keyword">is</span> a good resource <span class="keyword">for</span> the actual equation to implement</span><br><span class="line">  //   (look at equation <span class="number">3.33</span> http://planning.cs.uiuc.edu/node99.html</span><br><span class="line">  //   TODO complete</span><br><span class="line"></span><br><span class="line">  <span class="built_in">int</span> i, j;</span><br><span class="line">  /*This variable <span class="keyword">is</span> used <span class="keyword">for</span> normalizing weights of <span class="built_in">all</span> particles <span class="keyword">and</span> bring</span><br><span class="line">    them <span class="keyword">in</span> the <span class="built_in">range</span> of [<span class="number">0</span>, <span class="number">1</span>]*/</span><br><span class="line">  double weight_normalizer = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; num_particles; i++) &#123;</span><br><span class="line">    double particle_x = particles[i].x;</span><br><span class="line">    double particle_y = particles[i].y;</span><br><span class="line">    double particle_theta = particles[i].theta;</span><br><span class="line"></span><br><span class="line">    /*Step <span class="number">1</span>: Transform observations <span class="keyword">from</span> vehicle co-ordinates to <span class="built_in">map</span></span><br><span class="line">     * co-ordinates.*/</span><br><span class="line">    // Vector containing observations transformed to <span class="built_in">map</span> co-ordinates w.r.t.</span><br><span class="line">    // current particle.</span><br><span class="line">    vector&lt;LandmarkObs&gt; transformed_observations;</span><br><span class="line"></span><br><span class="line">    // Transform observations <span class="keyword">from</span> vehicle<span class="string">&#x27;s co-ordinates to map co-ordinates.</span></span><br><span class="line"><span class="string">    for (j = 0; j &lt; observations.size(); j++) &#123;</span></span><br><span class="line"><span class="string">      LandmarkObs transformed_obs;</span></span><br><span class="line"><span class="string">      transformed_obs.id = j;</span></span><br><span class="line"><span class="string">      transformed_obs.x = particle_x +</span></span><br><span class="line"><span class="string">                          (cos(particle_theta) * observations[j].x) -</span></span><br><span class="line"><span class="string">                          (sin(particle_theta) * observations[j].y);</span></span><br><span class="line"><span class="string">      transformed_obs.y = particle_y +</span></span><br><span class="line"><span class="string">                          (sin(particle_theta) * observations[j].x) +</span></span><br><span class="line"><span class="string">                          (cos(particle_theta) * observations[j].y);</span></span><br><span class="line"><span class="string">      transformed_observations.push_back(transformed_obs);</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    /*Step 2: Filter map landmarks to keep only those which are in the</span></span><br><span class="line"><span class="string">     sensor_range of current particle. Push them to predictions vector.*/</span></span><br><span class="line"><span class="string">    vector&lt;LandmarkObs&gt; predicted_landmarks;</span></span><br><span class="line"><span class="string">    for (j = 0; j &lt; map_landmarks.landmark_list.size(); j++) &#123;</span></span><br><span class="line"><span class="string">      Map::single_landmark_s current_landmark = map_landmarks.landmark_list[j];</span></span><br><span class="line"><span class="string">      if ((fabs((particle_x - current_landmark.x_f)) &lt;= sensor_range) &amp;&amp;</span></span><br><span class="line"><span class="string">          (fabs((particle_y - current_landmark.y_f)) &lt;= sensor_range)) &#123;</span></span><br><span class="line"><span class="string">        predicted_landmarks.push_back(LandmarkObs&#123;</span></span><br><span class="line"><span class="string">            current_landmark.id_i, current_landmark.x_f, current_landmark.y_f&#125;);</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    /*Step 3: Associate observations to lpredicted andmarks using nearest</span></span><br><span class="line"><span class="string">     * neighbor algorithm.*/</span></span><br><span class="line"><span class="string">    // Associate observations with predicted landmarks</span></span><br><span class="line"><span class="string">    dataAssociation(predicted_landmarks, transformed_observations,</span></span><br><span class="line"><span class="string">                    sensor_range);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    /*Step 4: Calculate the weight of each particle using Multivariate Gaussian</span></span><br><span class="line"><span class="string">     * distribution.*/</span></span><br><span class="line"><span class="string">    // Reset the weight of particle to 1.0</span></span><br><span class="line"><span class="string">    particles[i].weight = 1.0;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    double sigma_x = std_landmark[0];</span></span><br><span class="line"><span class="string">    double sigma_y = std_landmark[1];</span></span><br><span class="line"><span class="string">    double sigma_x_2 = pow(sigma_x, 2);</span></span><br><span class="line"><span class="string">    double sigma_y_2 = pow(sigma_y, 2);</span></span><br><span class="line"><span class="string">    double normalizer = (1.0 / (2.0 * M_PI * sigma_x * sigma_y));</span></span><br><span class="line"><span class="string">    int k, l;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    /*Calculate the weight of particle based on the multivariate Gaussian</span></span><br><span class="line"><span class="string">     * probability function*/</span></span><br><span class="line"><span class="string">    for (k = 0; k &lt; transformed_observations.size(); k++) &#123;</span></span><br><span class="line"><span class="string">      double trans_obs_x = transformed_observations[k].x;</span></span><br><span class="line"><span class="string">      double trans_obs_y = transformed_observations[k].y;</span></span><br><span class="line"><span class="string">      double trans_obs_id = transformed_observations[k].id;</span></span><br><span class="line"><span class="string">      double multi_prob = 1.0;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">      for (l = 0; l &lt; predicted_landmarks.size(); l++) &#123;</span></span><br><span class="line"><span class="string">        double pred_landmark_x = predicted_landmarks[l].x;</span></span><br><span class="line"><span class="string">        double pred_landmark_y = predicted_landmarks[l].y;</span></span><br><span class="line"><span class="string">        double pred_landmark_id = predicted_landmarks[l].id;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        if (trans_obs_id == pred_landmark_id) &#123;</span></span><br><span class="line"><span class="string">          multi_prob = normalizer *</span></span><br><span class="line"><span class="string">                       exp(-1.0 * ((pow((trans_obs_x - pred_landmark_x), 2) /</span></span><br><span class="line"><span class="string">                                    (2.0 * sigma_x_2)) +</span></span><br><span class="line"><span class="string">                                   (pow((trans_obs_y - pred_landmark_y), 2) /</span></span><br><span class="line"><span class="string">                                    (2.0 * sigma_y_2))));</span></span><br><span class="line"><span class="string">          particles[i].weight *= multi_prob;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    weight_normalizer += particles[i].weight;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  /*Step 5: Normalize the weights of all particles since resmapling using</span></span><br><span class="line"><span class="string">   * probabilistic approach.*/</span></span><br><span class="line"><span class="string">  for (int i = 0; i &lt; particles.size(); i++) &#123;</span></span><br><span class="line"><span class="string">    particles[i].weight /= weight_normalizer;</span></span><br><span class="line"><span class="string">    weights[i] = particles[i].weight;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>4）Resample Step</strong></p>
+<p>重采样(Resample)是从旧粒子(Old Particles)中随机抽取新粒子(New Particles)并根据其权重进行替换的过程。重采样后，具有更高权重的粒子保留的概率越大，概率越小的粒子消亡的概率越大。</p>
+<p>常用的Resample技术是Resampling Wheel。Resampling Wheel的算法思想如下：如下图所示的圆环，圆环的弧长正比与它的权重(即权重越大，弧长越长)。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Screenshot-from-2019-12-22-09-06-34.png"></p>
+<p>下一步就是利用类似于轮盘赌(Roulette Wheel)的方式，将圆环安装固定步长(Resampling Wheel中将圆环切分为2*max(weights))进行等分，选定一个方向进行n次随机旋转，每次旋转获得一个位置，这个位置就是被选中的粒子的索引。</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Screenshot-from-2019-12-22-09-52-27.png"></p>
+<p>搬运Youtube上的Udacity关于Resampling Wheel视频如下:</p>
+<p>来源:<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=wNQVo6uOgYA">https://www.youtube.com/watch?v=wNQVo6uOgYA</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">p3 &#x3D; []</span><br><span class="line">index &#x3D; int(random.random()*N)</span><br><span class="line">beta &#x3D; 0.0</span><br><span class="line">mw &#x3D; max(w)</span><br><span class="line">for i in range(N):</span><br><span class="line">  beta +&#x3D; random.random()*2*mw</span><br><span class="line">  while w[index] &lt; beta:</span><br><span class="line">     beta &#x3D; beta - w[index]</span><br><span class="line">     index &#x3D; index + 1</span><br><span class="line"></span><br><span class="line">  p3.append(p[index]) </span><br></pre></td></tr></table></figure>
+
+<p>Resample的C++代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">void ParticleFilter::resample() &#123;</span><br><span class="line">  // TODO: Resample particles <span class="keyword">with</span> replacement <span class="keyword">with</span> probability proportional to</span><br><span class="line">  // their weight. NOTE: You may find std::discrete_distribution helpful here.</span><br><span class="line">  //   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution</span><br><span class="line">  //   TODO complete</span><br><span class="line"></span><br><span class="line">  vector&lt;Particle&gt; resampled_particles;</span><br><span class="line"></span><br><span class="line">  // Create a generator to be used <span class="keyword">for</span> generating random particle index <span class="keyword">and</span> beta</span><br><span class="line">  // value</span><br><span class="line">  default_random_engine gen;</span><br><span class="line"></span><br><span class="line">  // Generate random particle index</span><br><span class="line">  uniform_int_distribution&lt;<span class="built_in">int</span>&gt; particle_index(<span class="number">0</span>, num_particles - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">int</span> current_index = particle_index(gen);</span><br><span class="line"></span><br><span class="line">  double beta = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">  double max_weight_2 = <span class="number">2.0</span> * *max_element(weights.begin(), weights.end());</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; particles.size(); i++) &#123;</span><br><span class="line">    uniform_real_distribution&lt;double&gt; random_weight(<span class="number">0.0</span>, max_weight_2);</span><br><span class="line">    beta += random_weight(gen);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (beta &gt; weights[current_index]) &#123;</span><br><span class="line">      beta -= weights[current_index];</span><br><span class="line">      current_index = (current_index + <span class="number">1</span>) % num_particles;</span><br><span class="line">    &#125;</span><br><span class="line">    resampled_particles.push_back(particles[current_index]);</span><br><span class="line">  &#125;</span><br><span class="line">  particles = resampled_particles;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后把这些代码串起来，实现车辆定位的功能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">// Set up parameters here</span><br><span class="line">double delta_t = <span class="number">0.1</span>;     // Time elapsed between measurements [sec]</span><br><span class="line">double sensor_range = <span class="number">50</span>; // Sensor <span class="built_in">range</span> [m]</span><br><span class="line"></span><br><span class="line">double sigma_pos[<span class="number">3</span>] = &#123;</span><br><span class="line">    <span class="number">0.3</span>, <span class="number">0.3</span>, <span class="number">0.01</span>&#125;; // GPS measurement uncertainty [x [m], y [m], theta [rad]]</span><br><span class="line">double sigma_landmark[<span class="number">2</span>] = &#123;</span><br><span class="line">    <span class="number">0.3</span>, <span class="number">0.3</span>&#125;; // Landmark measurement uncertainty [x [m], y [m]]</span><br><span class="line"></span><br><span class="line">// Read <span class="built_in">map</span> data</span><br><span class="line">Map <span class="built_in">map</span>;</span><br><span class="line"><span class="keyword">if</span> (!read_map_data(<span class="string">&quot;../data/map_data.txt&quot;</span>, <span class="built_in">map</span>)) &#123;</span><br><span class="line">  cout &lt;&lt; <span class="string">&quot;Error: Could not open map file&quot;</span> &lt;&lt; endl;</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Create particle <span class="built_in">filter</span></span><br><span class="line">ParticleFilter pf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (循环接收车辆的控制信息和Sense信息) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!pf.initialized()) &#123;</span><br><span class="line"></span><br><span class="line">    // Sense noisy position data <span class="keyword">from</span> the simulator</span><br><span class="line">    double sense_x = std::stod(j[<span class="number">1</span>][<span class="string">&quot;sense_x&quot;</span>].get&lt;std::string&gt;());</span><br><span class="line">    double sense_y = std::stod(j[<span class="number">1</span>][<span class="string">&quot;sense_y&quot;</span>].get&lt;std::string&gt;());</span><br><span class="line">    double sense_theta = std::stod(j[<span class="number">1</span>][<span class="string">&quot;sense_theta&quot;</span>].get&lt;std::string&gt;());</span><br><span class="line"></span><br><span class="line">    pf.init(sense_x, sense_y, sense_theta, sigma_pos);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    // Predict the vehicle<span class="string">&#x27;s next state from previous (noiseless</span></span><br><span class="line"><span class="string">    // control) data.</span></span><br><span class="line"><span class="string">    double previous_velocity =</span></span><br><span class="line"><span class="string">        std::stod(j[1][&quot;previous_velocity&quot;].get&lt;std::string&gt;());</span></span><br><span class="line"><span class="string">    double previous_yawrate =</span></span><br><span class="line"><span class="string">        std::stod(j[1][&quot;previous_yawrate&quot;].get&lt;std::string&gt;());</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    pf.prediction(delta_t, sigma_pos, previous_velocity, previous_yawrate);</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  // receive noisy observation data from the simulator</span></span><br><span class="line"><span class="string">  // sense_observations in JSON format</span></span><br><span class="line"><span class="string">  // [&#123;obs_x,obs_y&#125;,&#123;obs_x,obs_y&#125;,...&#123;obs_x,obs_y&#125;]</span></span><br><span class="line"><span class="string">  vector&lt;LandmarkObs&gt; noisy_observations;</span></span><br><span class="line"><span class="string">  string sense_observations_x = j[1][&quot;sense_observations_x&quot;];</span></span><br><span class="line"><span class="string">  string sense_observations_y = j[1][&quot;sense_observations_y&quot;];</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  std::vector&lt;float&gt; x_sense;</span></span><br><span class="line"><span class="string">  std::istringstream iss_x(sense_observations_x);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  std::copy(std::istream_iterator&lt;float&gt;(iss_x), std::istream_iterator&lt;float&gt;(),</span></span><br><span class="line"><span class="string">            std::back_inserter(x_sense));</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  std::vector&lt;float&gt; y_sense;</span></span><br><span class="line"><span class="string">  std::istringstream iss_y(sense_observations_y);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  std::copy(std::istream_iterator&lt;float&gt;(iss_y), std::istream_iterator&lt;float&gt;(),</span></span><br><span class="line"><span class="string">            std::back_inserter(y_sense));</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  for (int i = 0; i &lt; x_sense.size(); i++) &#123;</span></span><br><span class="line"><span class="string">    LandmarkObs obs;</span></span><br><span class="line"><span class="string">    obs.x = x_sense[i];</span></span><br><span class="line"><span class="string">    obs.y = y_sense[i];</span></span><br><span class="line"><span class="string">    noisy_observations.push_back(obs);</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  // Update the weights and resample</span></span><br><span class="line"><span class="string">  pf.updateWeights(sensor_range, sigma_landmark, noisy_observations, map);</span></span><br><span class="line"><span class="string">  pf.resample();</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  // Calculate and output the average weighted error of the particle</span></span><br><span class="line"><span class="string">  // filter over all time steps so far.</span></span><br><span class="line"><span class="string">  vector&lt;Particle&gt; particles = pf.particles;</span></span><br><span class="line"><span class="string">  int num_particles = particles.size();</span></span><br><span class="line"><span class="string">  double highest_weight = -1.0;</span></span><br><span class="line"><span class="string">  Particle best_particle;</span></span><br><span class="line"><span class="string">  double weight_sum = 0.0;</span></span><br><span class="line"><span class="string">  for (int i = 0; i &lt; num_particles; ++i) &#123;</span></span><br><span class="line"><span class="string">    if (particles[i].weight &gt; highest_weight) &#123;</span></span><br><span class="line"><span class="string">      highest_weight = particles[i].weight;</span></span><br><span class="line"><span class="string">      best_particle = particles[i];</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    weight_sum += particles[i].weight;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在Udacity Simulator上的演示效果如下:</p>
+<p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/particle_filter.gif"></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>1.<a target="_blank" rel="noopener" href="http://www.deepideas.net/robot-localization-histogram-filter/">http://www.deepideas.net/robot-localization-histogram-filter/</a><br>2.<a target="_blank" rel="noopener" href="https://github.com/sohonisaurabh/CarND-Kidnapped-Vehicle-Project">https://github.com/sohonisaurabh/CarND-Kidnapped-Vehicle-Project</a><br>3.<a target="_blank" rel="noopener" href="https://medium.com/intro-to-artificial-intelligence/kidnapped-vehicle-project-using-particle-filters-udacitys-self-driving-car-nanodegree-aa1d37c40d49">https://medium.com/intro-to-artificial-intelligence/kidnapped-vehicle-project-using-particle-filters-udacitys-self-driving-car-nanodegree-aa1d37c40d49</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Young Times
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/" title="自动驾驶定位算法(十三)-粒子滤波(Particle Filter)">http://example.com/2019/12/22/自动驾驶定位算法十三-粒子滤波particle-filter/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88/" rel="tag"># 多传感器融合</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D/" rel="tag"># 自动驾驶定位</a>
+              <a href="/tags/Particle-Filter/" rel="tag"># Particle Filter</a>
+              <a href="/tags/%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/" rel="tag"># 粒子滤波</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89-camera%E6%A0%87%E5%AE%9A/" rel="prev" title="计算机视觉-Camera标定">
+      <i class="fa fa-chevron-left"></i> 计算机视觉-Camera标定
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/" rel="next" title="自动驾驶定位算法-基于多传感器融合的状态估计(muti-Sensors Fusion)">
+      自动驾驶定位算法-基于多传感器融合的状态估计(muti-Sensors Fusion) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2-Particle-Filter-%E7%9A%84%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3"><span class="nav-number">1.</span> <span class="nav-text">1.粒子滤波(Particle Filter)的算法思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2%E7%AE%97%E6%B3%95%E5%9C%A8%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">2、粒子滤波算法在自动驾驶定位中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E5%85%88%E7%9C%8B%E7%9C%8B%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BD%A6%E8%BE%86%E6%9C%89%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.0.1.</span> <span class="nav-text">2.1 先看看自动驾驶车辆有什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E5%B0%86%E6%89%80%E6%9C%89%E4%BC%A0%E6%84%9F%E5%99%A8%E4%BF%A1%E6%81%AF%E7%BB%84%E5%90%88%E8%B5%B7%E6%9D%A5"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.2 将所有传感器信息组合起来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.0.3.</span> <span class="nav-text">2.3 粒子滤波代码实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Young Times"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Young Times</p>
+  <div class="site-description" itemprop="description">路要一步一步的走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Young Times</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">72k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:06</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'hEvBR6pmxtoYkRhC3fnMB8Yq-gzGzoHsz',
+      appKey     : 'nIkzvtLYb1avq32c9GYfgOOW',
+      placeholder: "Please Leave Your Message Here...",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
