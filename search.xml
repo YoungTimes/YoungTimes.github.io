@@ -974,6 +974,8 @@
     <content><![CDATA[<p>自动驾驶对定位的精度的要求在厘米级的，如何实现厘米级的高精度定位呢？一种众所周知的定位方法是利用全球定位系统(GPS)，利用多颗卫星的测量结果，通过三角测量(Triangulation)机制确定目标的位置，GPS定位的原理见《自动驾驶硬件系统-Global Navigation Satellite Systems》，但是GPS并不总是提供高精度定位数据，在GPS信号强的情况下，定位精度在1~3m范围内，在GPS信号弱的情况下，定位精度下降到10~50m范围内。虽然依赖于RTK，可以将卫星定位的精度提高到厘米级，但是在GPS信号弱的场景下，定位精度仍然不能满足应用需求。所以仅仅使用GPS不能实现高可靠的高精度定位的。</p>
 <p>为了达到厘米级(3-10cm)的定位精度，除了GPS之外，还需要借助于其它传感器，如激光传感器(LIDAR)、径向距离和角度传感器(Radial distance and angle sensor，RADAR)、视觉传感器(Camera)等，然后利用特定的算法将这些信息融合起来。粒子滤波(Particle Filter)就是利用这些传感器产生的数据进行高精定位的一种常用方法。</p>
 <p><img src="/2019/12/22/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%B8%89-%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2particle-filter/Particle_filters.gif" alt="Particle Filters From Udacity Lecture"></p>
+<span id="more"></span>
+
 <h1 id="粒子滤波-Particle-Filter-的算法思想"><a href="#粒子滤波-Particle-Filter-的算法思想" class="headerlink" title="粒子滤波(Particle Filter)的算法思想"></a>粒子滤波(Particle Filter)的算法思想</h1><p>相对之前提到的[标准卡尔曼滤波]，粒子滤波(Particle Filter)没有线性高斯分布的假设；相对于[直方图滤波]，粒子滤波(Particle Filter)不需要对状态空间进行区间划分。粒子滤波算法采用很多粒子对置信度$\text{bel}(x_t)$进行近似,每个粒子都是对t时刻机器人实际状态的一个猜测。</p>
 <p>$\chi_t := { \text{p}_t^{[1]}, \text{p}_t^{[2]}, …, \text{p}_t^{[n]} }$,其中$\text{p}_t^{[i]} \in \text{dom}(x_t)$</p>
 <p>越接近t时刻的Ground Truth状态描述的粒子，权重越高。</p>
