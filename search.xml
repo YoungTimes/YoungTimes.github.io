@@ -635,8 +635,7 @@
 <p>状态估计(State Estimation)选用传感器需要考虑哪些因素：</p>
 <p>1）误差不相关性。也就是说，用于Sensor Fusion的传感器其中单个传感器(Sensor Measurement)测量失败，不会导致其它传感器(Sensor)由于相同的原因而同时失败。</p>
 <p>2）传感器的相互补充性。 比如IMU可以填充GPS两次定位间隔期间的定位输出，用于平滑GPS/GNSS的定位结果；GPS为IMU提供初值，消除IMU单独使用出现的偏移(Drift)的问题；Lidar可以弥补定位精度的问题，而GNSS可以为Lidar定位地图匹配提供地图范围数据。</p>
-<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-13-18-59-1024x482.png"></p>
-<p>松耦合的系统</p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-13-18-59-1024x482.png" alt="松耦合的系统"></p>
 <h1 id="传感器的标定-Sensor-Calibration"><a href="#传感器的标定-Sensor-Calibration" class="headerlink" title="传感器的标定(Sensor Calibration)"></a>传感器的标定(Sensor Calibration)</h1><p>如果想要各个传感器能够相互协同，无间配合，传感器的标定是必不可少的。传感器的标定通常分为三种: 内参标定(Intrinsic Calibration)、外参标定(Extrinsic Calibration)和时间校准(Temporal Calibration)。</p>
 <p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-17-45-45-1024x285.png"></p>
 <h2 id="内参标定-Intrinsic-Calibration"><a href="#内参标定-Intrinsic-Calibration" class="headerlink" title="内参标定(Intrinsic Calibration)"></a>内参标定(Intrinsic Calibration)</h2><p>传感器或者车辆的内参在传感器制造的时候就已经固定下来，传感器模型中的固定参数都是内参，都需要通过Intrinsic Calibration事先确定。</p>
