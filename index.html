@@ -1203,7 +1203,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/" class="post-title-link" itemprop="url">自动驾驶定位算法(十五)基于多传感器融合的状态估计(muti-Sensors Fusion)</a>
+            <a href="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/" class="post-title-link" itemprop="url">自动驾驶定位算法-基于多传感器融合的状态估计(muti-Sensors Fusion)</a>
         </h2>
 
         <div class="post-meta">
@@ -1220,7 +1220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-04 11:25:25" itemprop="dateModified" datetime="2021-04-04T11:25:25+08:00">2021-04-04</time>
+                <time title="修改时间：2021-04-04 11:28:28" itemprop="dateModified" datetime="2021-04-04T11:28:28+08:00">2021-04-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1271,20 +1271,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="/%5DScreenshot-from-2019-12-28-12-29-38-1-1024x470.png"></p>
+          <p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-12-29-38-1-1024x470.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt; Multisensor Fusion for State Estimation</p>
 <h1 id="传感器-Sensor-选取"><a href="#传感器-Sensor-选取" class="headerlink" title="传感器(Sensor)选取"></a>传感器(Sensor)选取</h1><p>自动驾驶系统中用于状态估计(State Estimation)的常用传感器包括GPS/GNSS、IMU、激光雷达(Lidar)。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-12-38-59-1024x226.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-12-38-59-1024x226.png"></p>
 <p>状态估计(State Estimation)选用传感器需要考虑哪些因素：</p>
 <p>1）误差不相关性。也就是说，用于Sensor Fusion的传感器其中单个传感器(Sensor Measurement)测量失败，不会导致其它传感器(Sensor)由于相同的原因而同时失败。</p>
 <p>2）传感器的相互补充性。 比如IMU可以填充GPS两次定位间隔期间的定位输出，用于平滑GPS/GNSS的定位结果；GPS为IMU提供初值，消除IMU单独使用出现的偏移(Drift)的问题；Lidar可以弥补定位精度的问题，而GNSS可以为Lidar定位地图匹配提供地图范围数据。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-13-18-59-1024x482.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-13-18-59-1024x482.png"></p>
 <p>松耦合的系统</p>
 <h1 id="传感器的标定-Sensor-Calibration"><a href="#传感器的标定-Sensor-Calibration" class="headerlink" title="传感器的标定(Sensor Calibration)"></a>传感器的标定(Sensor Calibration)</h1><p>如果想要各个传感器能够相互协同，无间配合，传感器的标定是必不可少的。传感器的标定通常分为三种: 内参标定(Intrinsic Calibration)、外参标定(Extrinsic Calibration)和时间校准(Temporal Calibration)。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-17-45-45-1024x285.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-17-45-45-1024x285.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <h2 id="内参标定-Intrinsic-Calibration"><a href="#内参标定-Intrinsic-Calibration" class="headerlink" title="内参标定(Intrinsic Calibration)"></a>内参标定(Intrinsic Calibration)</h2><p>传感器或者车辆的内参在传感器制造的时候就已经固定下来，传感器模型中的固定参数都是内参，都需要通过Intrinsic Calibration事先确定。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-17-57-49-1024x492.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-17-57-49-1024x492.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>比如估计车辆运动距离的轮速计模型$v=r \omega$中，r就一个内参。另外激光雷达(Lidar)中扫描线的角度，在激光雷达计算模型中需要事先知道这个参数，以实现激光雷达扫描线(Scan Line)的拼接。</p>
 <p>如何获取传感器的内参呢？实践中有几种方法:</p>
@@ -1292,13 +1292,13 @@
 <p>2）手工测量内参。比如车轮的半径，可以通过手工测量的方法获取。但是类似于激光雷达的内参无法通过手工测量获取。</p>
 <p>3）Estimate as part of State。这种方式不仅可以获取精确的传感器内参，而且可以解决内参随时间变化的情况。比如汽车的轮胎半径漏气导致半径变小等。</p>
 <h2 id="外参标定-Extrinsic-Calibration"><a href="#外参标定-Extrinsic-Calibration" class="headerlink" title="外参标定(Extrinsic Calibration)"></a>外参标定(Extrinsic Calibration)</h2><p>传感器的外参主要表达各个传感器之间的位置相对姿态，它是把各个传感器的数据坐标统一起来的必不可少的参数。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-11-28-13.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-11-28-13.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>如何获取传感器的外参呢？实践中有几种方法:</p>
 <p>1、CAD图纸。如果你能获取传感器安装的CAD图纸，那你就可以获得比较准确的传感器外参。</p>
 <p>2、手动测量。当然手动测量的难度也非常高，因为传感器的中心往往在传感器内部，难以精确测量。</p>
 <p>3、Estimate as part of State。这也是一个研究的方向。可以比较好的应对外参标定问题，但难度也比较高。</p>
-<h2 id="时间校准-Temporal-Calibration"><a href="#时间校准-Temporal-Calibration" class="headerlink" title="时间校准(Temporal Calibration)"></a>时间校准(Temporal Calibration)</h2><p><img src="/%5DScreenshot-from-2019-12-28-19-03-16-1024x380.png"></p>
+<h2 id="时间校准-Temporal-Calibration"><a href="#时间校准-Temporal-Calibration" class="headerlink" title="时间校准(Temporal Calibration)"></a>时间校准(Temporal Calibration)</h2><p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-19-03-16-1024x380.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>时间校准对于各个传感器的数据融合至关重要。比如IMU的输出频率是200HZ，Lidar的输出频率是20HZ，只有按照最相近的时间进行对齐，才能将IMU和Lidar数据准确融合起来。</p>
 <p>在实际应用中，各个传感器的相对时间误差是未知的，这些误差可能是由于各个传感器的预处理耗时不同导致的，也可能是由于各个传感器的计时器精度不同造成的。</p>
@@ -1308,54 +1308,54 @@
 <h1 id="EKF-多传感器融合-Multi-Sensors-Fusion"><a href="#EKF-多传感器融合-Multi-Sensors-Fusion" class="headerlink" title="EKF-多传感器融合(Multi-Sensors Fusion)"></a>EKF-多传感器融合(Multi-Sensors Fusion)</h1><p>自动驾驶对车辆的状态(Vehicle State)的描述一般包括：位置(Position，一般为三维空间坐标x、y、z)、速度($v_x, v_y, v_z$)、朝向(四元数，x，y，z，w)，它是一个10维向量。</p>
 <p>$$<br>x_k =<br>\begin{bmatrix}<br>p_k \\<br>v_k \\<br>q_k \\<br>\end{bmatrix}<br>\in R^{10}<br>$$</p>
 <p>自动驾驶汽车一般包含多个Camera、3D 激光雷达(Lidar)、惯性测量单元(IMU)、多个Radar、GPS/GNSS Reciver、轮速计(Wheel Odmetry)，这些传感器在运行过程中时刻都在以不同的频率发送不同类型的数据，多传感器融合模块需要将这些信息融合起来，不断更新自动驾驶车辆的状态(Vehicle State)。多传感器融合进行状态估计(State Estimation)的流程如下：</p>
-<p><img src="/%5D1_7r_YClMa9KdIYmCWKJTEgA.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/1_7r_YClMa9KdIYmCWKJTEgA.png"></p>
 <p>车辆运动模型(Motion Model Input)如下，它的信息一般来自于IMU，包含x、y、z三个方向上的加速度和角速度，是一个6维向量。</p>
 <p>$$<br>u_k =<br>\begin{bmatrix}<br>f_k \\<br>\omega_k \\<br>\end{bmatrix}<br>\in R^6<br>$$</p>
 <p>车辆运动模型的计算过程如下:</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-16-30-17-1024x467.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-16-30-17-1024x467.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>为了应用EKF，我们定义Error State如下，其中$\phi_k$是3x1的矩阵。</p>
 <p>$$<br>\delta x_k =<br>\begin{bmatrix}<br>\delta p_k \\<br>\delta v_k \\<br>\delta \phi_k \\<br>\end{bmatrix}<br>\in R^6<br>$$</p>
 <p>EKF的Motion Model如下:</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-10-46-1024x473.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-10-46-1024x473.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>EKF中的GNSS测量模型:</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-16-04-1024x519.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-16-04-1024x519.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>EKF中的Lidar测量模型:</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-16-20-1024x555.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-16-20-1024x555.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>这里假设激光雷达(Lidar)的测量结果和GNSS的测量结果都在同一个坐标系下(注意，实际情况下，需要经过坐标变换才能达到这种效果)</p>
 <h2 id="EKF的IMU-GNSS-Lidar多传感器融合流程如下"><a href="#EKF的IMU-GNSS-Lidar多传感器融合流程如下" class="headerlink" title="EKF的IMU+GNSS+Lidar多传感器融合流程如下:"></a>EKF的IMU+GNSS+Lidar多传感器融合流程如下:</h2><p>1）Update State With IMU Inputs</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-22-00-1024x591.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-22-00-1024x591.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>2、Propagate Uncertainty</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-30-02-1024x394.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-30-02-1024x394.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>3、当有GNSS或者LIDAR测量结果到达时，进入步骤4），否则进入步骤1）。</p>
 <p>4、计算GNSS/Lidar的卡尔曼增益(Kalman Gain)。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-33-50-1024x417.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-33-50-1024x417.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>4、计算Error State。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-37-59-1024x362.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-37-59-1024x362.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>5、Correct Predicted State。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-41-36-1024x459.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-41-36-1024x459.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <p>6、Compute Corrected Covariance。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-23-44-46-1024x454.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-23-44-46-1024x454.png"></p>
 <p>Coursera Lecture -&gt; State Estimation and Localization for Self-Driving Cars -&gt;  Sensor Calibration - A Necessary Evil</p>
 <h1 id="状态估计-State-Estimation-的精度需求-Accuracy-Requirements"><a href="#状态估计-State-Estimation-的精度需求-Accuracy-Requirements" class="headerlink" title="状态估计(State Estimation)的精度需求(Accuracy Requirements)"></a>状态估计(State Estimation)的精度需求(Accuracy Requirements)</h1><p>不同的应用场景对State Estimation的精度的要求不同，比如高速场景下的Lane Keeping一般要求亚米级级精度。如下图所示的场景，车辆宽度为1.8m，机动车道宽度为3m，所以车辆两侧有约60cm的冗余空间，在这种场景下，如果要实现Lane Keeping的功能，只要状态估计的精度小于60cm就可以满足实际应用的需求。</p>
-<p><img src="/%5DScreenshot-from-2019-12-28-12-00-56.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-28-12-00-56.png"></p>
 <p>但在拥挤的城市道路交通场景下，对State Estimation的精度要求是越高越好，状态估计的精度越高，自动驾驶就越安全。</p>
 <h1 id="状态估计-State-Estimation-的更新频率要求"><a href="#状态估计-State-Estimation-的更新频率要求" class="headerlink" title="状态估计(State Estimation)的更新频率要求"></a>状态估计(State Estimation)的更新频率要求</h1><p>以人类驾驶汽车为例，一个人开车过程中闭着眼睛，但为了保证行车安全，她每间隔1s睁开一次眼睛，以确定自己所在的位置。在空旷的道路场景下，1HZ的位置确认频率就可以保证，但是在繁忙的交通的道路上，1s确认一次位置的做法就非常不靠谱了。</p>
 <p>但是，越高的定位频率带来的越高的计算资源消耗，而车载计算资源是有限的，并且还是感知、控制、决策、路径规划等所有功能共享的，所以在更新频率和计算资源之间需要有一个trade-off。</p>
 <p>根据经验，15HZ-30HZ的状态更新的频率就能够满足自动驾驶的应用需求，当然在计算资源允许的情况下，状态更新(State Estimation)频率越高越好。</p>
 <h1 id="Sensor-Failures"><a href="#Sensor-Failures" class="headerlink" title="Sensor Failures"></a>Sensor Failures</h1><p>自动驾驶使用的传感器系统可能由于外部环境因素而失效，比如恶劣天气状况、硬件故障、系统连接线松了等等；也可能由于传感器自身的短板导致，比如GNSS在隧道场景下无法定位、在城市环境下定位的误差达到数十米，IMU容易收到温度变换的影响等。</p>
 <p>即使在没有传感器异常的情况下，我们依然能够从多传感器的使用中收益。如下图所示，各个传感器的功能相互补充，构建安全的自动驾驶系统。</p>
-<p><img src="/%5DScreenshot-from-2019-12-29-09-21-22-1024x427.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-29-09-21-22-1024x427.png"></p>
 <p>各个传感器各有所长，比如短距测量传感器可以在停车场景下，检测附近的障碍物，避免发生碰撞；中距测量传感器在车道保持场景下，检测周围的行人、机动/非机动车辆；长距测量传感器帮助我们检测和预测远距离障碍物的运动等等。在实际应用要充分考虑到这些传感器的长处和短板，并增加一定的冗余系统，保证在部分系统无法工作的情况下，仍然可以保证车辆的正常运行。</p>
-<p><img src="/%5DScreenshot-from-2019-12-29-09-42-39-1024x600.png"></p>
+<p><img src="/2019/12/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%8D%81%E4%BA%94%E5%9F%BA%E4%BA%8E%E5%A4%9A%E4%BC%A0%E6%84%9F%E5%99%A8%E8%9E%8D%E5%90%88%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0/Screenshot-from-2019-12-29-09-42-39-1024x600.png"></p>
 <h1 id="多传感器融合的代码实战"><a href="#多传感器融合的代码实战" class="headerlink" title="多传感器融合的代码实战"></a>多传感器融合的代码实战</h1><p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-05-13-42-59-1024x403.png"></p>
 <p>Couresas上的Multi-Sensors Fusion Project效果如下:</p>
 <p><img src="http://www.banbeichadexiaojiubei.com/wp-content/uploads/2020/01/Screenshot-from-2020-01-05-13-11-47-1024x489.png"></p>
