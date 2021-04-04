@@ -1075,6 +1075,153 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">Lanelets: 高效的自动驾驶地图表达方式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-07 19:03:54" itemprop="dateCreated datePublished" datetime="2020-02-07T19:03:54+08:00">2020-02-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-04 21:32:52" itemprop="dateModified" datetime="2021-04-04T21:32:52+08:00">2021-04-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>LaneLets是自动驾驶领域高精度地图的一种高效表达方式，它以彼此相互连接的LaneLets来描述自动驾驶可行驶区域，不仅可以表达车道几何，也可以完整表述车道拓扑，同时可以集成交通规则和人的驾驶习惯。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-19-52-41.png"></p>
+<p>LaneLets Map</p>
+<p>如上图所示，每个Lanelet由left bound和right bound组成，left/right bound有一系列点序列组成，因此可以以任意精度逼近任意车道形状。</p>
+<h1 id="用于Routing的Lanelets-Graph"><a href="#用于Routing的Lanelets-Graph" class="headerlink" title="用于Routing的Lanelets Graph"></a>用于Routing的Lanelets Graph</h1><p>为了能够基于Lanelets进行路径规划，我们可以构建Lanelets邻接图结构。当Lanelets A的左右边界的终点与Lanelets B的左右边界的起点相同时，我们就称Lanelets A和Lanelets B是相邻接的。</p>
+<p>如下图所示，图(右)是对图(左)构建的Graph，同时将每个Lanelets的长度作为Graph Edge的权重。基于该Graph，我们就可以采用Dijkstra算法，实现从任意起点到终点的路径规划。当然读者也可以给Graph Edge赋予道路边界类型、权重因子等属性，从而实现其它类型的Routing规划算法。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-20-05-59.png"></p>
+<h1 id="Lanelets中的交通规则"><a href="#Lanelets中的交通规则" class="headerlink" title="Lanelets中的交通规则"></a>Lanelets中的交通规则</h1><p>开放的公共道路上存在各种各样的交通控制要素，比如红绿灯、交通标牌等。我们将这些交通规则按照一定的方式组织起来，并关联到对应的Lanelets上。行驶在Lanelets上的车辆必须遵守该Lanelets关联的交通规则。</p>
+<p>交通规则通常由两部分内容组成：1、规则的名称和内容；2、遵守这一规则的静态信息或者参数。举个路口红绿灯的例子，它的规则为车辆必须在交通灯为红色的时候，必须停止在路口停止线前等待；它的参数为停止线和关联交通灯的位置。</p>
+<p>这里要特别提到是没有红绿灯的十字路口，它的通行规则必须以尽可能少的阻碍其它拥有通行权的交通参与者为准则。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-20-36-38.png"></p>
+<h2 id="交通规则表达"><a href="#交通规则表达" class="headerlink" title="交通规则表达"></a>交通规则表达</h2><p>在实际数据中，交通规则通过”<strong>type=regulatory element</strong>“标识，再通过名称为maneuver的tag区分不同的交通规则。</p>
+<p><strong>merge and cross</strong></p>
+<p>当maneuver=merge时，该规则的参数是：merge发生的第一个Lanelets。该规则期望车辆在进入merge的第一个Lanelets时，尽可能的与同向车道的车辆的运动速度趋同，并且保持安全距离。</p>
+<p>当maneuver=cross时，该规则的参数是：与当前Lanelets发生cross的Lanelets，以及为了避免碰撞发生主车的停止位置。</p>
+<p><strong>traffic light</strong></p>
+<p>当maneuver=traffic light，该规则的参数是：路口的停止线和关联红绿灯的位置。该规则期望当红绿灯为红色时，车辆停止在停止线之前。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-22-48-26.png"></p>
+<h1 id="Lanelets中高效的距离计算和测量"><a href="#Lanelets中高效的距离计算和测量" class="headerlink" title="Lanelets中高效的距离计算和测量"></a>Lanelets中高效的距离计算和测量</h1><p>在使用Lanelets的过程中，计算车辆Pose到Lanelets边界的距离非常重要。由于LaneLets的左右边界是由折线组成的，因此我们可以先看看单个Segment的距离如何计算。</p>
+<p>假设单个Segment的定义如下:</p>
+<p>$G = (p_b, p_t, t_b, t_t)$</p>
+<p>其中，$p_b$是Segment的起点，$p_t$是Segment的终点，$t_b$是起点的切向量，$t_t$是终点的切向量。我们可以通过$lambda$对Segment进行插值。</p>
+<p>$<br>\begin{aligned}<br>&amp;\mathbf{t}{\lambda}=\lambda \mathbf{t}{t}+(1-\lambda) \mathbf{t}{b}\\ &amp; \mathbf{p}{\lambda}=\lambda \mathbf{p}{t}+(1-\lambda) \mathbf{p}{b}<br>\end{aligned}<br>$</p>
+<p>点X = $(x, y)^T$到Segment G的距离定义如下：</p>
+<p>$d = n_{\lambda} = x - p_{\lambda}$</p>
+<p>并且$n_{\lambda}$满足如下约束：</p>
+<p>$n_{\lambda}^T t_{\lambda} = 0 \tag{1}$</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-22-06-18.png"></p>
+<p>不失一般性，我们假设$p_b = (0, 0)^T, p_t = (l, 0)^T, t_b = (1, m_b)^T, t_t = (1, m_t)^T$，将这些信息代入公式(1)，可以得到:</p>
+<p>$<br>\lambda=\frac{x+y m_{b}}{l-y\left(m_{t}-m_{b}\right)}<br>$</p>
+<p>也就是说，只要知道了车辆的Pose(位置和朝向)，我们就能迅速计算出车辆到边界的距离。</p>
+<p>除此之外，通过计算$n_{\lambda}/n_{\lambda}$就可以得到任意一点的梯度信息。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-22-24-11.png"></p>
+<h1 id="开源的Lanelets地图加载库-libLanelet"><a href="#开源的Lanelets地图加载库-libLanelet" class="headerlink" title="开源的Lanelets地图加载库-libLanelet"></a>开源的Lanelets地图加载库-libLanelet</h1><p>libLanelet使用Boost C++代码库实现，它提供了读取、加载和查询XML文件的功能；使用RTree检索查询空间要素的功能；使用诸如Dijkstra进行Routing路线规划的功能；</p>
+<p>随着地图范围的不断扩张，Lanelets的数量会快速膨胀，为了提升数据检索的速度，libLanelets使用RTree对Lanelets进行检索，可以做到在O(logn)时间内实现对任意Object的查询。</p>
+<p>Github代码路径：<a target="_blank" rel="noopener" href="https://github.com/phbender/liblanelet">https://github.com/phbender/liblanelet</a></p>
+<h1 id="Lanelets高精度地图生成"><a href="#Lanelets高精度地图生成" class="headerlink" title="Lanelets高精度地图生成"></a>Lanelets高精度地图生成</h1><h2 id="Top-View-Map生成"><a href="#Top-View-Map生成" class="headerlink" title="Top-View Map生成"></a>Top-View Map生成</h2><p>我们利用立体图像技术，将车辆周围的3D点投影到地面上，再利用轨迹将这些3D投影点聚合起来，形成全局的鸟瞰图。然后利用这些鸟瞰图，使用OSM Editor人工标注高精度地图。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-23-25-52-1024x147.png"></p>
+<p>Virtual topview: Single image, reconstructed top view, superposed top view with annotated lanelets</p>
+<h2 id="Lanelets存储格式及编辑工具"><a href="#Lanelets存储格式及编辑工具" class="headerlink" title="Lanelets存储格式及编辑工具"></a>Lanelets存储格式及编辑工具</h2><p>Lanelets Map采用OSM格式存储：即文件格式采用XML格式；包含三个基础结构，nodes、ways和relations；坐标系采用WGS-84坐标系。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-22-49-26-954x1024.png"></p>
+<p>Java OSM editor</p>
+<h1 id="Lanelets在实际驾驶中的应用"><a href="#Lanelets在实际驾驶中的应用" class="headerlink" title="Lanelets在实际驾驶中的应用"></a>Lanelets在实际驾驶中的应用</h1><p>自动车辆利用Lanelets地图实现状态转换状态机(State Machine)不同状态之间的转换。如下图所示，当自动驾驶车辆行驶到绑定了交通规则的Lanelets时，并且距离交通规则参数的距离小于一定阈值时，事件S被触发，提醒车辆在停止线前停下来。当自动驾驶车辆距离交通规则参数的距离大于一定距离时，事件A被触发，车辆进入路口驾驶模式。当离开路口时，事件F被触发，整个系统被重置到空闲状态。</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-07-15-07-48.png"></p>
+<p>为了完成周围其它车辆的驾驶行为预测，我们首先获取社会车辆周围一定范围内的所有Lanelets，然后通过社会车辆的Pose与Lanelets中心线的距离和角度阈值过滤掉主车无法到达的Lanelets，最后在自动驾驶车辆的预测范围(比如可以预测社会车辆10s的运动范围)内，以社会车辆的运动朝向和运动速度计算所有的可能运动路径，从而调整自动驾驶汽车的运动规划，以避免可能存在的碰撞行为。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>Lanelets: Efficient Map Representation for Autonomous Driving</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1181,117 +1328,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/" class="post-title-link" itemprop="url">自动驾驶运动规划(Motion Planning)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-18 22:08:02" itemprop="dateCreated datePublished" datetime="2020-01-18T22:08:02+08:00">2020-01-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-28 21:22:44" itemprop="dateModified" datetime="2021-03-28T21:22:44+08:00">2021-03-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="什么是Motion-Planning"><a href="#什么是Motion-Planning" class="headerlink" title="什么是Motion Planning"></a>什么是Motion Planning</h1><p>Motion Planning是在遵循道路交通规则的前提下，将自动驾驶车辆从当前位置导航到目的地的一种方法。</p>
-<p>在实际开放道理场景下，自动驾驶要处理的场景非常繁杂：空旷的道路场景、与行人、障碍物共用道理的场景、空旷的十字路口、繁忙的十字路口、违反交通规则的行人/车辆、正常行驶的车辆/行人等等。场景虽然复杂，但都可以拆解为一系列简单行为(behavior)的组合:</p>
-<p><img src="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/Screenshot-from-2020-01-18-18-57-56-1024x468.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/18/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92motion-planning/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1363,7 +1399,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1415,12 +1451,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">90k</span>
+    <span title="站点总字数">93k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:22</span>
+    <span title="站点阅读时长">1:25</span>
 </div>
 
 <span id="busuanzi_container_site_uv">
