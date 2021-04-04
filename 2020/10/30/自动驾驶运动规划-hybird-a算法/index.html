@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="下面的视频展示了DARPA Urban Challenge(DARPA 2007)中Stanford Racing Team的无人车Junior使用的运动规划(Motion Planning)算法Hybird A*在增量构建的迷宫场景、阻断的道路场景和停车场狭窄停车位场景的实际表现。 在迷宫场景中，可以看到随着车辆的运动，周围在不断的做增量构建,这也就意味着，迷宫中的障碍物是通过车端的传感器实时感">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动驾驶运动规划-Hybird A*算法">
+<meta property="og:url" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="半杯茶的小酒杯">
+<meta property="og:description" content="下面的视频展示了DARPA Urban Challenge(DARPA 2007)中Stanford Racing Team的无人车Junior使用的运动规划(Motion Planning)算法Hybird A*在增量构建的迷宫场景、阻断的道路场景和停车场狭窄停车位场景的实际表现。 在迷宫场景中，可以看到随着车辆的运动，周围在不断的做增量构建,这也就意味着，迷宫中的障碍物是通过车端的传感器实时感">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-4b43504df6921dce7e5ff362a1a53c23_b.gif">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-4dfb7dacc8bc2d7da86aa9d5764bf5a1_b.jpg">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-242fb603c6b7478b26476e1d72df7351_b.jpg">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-bea58d1b8d2533fbdf1d62f79fd9f434_1440w.jpg">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-a57bc605a69cd10576c903cc66fa535f_1440w.jpg">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-e8aacf720df0170dc592f10c958d99aa_1440w.jpg">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-958aecbb37fe68605a3ef8bdac80c20f_1440w.jpg">
+<meta property="og:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-c3a5ebd96864055c8428555c729320fd_b.jpg">
+<meta property="article:published_time" content="2020-10-30T15:23:13.000Z">
+<meta property="article:modified_time" content="2021-04-04T13:53:43.487Z">
+<meta property="article:author" content="Young Times">
+<meta property="article:tag" content="运动规划">
+<meta property="article:tag" content="Hybird A Star">
+<meta property="article:tag" content="Hybird A*">
+<meta property="article:tag" content="Motion Planning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-4b43504df6921dce7e5ff362a1a53c23_b.gif">
+
+<link rel="canonical" href="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>自动驾驶运动规划-Hybird A*算法 | 半杯茶的小酒杯</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">半杯茶的小酒杯</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自动驾驶运动规划-Hybird A*算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-30 23:23:13" itemprop="dateCreated datePublished" datetime="2020-10-30T23:23:13+08:00">2020-10-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-04 21:53:43" itemprop="dateModified" datetime="2021-04-04T21:53:43+08:00">2021-04-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>下面的视频展示了DARPA Urban Challenge(DARPA 2007)中Stanford Racing Team的无人车Junior使用的运动规划(Motion Planning)算法Hybird A*在增量构建的迷宫场景、阻断的道路场景和停车场狭窄停车位场景的实际表现。</p>
+<p>在迷宫场景中，可以看到随着车辆的运动，周围在不断的做增量构建,这也就意味着，迷宫中的障碍物是通过车端的传感器实时感知结果得到的。车辆只能看到它周围的环境，随着车辆的持续运动，周围的环境被增量式的构建出来。车辆根据增量构建的场景，实时的调整自身的运动规划策略。</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-4b43504df6921dce7e5ff362a1a53c23_b.gif" alt="Hybird A\*算法在迷宫场景的规划效果。图片来源：参考材料2"></p>
+<p>视频中黄色的小短线是Hybird A*搜索树，可以看到该算法在不同位置、不同转向角度的情况下都可以实时的为车辆规划出可行的运动路径。</p>
+<p>在道路阻断导致车辆无法继续前行的场景下，Hybird A*算法可以规划出掉头曲线，从而避开阻塞的道路，从其它道路继续前进。</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-4dfb7dacc8bc2d7da86aa9d5764bf5a1_b.jpg" alt="Hybird A\*算法在道路阻断场景的规划效果。图片来源：参考材料2"></p>
+<p>最后是一个在停车场进入狭窄停车位的场景，可以看到Hybird A*算法可以规划出复杂的运动路线，使得车辆先前进，再后退，再一次性的进入到狭窄的空车位中。</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-242fb603c6b7478b26476e1d72df7351_b.jpg" alt="Hybird A\*算法在狭窄停车位场景的规划效果。图片来源：参考材料2"></p>
+<p>既然是A*算法，Hybird A*算法具有A*算法的基本特征，即通过当前状态到目标状态的代价(Cost)预估，引导车辆更快的收敛到目标状态。</p>
+<h1 id="搜索空间离散化"><a href="#搜索空间离散化" class="headerlink" title="搜索空间离散化"></a>搜索空间离散化</h1><p>传统的开放空间(Open Space)中的A*路径搜索的算法，一般将空间划分为小网格，使用网格中心作为A*路径规划的节点，在这些节点中寻求一条规避障碍物的路径。求解的路径只保证连通性，不保证车辆实际可行。</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-bea58d1b8d2533fbdf1d62f79fd9f434_1440w.jpg" alt="传统A\*算法 VS Hybird A\*算法。图片来源：参考材料2"></p>
+<p>Hybird A*算法同时考虑空间连通性和车辆朝向，将二维平面空间和角度同时进行二维离散化。论文《Practical Search Techniques in Path Planning  for Autonomous Driving》中设置的二维网格大小为1m x 1m，角度分辨率为$5^o$。在(X,Y,$\theta$)三个维度上进行搜索树(Search Tree)扩展时，Hybird A*将车辆的运动学约束引入其中，路径节点可以是二维小网格内的任意一点，保证了搜索出的路径一定是车辆实际可以行驶的。</p>
+<h1 id="Hybird-A-搜索树扩展"><a href="#Hybird-A-搜索树扩展" class="headerlink" title="Hybird A*搜索树扩展"></a>Hybird A*搜索树扩展</h1><h2 id="满足车辆运动学约束"><a href="#满足车辆运动学约束" class="headerlink" title="满足车辆运动学约束"></a>满足车辆运动学约束</h2><p>搜索树扩展过程需要基于车辆运动模型，不同类型的车辆运动模型有差异，这里以以前提到的Simple Car Model为例。</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-a57bc605a69cd10576c903cc66fa535f_1440w.jpg" alt="Simple Car车辆运动模型。图片来源：Planning Algorithm-http://planning.cs.uiuc.edu/node658.htm"></p>
+<p>Simple Car Model的车辆运动学约束的实现如下，其中(x,y, yaw)是车辆的当前姿态；distance是车辆在当前行驶方向上前进的距离；steer是方向盘与车辆行驶方向的夹角；函数返回的是满足车辆运动学约束的下一个姿态点。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move</span>(<span class="params">x, y, yaw, distance, steer, L=WB</span>):</span></span><br><span class="line">    x += distance * cos(yaw)</span><br><span class="line">    y += distance * sin(yaw)</span><br><span class="line">    yaw += pi_2_pi(distance * tan(steer) / L)  <span class="comment"># distance/2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x, y, yaw</span><br></pre></td></tr></table></figure>
+
+<h2 id="车辆控制空间离散化"><a href="#车辆控制空间离散化" class="headerlink" title="车辆控制空间离散化"></a>车辆控制空间离散化</h2><p>车辆的控制输入主要有两个：方向盘转角(Steering Angle)和运动方向(direction)。将方向盘转角从最小转角(Min Steering Angle)到最大转角(Max Steering Angle)按照一定间隔进行采样；车辆的运动方向只有两个：向前运动和向后运动。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> steer <span class="keyword">in</span> np.concatenate((np.linspace(-MAX_STEER, MAX_STEER, N_STEER),[<span class="number">0.0</span>])):</span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> [<span class="number">1</span>, -<span class="number">1</span>]:</span><br><span class="line">        <span class="keyword">yield</span> [steer, d]</span><br></pre></td></tr></table></figure>
+
+<h2 id="对运动空间进行扩展探索"><a href="#对运动空间进行扩展探索" class="headerlink" title="对运动空间进行扩展探索"></a>对运动空间进行扩展探索</h2><p>对运动空间进行扩展探索的过程就是以车辆的控制参数(Steering Angle和Direction)为输入，从车辆的当前姿态为输入，不断采样生成增量扩展的搜索树的过程。</p>
+<p>在生成搜索树的过程中，有两个细节：</p>
+<p>1）对采样扩展的结果进行碰撞检测，并剔除不满足碰撞检测的扩展。碰撞检测的过程不仅考虑障碍物的位置和形状，还需要考虑车辆自身的位置和形状；</p>
+<p>2）最大程度的保证采样扩展的起点和终点不在同一个网格中。可以将采样扩展的长度设置为比对角线长度大一点；</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-e8aacf720df0170dc592f10c958d99aa_1440w.jpg" alt="Search Tree With Reed-Shepp Expansion，黄绿色的是增量扩展的搜索树，紫色的是从当前位置到目标位置的Reed-Shepp扩展路径。图片来源：参考材料3"></p>
+<p>采样扩展的示例代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">x, y, yaw = current.xlist[-<span class="number">1</span>], current.ylist[-<span class="number">1</span>], current.yawlist[-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">arc_l = XY_GRID_RESOLUTION * <span class="number">1.5</span></span><br><span class="line">xlist, ylist, yawlist = [], [], []</span><br><span class="line"><span class="keyword">for</span> dist <span class="keyword">in</span> np.arange(<span class="number">0</span>, arc_l, MOTION_RESOLUTION):</span><br><span class="line">    x, y, yaw = move(x, y, yaw, MOTION_RESOLUTION * direction, steer)</span><br><span class="line">    xlist.append(x)</span><br><span class="line">    ylist.append(y)</span><br><span class="line">    yawlist.append(yaw)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> check_car_collision(xlist, ylist, yawlist, ox, oy, kdtree):</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="搜索代价预估-Heuristics"><a href="#搜索代价预估-Heuristics" class="headerlink" title="搜索代价预估(Heuristics)"></a>搜索代价预估(Heuristics)</h1><p>Hybird A*算法依赖如下两种Heuristics：Non Holonomic Without Obstacles和Obstacles Without Holonomic。</p>
+<h2 id="Non-Holonomic-Without-Obstacles"><a href="#Non-Holonomic-Without-Obstacles" class="headerlink" title="Non Holonomic Without Obstacles"></a>Non Holonomic Without Obstacles</h2><p>Non Holonomic Without Obstacles只考虑车辆运动的非完整约束特性，而不考虑障碍物对车辆运动的限制，即认为车辆在完全没有障碍物的开放空间上运动。<br>Heuristics Cost = Max(non holonomic without obstacles cost, 2D Euclidean distance)</p>
+<p>之所以使用Non Holonomic Without Obstacles Cost和2D Euclidean distance的原因在于，它可以对靠近目标附近的错误Heading搜索进行大量有效的剪枝。<br>Non Holonomic Without Obstacles Cost的计算过程中，对车辆的运动方向变化、车辆转向角度变化、车辆方向盘转角大小等行为施加一定的惩罚，保证车辆按照预期的行为进行运动。</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-958aecbb37fe68605a3ef8bdac80c20f_1440w.jpg" alt="Hybird A\*算法在停车场的路径规划效果。图片来源：参考材料3"></p>
+<h2 id="Obstacles-Without-Holonomic"><a href="#Obstacles-Without-Holonomic" class="headerlink" title="Obstacles Without Holonomic"></a>Obstacles Without Holonomic</h2><p>Obstacles Without Holonomic只考虑环境中的障碍物，不考虑车辆的运动约束。这种情况的处理就非常常见了，先基于已知环境和已知障碍物构建网格地图，再采用动态规划算法(Dynamic Programming)计算每个网格到达目的地所在网格的Cost(Cost一般使用欧式距离就够了)。</p>
+<p>使用该Heuristic的好处是，可以提前发现所有的U型障碍物和Dead Ends，从而引导车辆尽早避开这些区域。</p>
+<p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/v2-c3a5ebd96864055c8428555c729320fd_b.jpg" alt="动态规划算法(Dynamic Programming)"></p>
+<h1 id="Analytic-Expansions"><a href="#Analytic-Expansions" class="headerlink" title="Analytic Expansions"></a>Analytic Expansions</h1><p>前面提到的Hybird A*算法中对运动空间(X, Y, $\theta$)和车辆控制参数(Steering Angle)进行了离散化处理，这就决定了它永远不可能精确的到达连续变化的目标姿态。</p>
+<p>为了解决这一问题，论文《Practical Search Techniques in Path Planning  for Autonomous Driving》中提出使用基于Reed Shepp模型的Analytic  Expansions，即选出一些节点，使用Reed Shepp曲线计算从该节点到目标姿态的路径，如果该路径在已知的环境中不与任何障碍物发生碰撞，则将其作为可选的行驶路径。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">paths = rs.calc_paths(sx, sy, syaw, gx, gy, gyaw,</span><br><span class="line">                        max_curvature, step_size=MOTION_RESOLUTION)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> paths:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">best_path, best = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> path <span class="keyword">in</span> paths:</span><br><span class="line">    <span class="keyword">if</span> check_car_collision(path.x, path.y, path.yaw, ox, oy, kdtree):</span><br><span class="line">        cost = calc_rs_path_cost(path)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> best <span class="keyword">or</span> best &gt; cost:</span><br><span class="line">            best = cost</span><br><span class="line">            best_path = path</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> best_path</span><br></pre></td></tr></table></figure>
+
+<p>到目前为止，我们通过Hybird A*算法得到了一条实际可行驶的运动路径，但这样的路径往往需要进一步的优化才能得到更好的预期驾驶行为。这种优化分为两个步骤：</p>
+<p>1） 应用非线性优化算法(non-linear optimization)对路径的长度(length)和平滑性(smoothness)进行优化；</p>
+<p>2） 对优化后的路径进行非参数化的插值(non-parametric interpolation)。</p>
+<p>如何对规划出的路径进行继续优化下周继续研究！</p>
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>1、Explaining the Hybrid A Star pathfinding algorithm for selfdriving cars.(<a target="_blank" rel="noopener" href="https://blog.habrador.com/2015/11/explaining-hybrid-star-pathfinding.html">https://blog.habrador.com/2015/11/explaining-hybrid-star-pathfinding.html</a>)<br>2、Udacity A* in Action-Artificial Intelligence for Robotics(<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=qXZt-B7iUyw">https://www.youtube.com/watch?v=qXZt-B7iUyw</a>)<br>3、Practical Search Techniques in Path Planning for Autonomous Driving(<a target="_blank" rel="noopener" href="https://ai.stanford.edu/~ddolgov/papers/dolgov/_gpp/_stair08.pdf">https://ai.stanford.edu/~ddolgov/papers/dolgov\_gpp\_stair08.pdf</a>)<br>4、文中代码出处(<a target="_blank" rel="noopener" href="https://github.com/gyq18/PythonRobotics/blob/9a9ea3b3d7cc2f5e4cb10b384610964044f17583/PathPlanning/HybridAStar/hybrid/_a/_star.py">https://github.com/gyq18/PythonRobotics/blob/9a9ea3b3d7cc2f5e4cb10b384610964044f17583/PathPlanning/HybridAStar/hybrid\_a\_star.py</a>)</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Young Times
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95/" title="自动驾驶运动规划-Hybird A*算法">http://example.com/2020/10/30/自动驾驶运动规划-hybird-a算法/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92/" rel="tag"># 运动规划</a>
+              <a href="/tags/Hybird-A-Star/" rel="tag"># Hybird A Star</a>
+              <a href="/tags/Hybird-A/" rel="tag"># Hybird A*</a>
+              <a href="/tags/Motion-Planning/" rel="tag"># Motion Planning</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/30/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92dynamic-programming%E5%85%A5%E9%97%A8/" rel="prev" title="机器人动态规划(Dynamic Programming)入门">
+      <i class="fa fa-chevron-left"></i> 机器人动态规划(Dynamic Programming)入门
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95%E7%BB%AD/" rel="next" title="自动驾驶运动规划-Hybird A*算法(续)">
+      自动驾驶运动规划-Hybird A*算法(续) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E7%A9%BA%E9%97%B4%E7%A6%BB%E6%95%A3%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">搜索空间离散化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hybird-A-%E6%90%9C%E7%B4%A2%E6%A0%91%E6%89%A9%E5%B1%95"><span class="nav-number">2.</span> <span class="nav-text">Hybird A*搜索树扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%A1%E8%B6%B3%E8%BD%A6%E8%BE%86%E8%BF%90%E5%8A%A8%E5%AD%A6%E7%BA%A6%E6%9D%9F"><span class="nav-number">2.1.</span> <span class="nav-text">满足车辆运动学约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E8%BE%86%E6%8E%A7%E5%88%B6%E7%A9%BA%E9%97%B4%E7%A6%BB%E6%95%A3%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">车辆控制空间离散化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%BF%90%E5%8A%A8%E7%A9%BA%E9%97%B4%E8%BF%9B%E8%A1%8C%E6%89%A9%E5%B1%95%E6%8E%A2%E7%B4%A2"><span class="nav-number">2.3.</span> <span class="nav-text">对运动空间进行扩展探索</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E4%BB%A3%E4%BB%B7%E9%A2%84%E4%BC%B0-Heuristics"><span class="nav-number">3.</span> <span class="nav-text">搜索代价预估(Heuristics)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Non-Holonomic-Without-Obstacles"><span class="nav-number">3.1.</span> <span class="nav-text">Non Holonomic Without Obstacles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Obstacles-Without-Holonomic"><span class="nav-number">3.2.</span> <span class="nav-text">Obstacles Without Holonomic</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Analytic-Expansions"><span class="nav-number">4.</span> <span class="nav-text">Analytic Expansions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%9D%90%E6%96%99"><span class="nav-number">5.</span> <span class="nav-text">参考材料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Young Times"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Young Times</p>
+  <div class="site-description" itemprop="description">路要一步一步的走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Young Times</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">100k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:31</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'hEvBR6pmxtoYkRhC3fnMB8Yq-gzGzoHsz',
+      appKey     : 'nIkzvtLYb1avq32c9GYfgOOW',
+      placeholder: "Please Leave Your Message Here...",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
