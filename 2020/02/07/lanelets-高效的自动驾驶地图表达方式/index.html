@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="LaneLets是自动驾驶领域高精度地图的一种高效表达方式，它以彼此相互连接的LaneLets来描述自动驾驶可行驶区域，不仅可以表达车道几何，也可以完整表述车道拓扑，同时可以集成交通规则和人的驾驶习惯。  LaneLets Map 如上图所示，每个Lanelet由left bound和right bound组成，left&#x2F;right bound有一系列点序列组成，因此可以以任意精度逼近任意车道形状">
+  <meta name="description" content="LaneLets是自动驾驶领域高精度地图的一种高效表达方式，它以彼此相互连接的LaneLets来描述自动驾驶可行驶区域，不仅可以表达车道几何，也可以完整表述车道拓扑，同时可以集成交通规则和人的驾驶习惯。  如上图所示，每个Lanelet由left bound和right bound组成，left&#x2F;right bound有一系列点序列组成，因此可以以任意精度逼近任意车道形状。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Lanelets: 高效的自动驾驶地图表达方式">
 <meta property="og:url" content="http://example.com/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/index.html">
 <meta property="og:site_name" content="半杯茶的小酒杯">
-<meta property="og:description" content="LaneLets是自动驾驶领域高精度地图的一种高效表达方式，它以彼此相互连接的LaneLets来描述自动驾驶可行驶区域，不仅可以表达车道几何，也可以完整表述车道拓扑，同时可以集成交通规则和人的驾驶习惯。  LaneLets Map 如上图所示，每个Lanelet由left bound和right bound组成，left&#x2F;right bound有一系列点序列组成，因此可以以任意精度逼近任意车道形状">
+<meta property="og:description" content="LaneLets是自动驾驶领域高精度地图的一种高效表达方式，它以彼此相互连接的LaneLets来描述自动驾驶可行驶区域，不仅可以表达车道几何，也可以完整表述车道拓扑，同时可以集成交通规则和人的驾驶习惯。  如上图所示，每个Lanelet由left bound和right bound组成，left&#x2F;right bound有一系列点序列组成，因此可以以任意精度逼近任意车道形状。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-19-52-41.png">
 <meta property="og:image" content="http://example.com/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-20-05-59.png">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="http://example.com/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-22-49-26-954x1024.png">
 <meta property="og:image" content="http://example.com/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-07-15-07-48.png">
 <meta property="article:published_time" content="2020-02-07T11:03:54.000Z">
-<meta property="article:modified_time" content="2021-04-04T13:32:52.190Z">
+<meta property="article:modified_time" content="2021-04-04T13:39:33.858Z">
 <meta property="article:author" content="Young Times">
 <meta property="article:tag" content="自动驾驶">
 <meta name="twitter:card" content="summary">
@@ -234,7 +234,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-04 21:32:52" itemprop="dateModified" datetime="2021-04-04T21:32:52+08:00">2021-04-04</time>
+                <time title="修改时间：2021-04-04 21:39:33" itemprop="dateModified" datetime="2021-04-04T21:39:33+08:00">2021-04-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,9 +293,10 @@
 
       
         <p>LaneLets是自动驾驶领域高精度地图的一种高效表达方式，它以彼此相互连接的LaneLets来描述自动驾驶可行驶区域，不仅可以表达车道几何，也可以完整表述车道拓扑，同时可以集成交通规则和人的驾驶习惯。</p>
-<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-19-52-41.png"></p>
-<p>LaneLets Map</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-19-52-41.png" alt="LaneLets Map"></p>
 <p>如上图所示，每个Lanelet由left bound和right bound组成，left/right bound有一系列点序列组成，因此可以以任意精度逼近任意车道形状。</p>
+<span id="more"></span>
+
 <h1 id="用于Routing的Lanelets-Graph"><a href="#用于Routing的Lanelets-Graph" class="headerlink" title="用于Routing的Lanelets Graph"></a>用于Routing的Lanelets Graph</h1><p>为了能够基于Lanelets进行路径规划，我们可以构建Lanelets邻接图结构。当Lanelets A的左右边界的终点与Lanelets B的左右边界的起点相同时，我们就称Lanelets A和Lanelets B是相邻接的。</p>
 <p>如下图所示，图(右)是对图(左)构建的Graph，同时将每个Lanelets的长度作为Graph Edge的权重。基于该Graph，我们就可以采用Dijkstra算法，实现从任意起点到终点的路径规划。当然读者也可以给Graph Edge赋予道路边界类型、权重因子等属性，从而实现其它类型的Routing规划算法。</p>
 <p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-20-05-59.png"></p>
@@ -332,8 +333,7 @@
 <p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-23-25-52-1024x147.png"></p>
 <p>Virtual topview: Single image, reconstructed top view, superposed top view with annotated lanelets</p>
 <h2 id="Lanelets存储格式及编辑工具"><a href="#Lanelets存储格式及编辑工具" class="headerlink" title="Lanelets存储格式及编辑工具"></a>Lanelets存储格式及编辑工具</h2><p>Lanelets Map采用OSM格式存储：即文件格式采用XML格式；包含三个基础结构，nodes、ways和relations；坐标系采用WGS-84坐标系。</p>
-<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-22-49-26-954x1024.png"></p>
-<p>Java OSM editor</p>
+<p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-06-22-49-26-954x1024.png" alt="Java OSM editor"></p>
 <h1 id="Lanelets在实际驾驶中的应用"><a href="#Lanelets在实际驾驶中的应用" class="headerlink" title="Lanelets在实际驾驶中的应用"></a>Lanelets在实际驾驶中的应用</h1><p>自动车辆利用Lanelets地图实现状态转换状态机(State Machine)不同状态之间的转换。如下图所示，当自动驾驶车辆行驶到绑定了交通规则的Lanelets时，并且距离交通规则参数的距离小于一定阈值时，事件S被触发，提醒车辆在停止线前停下来。当自动驾驶车辆距离交通规则参数的距离大于一定距离时，事件A被触发，车辆进入路口驾驶模式。当离开路口时，事件F被触发，整个系统被重置到空闲状态。</p>
 <p><img src="/2020/02/07/lanelets-%E9%AB%98%E6%95%88%E7%9A%84%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%9C%B0%E5%9B%BE%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F/Screenshot-from-2020-02-07-15-07-48.png"></p>
 <p>为了完成周围其它车辆的驾驶行为预测，我们首先获取社会车辆周围一定范围内的所有Lanelets，然后通过社会车辆的Pose与Lanelets中心线的距离和角度阈值过滤掉主车无法到达的Lanelets，最后在自动驾驶车辆的预测范围(比如可以预测社会车辆10s的运动范围)内，以社会车辆的运动朝向和运动速度计算所有的可能运动路径，从而调整自动驾驶汽车的运动规划，以避免可能存在的碰撞行为。</p>
