@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="HD Maps: Structure, Functionalities, Accuracy And Standards在自动驾驶系统的功能系统架构中，高精地图与定位功能紧密相关，与感知模块交互，并最终支持规划和控制模块。  不同级别的自动驾驶对地图的精细程度要求不同。高精地图不仅存储Road和Lane等详细信息，而且还存储Landmark信息和周围环境信息用于辅助车辆定位；车辆定位信息和高精地图信">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动驾驶高精地图-概述与分析">
+<meta property="og:url" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="半杯茶的小酒杯">
+<meta property="og:description" content="HD Maps: Structure, Functionalities, Accuracy And Standards在自动驾驶系统的功能系统架构中，高精地图与定位功能紧密相关，与感知模块交互，并最终支持规划和控制模块。  不同级别的自动驾驶对地图的精细程度要求不同。高精地图不仅存储Road和Lane等详细信息，而且还存储Landmark信息和周围环境信息用于辅助车辆定位；车辆定位信息和高精地图信">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8810.59.57-1024x434.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.21.29-1024x162.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.26.32-1024x483.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.37.11-1024x384.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.47.29-1024x277.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.50.19-1024x653.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%8812.23.46-1024x953.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%8812.40.17-1024x482.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%8812.44.01-1024x274.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%881.12.03.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%881.21.23-1024x568.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-15-%E4%B8%8B%E5%8D%881.16.52-1024x340.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-15-%E4%B8%8B%E5%8D%881.45.18-1024x323.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-15-%E4%B8%8B%E5%8D%883.18.52-1024x286.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-16-%E4%B8%8A%E5%8D%888.30.57-1024x657.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-16-%E4%B8%8B%E5%8D%8811.42.16-1024x344.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-18-%E4%B8%8A%E5%8D%888.33.40-1024x510.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-18-%E4%B8%8A%E5%8D%888.45.43.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-19-%E4%B8%8A%E5%8D%888.34.18-1024x337.png">
+<meta property="og:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-19-%E4%B8%8A%E5%8D%888.38.21-1024x420.png">
+<meta property="article:published_time" content="2019-09-20T05:27:19.000Z">
+<meta property="article:modified_time" content="2021-04-04T13:22:30.922Z">
+<meta property="article:author" content="Young Times">
+<meta property="article:tag" content="自动驾驶">
+<meta property="article:tag" content="高精地图">
+<meta property="article:tag" content="自动驾驶定位">
+<meta property="article:tag" content="NDS">
+<meta property="article:tag" content="NDT">
+<meta property="article:tag" content="定位模型">
+<meta property="article:tag" content="相对定位">
+<meta property="article:tag" content="绝对定位">
+<meta property="article:tag" content="车道模型">
+<meta property="article:tag" content="道路模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8810.59.57-1024x434.png">
+
+<link rel="canonical" href="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>自动驾驶高精地图-概述与分析 | 半杯茶的小酒杯</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">半杯茶的小酒杯</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自动驾驶高精地图-概述与分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-20 13:27:19" itemprop="dateCreated datePublished" datetime="2019-09-20T13:27:19+08:00">2019-09-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-04 21:22:30" itemprop="dateModified" datetime="2021-04-04T21:22:30+08:00">2021-04-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HD-Maps-Structure-Functionalities-Accuracy-And-Standards"><a href="#HD-Maps-Structure-Functionalities-Accuracy-And-Standards" class="headerlink" title="HD Maps: Structure, Functionalities, Accuracy And Standards"></a>HD Maps: Structure, Functionalities, Accuracy And Standards</h1><p>在自动驾驶系统的功能系统架构中，高精地图与定位功能紧密相关，与感知模块交互，并最终支持规划和控制模块。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8810.59.57-1024x434.png" alt="Functional system architecture of an automated driving system."></p>
+<p>不同级别的自动驾驶对地图的精细程度要求不同。高精地图不仅存储Road和Lane等详细信息，而且还存储Landmark信息和周围环境信息用于辅助车辆定位；车辆定位信息和高精地图信息又作为Perception模块的输入，实现为物理环境建模的目的；Planning&amp;Control模块依据Perception模块输出的环境模型规划和控制车辆的驾驶行为；同时Perception的建模信息又可以作为高精地图的输入，实现对高精地图的及时更新。</p>
+<h2 id="HD-Map-Structure"><a href="#HD-Map-Structure" class="headerlink" title="HD Map Structure"></a>HD Map Structure</h2><p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.21.29-1024x162.png" alt="Examples of layered structure of an HD Map"></p>
+<p>如上图所示，虽然叫法不同，大部分地图厂商的高精地图都基本分为三层:Road Model, Lane Model 和Localization Model。</p>
+<h2 id="HD-Map-Functionalities"><a href="#HD-Map-Functionalities" class="headerlink" title="HD Map Functionalities"></a>HD Map Functionalities</h2><p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.26.32-1024x483.png" alt="functionality of an HD Map. (a) Road Model supports navigation; (b) Localisation Model enables perception using Lane Model: the ego vehicle understands the presence of lane markings and an obstacle; (c) Lane Model supports tactical planning, for example, lane-changing manoeuvre."></p>
+<p>如上图所示，Road Model用于导航规划；Lane Model用于感知和考虑当前道路和交通状况的路线规划；Localization Model用于在地图中定位车辆，只有当车辆在地图中准确定位时，Lane Model才能帮助车辆感知。</p>
+<h2 id="Map-Accuracy"><a href="#Map-Accuracy" class="headerlink" title="Map Accuracy"></a>Map Accuracy</h2><p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.37.11-1024x384.png" alt="Relative accuracy defined in EDMap (2004). (a) Incorrect relative accuracies: &lt; 20 cm (orange) and &gt; 20 cm (red) respectively; (b) Correct relative accuracies: &lt; 20cm (orange) and &gt; 20cm (red) respectively."></p>
+<p>绝对精度(Absolute Accuracy)：Map Geometry偏移Ground Truth Geometry的最大空间距离。</p>
+<p>相对精度(Relative Accuracy)： 首先Align Map Geometry和Ground Truth Geometry，然后计算二者之间的最大空间距离。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.47.29-1024x277.png" alt="The map accuracy parameters set by some notable map providers"></p>
+<h2 id="HD-Map-Related-Standards"><a href="#HD-Map-Related-Standards" class="headerlink" title="HD Map Related Standards"></a>HD Map Related Standards</h2><p>ISO/TC 204 发布的Geographic Data File (GDF) 提供了一个用于地图信息存储和交换的基础版本。GDF 5.1将支持自动驾驶，并于2018年发布了Local Dynamic Map (LDM)标准，存储在LDM的信息包含天气、道路、交通状况、静态信息等。</p>
+<p>许多政府和工业团体都在积极推动自动驾驶地图的标准化，比如，Open AutoDrive Forum (OADF) (openauto-drive.org) 作为cross-domain平台推动自动驾驶标准化。Traveller Information Services Association (TISA) (tisa.org) 正在讨论将Transport Protocol Experts Group (TPEGTM) 的交通信息精度提升到车道级别。Advanced Driver Assistance Systems Interface Specification (ADASIS) Forum (adasis.org) 发布ADASIS protocol V3以支持车内高精地图分发。Sensoris (sensor-is.org) 正在致力于基于车辆的传感器数据交换格式的标准化，以及车辆到云和云到云接口的研发。Navigation Data Standard (NDS, 2016) 和 OpenDRIVE(OpenDRIVE, 2015)是两大高精地图工业级标准，它们与GDF的对比如下:</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8811.50.19-1024x653.png"></p>
+<p>还有一些地区和国家也在研究自动驾驶的地图标准。日本在研究Dynamic Map(en.sip- adus.go.jp)；2018年5月，中国智能与互联汽车产业创新联盟（CAICV）自动驾驶地图工作组（caicv.org.cn）正式成立，该工作组的愿景是实现中国自动驾驶和高清地图的标准化。</p>
+<h1 id="HD-Map-Models"><a href="#HD-Map-Models" class="headerlink" title="HD Map Models"></a>HD Map Models</h1><p>HD Map Model包含Road Model, Lane Model和Localization Model。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%8812.23.46-1024x953.png" alt="Road Model (green polylines and yellow nodes) on top of Lane Model."></p>
+<h2 id="Road-Model"><a href="#Road-Model" class="headerlink" title="Road Model"></a>Road Model</h2><p>Road Model使用有序的形状点序列组成的线段表示，每个Road Section都包含Start Nodes和End Nodes。使用形状点序列定义Curved Road Geometry，优点是表达简单，增加中间点的密度即可以获得更好的精度，但缺点是需要存储大量的信息，Road Model的道路属性和丰富的语义信息可以为自动驾驶带来更多的先验知识。</p>
+<p>此外，相对于传统的2D导航地图，高精地图的Road Model增加了高度信息，对于精度的要求也更高。不同地图提出的用于ADAS的元素级精度要求如下表:</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%8812.40.17-1024x482.png" alt="Examples of map content for ADAS and accuracy requirements"></p>
+<h2 id="Lane-Model"><a href="#Lane-Model" class="headerlink" title="Lane Model"></a>Lane Model</h2><p>最著名的车道地图是DARPA城市挑战赛使用的Road Network Description File (RDNF)，但是RDNF是2D地图，并且也非常粗糙。</p>
+<p>Bertha Drive项目使用的基于Lanelet的三维车道模型中，车道不仅包含高度精确的左右边界的可行驶区域，而且车道行驶所需要的交通规则信息。</p>
+<p>通常情况下，Lane Model包含如下信息：</p>
+<h3 id="Highly-accurate-geometry-model"><a href="#Highly-accurate-geometry-model" class="headerlink" title="Highly accurate geometry model"></a>Highly accurate geometry model</h3><p>Lane Geometry Mode在很大程度上决定了Lane Model的准确性、存储效率和可用性，该模型不仅涵盖车道中心线、车道边界和RoadMarkings，还应包含潜在的三维道路结构，如斜坡和立交桥等。此外，它还应该具备辅助车辆高效计算的能力。</p>
+<h3 id="Lane-attributes"><a href="#Lane-attributes" class="headerlink" title="Lane attributes"></a>Lane attributes</h3><p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%8812.44.01-1024x274.png"></p>
+<p>Lane Attribute主要包括车道中心线(沿车道中间的理论线)和具有不同形状、颜色和材质的车道边界。</p>
+<h3 id="Traffic-Regulations-Road-Furniture-And-Parking"><a href="#Traffic-Regulations-Road-Furniture-And-Parking" class="headerlink" title="Traffic Regulations, Road Furniture And Parking"></a>Traffic Regulations, Road Furniture And Parking</h3><p>交通规则和相关信息/参数可以嵌入到其他属性中，例如车道的道路类型可以隐式地指示道路的默认限速。同时Lane Model也应具备分段车道属性的表达能力。与车道关联的停车位和道路设施也需要高度精确的位置信息。</p>
+<h2 id="Lane-connectivity"><a href="#Lane-connectivity" class="headerlink" title="Lane connectivity"></a>Lane connectivity</h2><p>Lane connectivity描述了车道或车道的连接关系。交叉路口的拓扑和语义方面由Traffic Matrices处理，Traffic Matrices定义了符合交通规则的所有操作。</p>
+<p>车道连通性几何信息通过连接出入口控制点的Virtual Lane表示，Virtual Lane可以使用与普通车道相同的几何车道模型(NDS, 2016)或者采用完全不同的车道模型表示方法(因为两个固定的控制点会影响车道曲线的连续性)。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%881.12.03.png" alt="An intersection with entry (blue dots) and exit (red dots) control points and the centrelines of virtual lanes (blue dashed arrow)."></p>
+<p>下表列举了各个地图供应商和标准化组织提供的Lane Model内容和精度要求。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8B%E5%8D%881.21.23-1024x568.png" alt="Examples of Lane Model content and accuracy requirements"></p>
+<h2 id="Localisation-Model"><a href="#Localisation-Model" class="headerlink" title="Localisation Model"></a>Localisation Model</h2><p>Localisation Model用于辅助车辆定位。根据所使用传感器方案的不同，定位技术分为Feature Based的方法和Dense Information Based的方法。</p>
+<p><strong>Feature-based Localisation Model</strong></p>
+<p>Feature-Based Localisation Model通常被存储为Graph，每一个Graph Node包含Image和3D Landmark，连接Graph Node的Edge是车辆Pose。Landmark通常使用特征描述子(Feature Descriptor)表达，以方便在Live Image和Map进行Feature匹配。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-15-%E4%B8%8B%E5%8D%881.16.52-1024x340.png" alt="Localisation Model examples. (a) Landmark map with green landmarks and orange vehicle pose; (b) Road marking map with blue line segments"></p>
+<p>Feature Map易用高效，但是制作Offline Map和Online Localization都需要进行Feature Extraction，过程繁琐复杂。</p>
+<p><strong>Dense Information-Based Localisation Model</strong></p>
+<p>Dense Information-Based Localisation Model可以进一步分为Location Based(Grid Map)或View Based(如Point Cloud)。毫米波雷达和RGB-D相机也可以用于收集Dense Information进行制图，但LiDAR是目前测绘和自动驾驶公司(HERE、TomTom、Google等)最广泛使用的采集设备。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-15-%E4%B8%8B%E5%8D%881.45.18-1024x323.png" alt="Examples of 2D grid map formats. (a) Reflectivity grid map; (b) Occupancy grid map (colour denotes the distance to road centre) ."></p>
+<p>2D Grid Map探索X-Y平面(地面)和X-Z平面(垂直于地面)，如上左图所示，假设道路表面平坦，每一个Grid Cell被激光雷达的平均反射值填充，或者由激光雷达反射值的高斯分布填充，两种定位方法的相对精度均在10厘米量级。另一种方法是使用Occupancy Grid Map，如上右图所示，每一个Grid Cell被由距道路中心距离和网格被占用概率联合定义的累积概率填充，通过该手段将道路的3D信息压缩为2D栅格地图，从而达到40cm以内的绝对定位精度。2D Grid Map的缺点在于对于环境变化不具鲁棒性。</p>
+<p>2.5D地图是包含高度信息的2D Map。Wolcott和Eustice(2014)在2D X-Y Reflectivity Grid Map中添加Z信息，以描绘道路的高度变化；Morales等人(2010)将Estimated Height添加到2D Map中心线地图中，以在室外林地环境中实现定位；此外，Wolcott和Eustice(2015)提出了对Z高度和反射率值进行建模，以捕获结构和外观变化，并使用多分辨率搜索进行优化。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-15-%E4%B8%8B%E5%8D%883.18.52-1024x286.png" alt="continued effort of improvement。a) 2D reflectivity grid map；b) 2D probabilistic grid map;  
+(c) 2D probabilistic grid map with height attribute; (d) 2·5D grid map. Only the i-th cell is annotated. Note: i= the index of the cell; z= height; r= reflectivity value; μ = mean; G = Gaussian distribution."></p>
+<p>3D点云地图通常由latitude、longitude、altitude、ntensity信息组成的点序列组成，并且可以用Camera Data赋予点云数据纹理。3D点云地图随着面积的增加，其内存占用也呈现指数级增长，这给实际使用带来很多问题。</p>
+<p>定位模型或高精地图面临的挑战之一是如何反映环境中的结构、季节或光照条件变化。Churchill和New-man(2013) 提出了考虑“在不同的时间、不同的天气和光照条件”场景差异的方案，Maddern等人(2015)提出的3D PointCloud Map也采用了这种Experience-Based Navigation的方法。Irie(2010)尝试将Grid Map和Feature整合到一个Map中，以提高对光照变化的鲁棒性。在未来，实时地图将是地图的终极目标。</p>
+<h1 id="HD-Map-Mapping"><a href="#HD-Map-Mapping" class="headerlink" title="HD Map Mapping"></a>HD Map Mapping</h1><p>HDMap Mapping的主要方法是收集车辆的传感器数据(GNSS Receiver、IMU、Camera、Lidar、Wheel Odometry等)，然后依赖于Mobile Mapping System (MMS) 和 Simultaneous Localisation and Mapping (SLAM)等方法完成地图制作。</p>
+<p>NMS依赖于GNSS/IMU进行Pose Estimation，地图采集车的所有传感器数据都包含精确的时间戳，在用于制图之前，需要对这些数据进行离线处理和校准，比如，通过合并同一场景的包含地理信息的图像来创建Dense Localisation Model，从包含地理信息的图像中提取Feature用于车道建模也是热门的研究领域。另外一个研究课题是如何用解析方程来拟合道路和车道曲线，Betaille等人(2010)提出clothoids曲线来拟合实际道路曲线； Gwon等人(2016)提出使用样条曲线拟合实际道路曲线，样条曲线的每一个曲线段为三次多项式。</p>
+<p>SLAM最初是针对没有GNSS的环境开发的，其目的是利用Ego Motion Measurements 和Loop Closures建立一个全球一致的Environment Representation ，该Representation提供的Environment Topology和Metric Representation可以辅助进行自动驾驶定位。</p>
+<p>MMS和SLAM都有自己的挑战。对于NMS而言，挑战在于GNSS在城市区域的可用性和准确性相对较低；对于SLAM而言，挑战在于随着采集区域的增加，计算成本和计算复杂度爆炸性增长。这些原因催生了对SLAM和GNSS/IMU相互集成的研究，通过增加其他信息来源，如可公开获取的航空影像和数字地图，而不是仅仅使用Loop Closure作为减小SLAM不确定性的唯一来源。</p>
+<p>HDMap Mapping面临的挑战之一是实现全自动化，目前的方案是引入机器学习的方法从图像数据中提取道路网络语义信息；另一个挑战是实现大规模制图，解决方案是数据众包，利用来自同一条道路的车辆的传感器数据用于改进更新现有地图或制作新地图。</p>
+<p>如果政府在规划、施工遵守标准施工方案，那么从设计和施工文件中获取HDMap信息也是一种潜在可行的方法。</p>
+<h1 id="Vehicle-Localization-With-HD-Map-And-Numerical-Analysis"><a href="#Vehicle-Localization-With-HD-Map-And-Numerical-Analysis" class="headerlink" title="Vehicle Localization With HD Map And Numerical Analysis"></a>Vehicle Localization With HD Map And Numerical Analysis</h1><h2 id="Map-Relative-Localisation"><a href="#Map-Relative-Localisation" class="headerlink" title="Map Relative Localisation"></a>Map Relative Localisation</h2><p>Map Relative Localization是解决主车相对于HDMap的位置估计问题。自动驾驶要求非常精确的六自由度(DOF)定位，这对于定义主车视野(Field Of View，FOV)以有效利用车道模型(Lane Model)进行感知至关重要。Levinson和Thrun(2010)研究认为厘米级定位精度对于任何开放道路的自动驾驶都足够使用。自动驾驶车辆还需要较高的位置更新频率：对于某些系统，更新频率高达200HZ（Levinson等人，2007年）；10HZ，限速63公里/小时（Levinson和Thrun，2010年），20HZ，时速60公里（Cui等人，2014年）。</p>
+<p>高精地图(HDMap)提供已知的环境信息，然后使用环境感知传感器感知的信息用于定位。通过将从实时图像或扫描中检测到的Feature注册到定位模型中，相对于地图的六自由度(DOF)车辆姿态估计可以达到10-20厘米精度，有了定位信息，就可以将车道模型(Lane Mode)引入到感知任务中，从而将复杂的静态环境感知问题转化为定位问题。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-16-%E4%B8%8A%E5%8D%888.30.57-1024x657.png" alt="Feature-based and appearance-based vehicle localisation flow chart."></p>
+<p>上图显示了地图相对定位的一般流程。Appearance Based的方法避开了Feature Detection的步骤。“Data Association”将环境传感器测量信息与地图关联起来。当使用贝叶斯状态估计器时，如Kalman Filter(KF)以及其变种(Extended、Unscented等)、Particle Filter (PF)等，Pose Estimation过程对应于State Estimation。</p>
+<p>使用KF时，Data Association对于Pose Estimation是必不可少的；当使用PF时它可以简化，但是可以分别考虑每个粒子。Map Relative Localisation使用的Data Association方法包括基于描述子的Feature Matching、Direct Points Comparison、Point Set Registration(Iterative Closest Point，ICP)；Appearance-based Matching使用Normalised Mutual Information、Maximum Likelihood Estimate、Normalised Information Distance、ICP和 Normal Distribution Transformation (NDT)进行Direct Registration。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-16-%E4%B8%8B%E5%8D%8811.42.16-1024x344.png" alt="(a) The 3D point cloud-based HD Map; (b) A section of the road in the map and one matched scan (in red)."></p>
+<h2 id="Numerical-analysis"><a href="#Numerical-analysis" class="headerlink" title="Numerical analysis"></a>Numerical analysis</h2><p>本节分析使用NDT作为Data Association和主车Pose Estimation的HDMap-Based Localisation，并比较了使用GNSS和ICP的Matching效果。</p>
+<p>Input Scan: $S={x_i}(i=1…N_s)$，Map:$M={y_i}(i=1…N_m)$，Scan和Map匹配的过程称为Scan Matching或者Registration，匹配的结果是Vehicle相对于Map的六自由度刚体变换参数:$p=(\psi, \theta, \phi, t_x, t_y, t_z)$。</p>
+<p>ICP和NDT是两个广泛使用的Registration方法。ICP将Registration任务看做Source和Target的几何要素(点、线、面)的对应问题。NDT可以避免建立这种对应关系。</p>
+<p>本节研究使用Autoware的真实数据集，从数据集中提取了大约3000个Scan作为Input Scan。Scan采用0.5m Voxel Grid进行下采样，然后分别使用NDT(Cell Size=0.5m)和ICP与Autoware的3D Point Cloud Map进行Match。</p>
+<p>记初始Pose为$p_0$、Input Scan为S，地图为M，NDT过程分为如下两步：</p>
+<p><strong>Step 1. Build NDT map</strong></p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-18-%E4%B8%8A%E5%8D%888.33.40-1024x510.png"></p>
+<p>如上图所示，第一步是将Point Cloud分散到预先定义的固定大小的立方体${\beta_i}，=1,…,m$。假设任意一个立方体$\beta$包含的点集${z_k},k=1,…,n$。Mean Vector $\mu$和Covariance Matrix $\sum$定义如下:</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-18-%E4%B8%8A%E5%8D%888.45.43.png"></p>
+<p>对于每一个$\beta_i$进行3D正态分布建模:$N(\mu, \sum)$，它的概率密度函数如下:</p>
+<p>$prob(x)=\frac{1}{c}exp(-\frac{(x-\mu)^T \sum^{-1} (x-\mu)}{2})$</p>
+<p><strong>Step 2. Align the input scan to the map.</strong></p>
+<p>初始Pose:$p=p_0$，采用牛顿法迭代优化姿态p。</p>
+<p>1.采用姿态p对Input Scan进行变换。如下，其中T是Transformation Function。</p>
+<p>$x_i^{\prime} = T(p, x_i)$</p>
+<p>将$x_i^{\prime}$映射到Map Cell，通过概率密度函数计算Score:</p>
+<p>$s(p) = -\sum_{i=1}^{N_s} prob(T(p, x_i))$</p>
+<p>2. 计算$\Delta p$</p>
+<p>$H \Delta p = -g$</p>
+<p>其中H是Hessian矩阵，g是梯度矩阵；</p>
+<p>3. 更新姿态p</p>
+<p>$p = p + \Delta p$</p>
+<p>持续上述过程，直至$\Delta p$小于预定阈值。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-19-%E4%B8%8A%E5%8D%888.34.18-1024x337.png" alt="Comparing the coordinates from NDT, ICP and GNSS RTK (m)"></p>
+<p>如上图，NDT、ICP、GNSS RTK的RMS Difference都在10cm以内。</p>
+<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-19-%E4%B8%8A%E5%8D%888.38.21-1024x420.png" alt="Comparison the trajectories between: (a) NDT and GNSS; (b) NDT and ICP."></p>
+<p>如上图所示，NDT、ICP、GNSS RTK的水平坐标差异大多数都在$2\sigma$范围内(&lt;20cm)，但是也有一些超出了$4\sigma$范围，因此要应用在自动驾驶领域，需要对定位输出做严格的质量控制。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接:"></a>参考链接:</h1><p>Paper: High Definition Map for Automated Driving: Overview and Analysis</p>
+<h1 id="该文章为翻译文章，原文出处："><a href="#该文章为翻译文章，原文出处：" class="headerlink" title="该文章为翻译文章，原文出处："></a>该文章为翻译文章，原文出处：</h1><p>Liu, R., Wang, J., &amp; Zhang, B. (n.d.). High Definition Map for Automated Driving: Overview and Analysis. Journal of Navigation, 1-18. doi:10.1017/S0373463319000638</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Young Times
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/" title="自动驾驶高精地图-概述与分析">http://example.com/2019/09/20/自动驾驶高精地图-概述与分析/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" rel="tag"># 自动驾驶</a>
+              <a href="/tags/%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE/" rel="tag"># 高精地图</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D/" rel="tag"># 自动驾驶定位</a>
+              <a href="/tags/NDS/" rel="tag"># NDS</a>
+              <a href="/tags/NDT/" rel="tag"># NDT</a>
+              <a href="/tags/%E5%AE%9A%E4%BD%8D%E6%A8%A1%E5%9E%8B/" rel="tag"># 定位模型</a>
+              <a href="/tags/%E7%9B%B8%E5%AF%B9%E5%AE%9A%E4%BD%8D/" rel="tag"># 相对定位</a>
+              <a href="/tags/%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D/" rel="tag"># 绝对定位</a>
+              <a href="/tags/%E8%BD%A6%E9%81%93%E6%A8%A1%E5%9E%8B/" rel="tag"># 车道模型</a>
+              <a href="/tags/%E9%81%93%E8%B7%AF%E6%A8%A1%E5%9E%8B/" rel="tag"># 道路模型</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/" rel="next" title="自动驾驶定位算法-直方图滤波(Histogram Filter)定位">
+      自动驾驶定位算法-直方图滤波(Histogram Filter)定位 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HD-Maps-Structure-Functionalities-Accuracy-And-Standards"><span class="nav-number">1.</span> <span class="nav-text">HD Maps: Structure, Functionalities, Accuracy And Standards</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HD-Map-Structure"><span class="nav-number">1.1.</span> <span class="nav-text">HD Map Structure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HD-Map-Functionalities"><span class="nav-number">1.2.</span> <span class="nav-text">HD Map Functionalities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map-Accuracy"><span class="nav-number">1.3.</span> <span class="nav-text">Map Accuracy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HD-Map-Related-Standards"><span class="nav-number">1.4.</span> <span class="nav-text">HD Map Related Standards</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HD-Map-Models"><span class="nav-number">2.</span> <span class="nav-text">HD Map Models</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Road-Model"><span class="nav-number">2.1.</span> <span class="nav-text">Road Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lane-Model"><span class="nav-number">2.2.</span> <span class="nav-text">Lane Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Highly-accurate-geometry-model"><span class="nav-number">2.2.1.</span> <span class="nav-text">Highly accurate geometry model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lane-attributes"><span class="nav-number">2.2.2.</span> <span class="nav-text">Lane attributes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Traffic-Regulations-Road-Furniture-And-Parking"><span class="nav-number">2.2.3.</span> <span class="nav-text">Traffic Regulations, Road Furniture And Parking</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lane-connectivity"><span class="nav-number">2.3.</span> <span class="nav-text">Lane connectivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Localisation-Model"><span class="nav-number">2.4.</span> <span class="nav-text">Localisation Model</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HD-Map-Mapping"><span class="nav-number">3.</span> <span class="nav-text">HD Map Mapping</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vehicle-Localization-With-HD-Map-And-Numerical-Analysis"><span class="nav-number">4.</span> <span class="nav-text">Vehicle Localization With HD Map And Numerical Analysis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Map-Relative-Localisation"><span class="nav-number">4.1.</span> <span class="nav-text">Map Relative Localisation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Numerical-analysis"><span class="nav-number">4.2.</span> <span class="nav-text">Numerical analysis</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">参考链接:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%A5%E6%96%87%E7%AB%A0%E4%B8%BA%E7%BF%BB%E8%AF%91%E6%96%87%E7%AB%A0%EF%BC%8C%E5%8E%9F%E6%96%87%E5%87%BA%E5%A4%84%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">该文章为翻译文章，原文出处：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Young Times"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Young Times</p>
+  <div class="site-description" itemprop="description">路要一步一步的走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Young Times</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">90k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:22</span>
+</div>
+
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'hEvBR6pmxtoYkRhC3fnMB8Yq-gzGzoHsz',
+      appKey     : 'nIkzvtLYb1avq32c9GYfgOOW',
+      placeholder: "Please Leave Your Message Here...",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
