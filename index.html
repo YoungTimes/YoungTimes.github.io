@@ -658,7 +658,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-04 22:01:26" itemprop="dateModified" datetime="2021-04-04T22:01:26+08:00">2021-04-04</time>
+                <time title="修改时间：2021-04-04 22:03:35" itemprop="dateModified" datetime="2021-04-04T22:03:35+08:00">2021-04-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -713,19 +713,19 @@
 <h1 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h1><p>对于Hybird A*生成的车辆轨迹序列：${(x_1, y_1),(x_2, y_2),…,(x_N, y_N)}$,论文【1】中提出如下的目标优化函数(Objective Function)：</p>
 <p>$$\begin{array}{l}w_{\rho} \sum_{i=1}^{N} \rho_{V}\left(x_{i}, y_{i}\right)+ \\ w_{o} \sum_{i=1}^{N} \sigma_{o}\left(\left\mathbf{x}<em>{i}-\mathbf{o}</em>{i}\right-d_{\max }\right)+ \\w_{\kappa} \sum_{i=1}^{N-1} \sigma_{\kappa}\left(\frac{\Delta \phi_{i}}{\left\Delta \mathbf{x}<em>{i}\right}-\kappa</em>{\max }\right)+ \\ w_{s} \sum_{i=1}^{N-1}\left(\Delta \mathbf{x}<em>{i+1}-\Delta \mathbf{x}</em>{i}\right)^{2}\end{array}$$</p>
 <p>该优化函数是Voronoi Term、Obstacle Term、Curvature Term和Smoothness Term四个部分的加权平均：第一个部分引导车辆尽可能的避开障碍物区域；第二个部分惩罚车辆与障碍物的碰撞行为；第三部分约束规划的每个点的最大曲率，并提供车辆非完整约束的保证；第四个部分是轨迹的平滑性约束。$w_{\rho}$、$w_{o}$、$w_{\kappa}$、$w_{s}$分别是这四个部分的权重因子。</p>
-<h1 id="oronoi-Term"><a href="#oronoi-Term" class="headerlink" title="oronoi Term"></a>oronoi Term</h1><p>Voronoi Term中引入了Voronoi Field的概念，Voronoi Field是机器人Motion Planning领域两种经典算法Voronoi Diagram和Potential Field的结合。</p>
+<h2 id="oronoi-Term"><a href="#oronoi-Term" class="headerlink" title="oronoi Term"></a>oronoi Term</h2><p>Voronoi Term中引入了Voronoi Field的概念，Voronoi Field是机器人Motion Planning领域两种经典算法Voronoi Diagram和Potential Field的结合。</p>
 <p>此处采用Voronoi Field的定义如下：</p>
 <p>$$\begin{aligned}\rho_{V}(x, y)=&amp;\left(\frac{\alpha}{\alpha+d_{\mathcal{O}}(x, y)}\right)\left(\frac{d_{\mathcal{V}}(x, y)}{d_{\mathcal{O}}(x, y)+d_{\mathcal{V}}(x, y)}\right) \\&amp; \frac{\left(d_{\mathcal{O}}-d_{\mathcal{O}}^{\max }\right)^{2}}{\left(d_{\mathcal{O}}^{\max }\right)^{2}}\end{aligned}$$</p>
 <p>其中$d_{\mathcal{O}}$和$d_{\mathcal{V}}$分别是路径点(x,y)到最近障碍物的距离和到最近Voronoi Diagram的边的距离。越靠近障碍物，$\rho_{V}(x, y)$的值越大，越接近1；越靠近Voronoi Edge，$\rho_{V}(x, y)$的值越接近0。</p>
 <p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95%E7%BB%AD/v2-8f93cbb765626ef162a1d0ae24a1ca84_1440w.jpg"></p>
 <p>上图图左一为Voronoi Field的实际效果，上图右一是标准Potential Field的实际效果。可以看到，Voronoi Field对狭窄通道的效果要明显优于Potential Field。</p>
 <p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95%E7%BB%AD/v2-b2b52c6d9e0c597c882a9016b574c22c_1440w.jpg" alt="实际停车场的Voronoi Field和Junior的规划路径"></p>
-<h1 id="Obstacle-Term"><a href="#Obstacle-Term" class="headerlink" title="Obstacle Term"></a>Obstacle Term</h1><p>Obstacle Term中$x_i$是路径点坐标位置，$o_i$是附近障碍物的位置，$d_{max}$是决定Obstacle Term是否影响路径Cost的阈值。当路径点距离障碍物的距离小于$d_{max}$时，Obstacle Term才会对轨迹的Cost进行惩罚。距离障碍物越近，$x_i - o_i$的值越小，Obstacle Term的值就越大，整个轨迹的Cost也就越大。这样就达到了使得平滑后的路径远离障碍物的效果。</p>
+<h2 id="Obstacle-Term"><a href="#Obstacle-Term" class="headerlink" title="Obstacle Term"></a>Obstacle Term</h2><p>Obstacle Term中$x_i$是路径点坐标位置，$o_i$是附近障碍物的位置，$d_{max}$是决定Obstacle Term是否影响路径Cost的阈值。当路径点距离障碍物的距离小于$d_{max}$时，Obstacle Term才会对轨迹的Cost进行惩罚。距离障碍物越近，$x_i - o_i$的值越小，Obstacle Term的值就越大，整个轨迹的Cost也就越大。这样就达到了使得平滑后的路径远离障碍物的效果。</p>
 <p>这里$\sigma_{o}$一般使用二次函数。即:</p>
 <p>$$\sigma_{o} \left(\left {\mathbf{x}}<em>{i}-{\mathbf{o}}</em>{i}\right-d_{\max }\right) = \left(\left {\mathbf{x}}<em>{i}-{\mathbf{o}}</em>{i}\right-d_{\max }\right)^2$$</p>
-<h1 id="Curvature-Term"><a href="#Curvature-Term" class="headerlink" title="Curvature Term"></a>Curvature Term</h1><p>对于一系列的点$X_i={x_i, y_i}, i \in [1,N]$，$\Delta X_i = X_i - X_{i-1}$，即为规划路径的方向向量；$\Delta \phi_i$为路径点的方向角变化。</p>
+<h2 id="Curvature-Term"><a href="#Curvature-Term" class="headerlink" title="Curvature Term"></a>Curvature Term</h2><p>对于一系列的点$X_i={x_i, y_i}, i \in [1,N]$，$\Delta X_i = X_i - X_{i-1}$，即为规划路径的方向向量；$\Delta \phi_i$为路径点的方向角变化。</p>
 <p>$\kappa = \Delta \phi / \Delta X_i$为$X_i$处的曲率。与Obstacle Term类似，Curvature Term也设置了一个最大允许的路径曲率$\kappa_{max}$，当曲率大于$\kappa_{max}$时，Curvature Term才会对路径的Cost施加惩罚。</p>
-<h1 id="Smoothness-Term"><a href="#Smoothness-Term" class="headerlink" title="Smoothness Term"></a>Smoothness Term</h1><p>平滑项利用当前点前后两个方向向量的差值来衡量，方向向量既可以衡量方向的改变，也可以体现轨迹点的分布变换。</p>
+<h2 id="Smoothness-Term"><a href="#Smoothness-Term" class="headerlink" title="Smoothness Term"></a>Smoothness Term</h2><p>平滑项利用当前点前后两个方向向量的差值来衡量，方向向量既可以衡量方向的改变，也可以体现轨迹点的分布变换。</p>
 <h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><p>确定Objective Function函数之后，就可以利用Conjugate Gradient(CG，共轭梯度法)或者Gradient Descent求解最优路径。</p>
 <p><img src="/2020/10/30/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92-hybird-a%E7%AE%97%E6%B3%95%E7%BB%AD/v2-58534926e1b30883118f3532096bb90b_1440w.jpg"></p>
 <p>代码参见:<br><a target="_blank" rel="noopener" href="https://github.com/teddyluo/hybrid-a-star-annotation/blob/master/src/smoother.cpp">https://github.com/teddyluo/hybrid-a-star-annotation/blob/master/src/smoother.cpp</a></p>
