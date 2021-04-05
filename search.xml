@@ -1518,10 +1518,10 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Plot the loss and mse</span></span><br><span class="line">Y_pred = model.predict(norm_test_X)</span><br><span class="line">plot_diff(test_Y[<span class="number">0</span>], Y_pred[<span class="number">0</span>], title=<span class="string">&#x27;Y1&#x27;</span>)</span><br><span class="line">plot_diff(test_Y[<span class="number">1</span>], Y_pred[<span class="number">1</span>], title=<span class="string">&#x27;Y2&#x27;</span>)</span><br><span class="line">plot_metrics(metric_name=<span class="string">&#x27;y1_output_root_mean_squared_error&#x27;</span>, title=<span class="string">&#x27;Y1 RMSE&#x27;</span>, ylim=<span class="number">6</span>)</span><br><span class="line">plot_metrics(metric_name=<span class="string">&#x27;y2_output_root_mean_squared_error&#x27;</span>, title=<span class="string">&#x27;Y2 RMSE&#x27;</span>, ylim=<span class="number">7</span>)</span><br></pre></td></tr></table></figure>
 
 
-<p>![Y1.png]</p>
-<p>![Y2.png]</p>
-<p>![Y1_mse.png]</p>
-<p>![Y2_mse.png]</p>
+<p>!()[Y1.png]</p>
+<p>!()[Y2.png]</p>
+<p>!()[Y1_mse.png]</p>
+<p>!()[Y2_mse.png]</p>
 ]]></content>
       <categories>
         <category>DeepLearning</category>
