@@ -363,7 +363,7 @@
       </tags>
   </entry>
   <entry>
-    <title>tensorflow-Sequential API vs Functional API</title>
+    <title>Tensorflow-Sequential API vs Functional API</title>
     <url>/2021/04/05/tensorflow-Sequential-API-vs-Functional-API/</url>
     <content><![CDATA[<h1 id="Imports"><a href="#Imports" class="headerlink" title="Imports"></a>Imports</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.keras.utils.vis_utils <span class="keyword">import</span> plot_model</span><br><span class="line"><span class="keyword">import</span> pydot</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Model</span><br></pre></td></tr></table></figure>
 
