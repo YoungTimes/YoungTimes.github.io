@@ -190,6 +190,116 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/05/tensorflow-Sequential-API-vs-Functional-API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/05/tensorflow-Sequential-API-vs-Functional-API/" class="post-title-link" itemprop="url">tensorflow-Sequential API vs Functional API</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-05 10:29:55 / 修改时间：10:40:56" itemprop="dateCreated datePublished" datetime="2021-04-05T10:29:55+08:00">2021-04-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/04/05/tensorflow-Sequential-API-vs-Functional-API/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/05/tensorflow-Sequential-API-vs-Functional-API/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Imports"><a href="#Imports" class="headerlink" title="Imports"></a>Imports</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.keras.utils.vis_utils <span class="keyword">import</span> plot_model</span><br><span class="line"><span class="keyword">import</span> pydot</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Model</span><br></pre></td></tr></table></figure>
+
+<h1 id="Sequential-API"><a href="#Sequential-API" class="headerlink" title="Sequential API"></a>Sequential API</h1><p>使用Sequential API构建Model。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model_with_sequential</span>():</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># instantiate a Sequential class and linearly stack the layers of your model</span></span><br><span class="line">    seq_model = tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">                                            tf.keras.layers.Dense(<span class="number">128</span>, activation=tf.nn.relu),</span><br><span class="line">                                            tf.keras.layers.Dense(<span class="number">10</span>, activation=tf.nn.softmax)])</span><br><span class="line">    <span class="keyword">return</span> seq_model</span><br></pre></td></tr></table></figure>
+
+<h1 id="Functional-API"><a href="#Functional-API" class="headerlink" title="Functional API"></a>Functional API</h1><p>使用Functional API构建相同的Model。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model_with_functional</span>():</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># instantiate the input Tensor</span></span><br><span class="line">    input_layer = tf.keras.Input(shape=(<span class="number">28</span>, <span class="number">28</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># stack the layers using the syntax: new_layer()(previous_layer)</span></span><br><span class="line">    flatten_layer = tf.keras.layers.Flatten()(input_layer)</span><br><span class="line">    first_dense = tf.keras.layers.Dense(<span class="number">128</span>, activation=tf.nn.relu)(flatten_layer)</span><br><span class="line">    output_layer = tf.keras.layers.Dense(<span class="number">10</span>, activation=tf.nn.softmax)(first_dense)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># declare inputs and outputs</span></span><br><span class="line">    func_model = Model(inputs=input_layer, outputs=output_layer)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> func_model</span><br></pre></td></tr></table></figure>
+
+<h1 id="Model-Visualization"><a href="#Model-Visualization" class="headerlink" title="Model Visualization"></a>Model Visualization</h1><p>模型可视化，可以看到两种方法构建的模型完全等效。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#model = build_model_with_functional()</span></span><br><span class="line">model = build_model_with_sequential()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Plot model graph</span></span><br><span class="line">plot_model(model, show_shapes=<span class="literal">True</span>, show_layer_names=<span class="literal">True</span>, to_file=<span class="string">&#x27;model.png&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/04/05/tensorflow-Sequential-API-vs-Functional-API/model_visual.png"></p>
+<h1 id="Training-the-model"><a href="#Training-the-model" class="headerlink" title="Training the model"></a>Training the model</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># prepare fashion mnist dataset</span></span><br><span class="line">mnist = tf.keras.datasets.fashion_mnist</span><br><span class="line">(training_images, training_labels), (test_images, test_labels) = mnist.load_data()</span><br><span class="line">training_images = training_images / <span class="number">255.0</span></span><br><span class="line">test_images = test_images / <span class="number">255.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># configure, train, and evaluate the model</span></span><br><span class="line">model.<span class="built_in">compile</span>(optimizer=tf.optimizers.Adam(),</span><br><span class="line">              loss=<span class="string">&#x27;sparse_categorical_crossentropy&#x27;</span>,</span><br><span class="line">              metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">model.fit(training_images, training_labels, epochs=<span class="number">5</span>)</span><br><span class="line">model.evaluate(test_images, test_labels)</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Downloading data from https:&#x2F;&#x2F;storage.googleapis.com&#x2F;tensorflow&#x2F;tf-keras-datasets&#x2F;train-labels-idx1-ubyte.gz</span><br><span class="line">32768&#x2F;29515 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 0s 0us&#x2F;step</span><br><span class="line">Downloading data from https:&#x2F;&#x2F;storage.googleapis.com&#x2F;tensorflow&#x2F;tf-keras-datasets&#x2F;train-images-idx3-ubyte.gz</span><br><span class="line">26427392&#x2F;26421880 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 0s 0us&#x2F;step</span><br><span class="line">Downloading data from https:&#x2F;&#x2F;storage.googleapis.com&#x2F;tensorflow&#x2F;tf-keras-datasets&#x2F;t10k-labels-idx1-ubyte.gz</span><br><span class="line">8192&#x2F;5148 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 0s 0us&#x2F;step</span><br><span class="line">Downloading data from https:&#x2F;&#x2F;storage.googleapis.com&#x2F;tensorflow&#x2F;tf-keras-datasets&#x2F;t10k-images-idx3-ubyte.gz</span><br><span class="line">4423680&#x2F;4422102 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 0s 0us&#x2F;step</span><br><span class="line">Train on 60000 samples</span><br><span class="line">Epoch 1&#x2F;5</span><br><span class="line">60000&#x2F;60000 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 5s 76us&#x2F;sample - loss: 0.4978 - accuracy: 0.8248</span><br><span class="line">Epoch 2&#x2F;5</span><br><span class="line">60000&#x2F;60000 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 4s 71us&#x2F;sample - loss: 0.3732 - accuracy: 0.8661</span><br><span class="line">Epoch 3&#x2F;5</span><br><span class="line">60000&#x2F;60000 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 4s 71us&#x2F;sample - loss: 0.3356 - accuracy: 0.8778</span><br><span class="line">Epoch 4&#x2F;5</span><br><span class="line">60000&#x2F;60000 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 4s 71us&#x2F;sample - loss: 0.3103 - accuracy: 0.8866</span><br><span class="line">Epoch 5&#x2F;5</span><br><span class="line">60000&#x2F;60000 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 4s 71us&#x2F;sample - loss: 0.2908 - accuracy: 0.8927</span><br><span class="line">10000&#x2F;10000 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 0s 27us&#x2F;sample - loss: 0.3443 - accuracy: 0.8759</span><br><span class="line">[0.34429156123399735, 0.8759]</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/04/%E4%B8%80%E4%BD%8D%E8%B4%A2%E5%8A%A1%E8%87%AA%E7%94%B1%E4%BA%BA%E5%A3%AB%E7%9A%84%E6%8A%95%E8%B5%84%E4%BF%AE%E8%A1%8C(%E8%BD%AC%E5%B8%96)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1184,116 +1294,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">未知环境下的Lidar概率占位栅格图(Occupancy Grid Map) Python代码实现</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-02-15 20:43:51" itemprop="dateCreated datePublished" datetime="2020-02-15T20:43:51+08:00">2020-02-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-03 12:10:47" itemprop="dateModified" datetime="2021-04-03T12:10:47+08:00">2021-04-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>前面文章&lt;&lt;自动驾驶Mapping-占位栅格图(Occupancy Grid Map)&gt;&gt;中介绍了概率占位栅格地图(Probabilistic Occupancy Grid)的原理，并推导了如何利用贝叶斯理论(Bayes Theorem)更新生成概率占位栅格地图。下面看看如何用Python代码实现未知环境中的运动车辆上安装的激光雷达(lidar)生成概率占位栅格图。</p>
-<h4 id="１、构建环境地图和车辆运动模型"><a href="#１、构建环境地图和车辆运动模型" class="headerlink" title="１、构建环境地图和车辆运动模型"></a>１、构建环境地图和车辆运动模型</h4><p>在生成栅格地图之前，首先需要构造一个用于车辆运动的环境地图(这个地图是用于仿真的真值，对于车辆来说是未知的环境)。我们用０和１值来构造Ｍ*N的环境地图，０表示可行驶区域，１表示占用区域。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1365,20 +1365,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-count">63</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1417,12 +1417,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">106k</span>
+    <span title="站点总字数">110k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:36</span>
+    <span title="站点阅读时长">1:40</span>
 </div>
 
 <span id="busuanzi_container_site_uv">
