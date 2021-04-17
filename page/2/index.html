@@ -190,6 +190,123 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/" class="post-title-link" itemprop="url">RNN预测行人运动轨迹</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-11 18:39:38" itemprop="dateCreated datePublished" datetime="2020-07-11T18:39:38+08:00">2020-07-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-28 22:44:07" itemprop="dateModified" datetime="2021-03-28T22:44:07+08:00">2021-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>最近在研究论文-Social LSTM: Human Trajectory Prediction in Crowded Spaces, 先从最基本的RNN模型入手看看效果。</p>
+<p>本文代码已经上传到Github:<br><a target="_blank" rel="noopener" href="https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py">https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py</a></p>
+</blockquote>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/Screenshot_from_2021-03-28_22-40-11.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/02/15/%E6%9C%AA%E7%9F%A5%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84lidar%E6%A6%82%E7%8E%87%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map-python%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1181,121 +1298,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header.jpg">
-      <meta itemprop="name" content="Young Times">
-      <meta itemprop="description" content="路要一步一步的走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半杯茶的小酒杯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">自动驾驶高精地图-概述与分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-09-20 13:27:19" itemprop="dateCreated datePublished" datetime="2019-09-20T13:27:19+08:00">2019-09-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-04 21:25:43" itemprop="dateModified" datetime="2021-04-04T21:25:43+08:00">2021-04-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>7.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HD-Maps-Structure-Functionalities-Accuracy-And-Standards"><a href="#HD-Maps-Structure-Functionalities-Accuracy-And-Standards" class="headerlink" title="HD Maps: Structure, Functionalities, Accuracy And Standards"></a>HD Maps: Structure, Functionalities, Accuracy And Standards</h1><p>在自动驾驶系统的功能系统架构中，高精地图与定位功能紧密相关，与感知模块交互，并最终支持规划和控制模块。</p>
-<p><img src="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7-2019-09-20-%E4%B8%8A%E5%8D%8810.59.57-1024x434.png" alt="Functional system architecture of an automated driving system."></p>
-<p>不同级别的自动驾驶对地图的精细程度要求不同。高精地图不仅存储Road和Lane等详细信息，而且还存储Landmark信息和周围环境信息用于辅助车辆定位；车辆定位信息和高精地图信息又作为Perception模块的输入，实现为物理环境建模的目的；Planning&amp;Control模块依据Perception模块输出的环境模型规划和控制车辆的驾驶行为；同时Perception的建模信息又可以作为高精地图的输入，实现对高精地图的及时更新。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1363,7 +1369,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1415,12 +1421,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">396k</span>
+    <span title="站点总字数">133k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">6:01</span>
+    <span title="站点阅读时长">2:01</span>
 </div>
 
 <span id="busuanzi_container_site_uv">
