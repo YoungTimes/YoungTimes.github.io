@@ -190,6 +190,117 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Young Times">
+      <meta itemprop="description" content="路要一步一步的走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半杯茶的小酒杯">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/" class="post-title-link" itemprop="url">自动驾驶定位算法-直方图滤波(Histogram Filter)定位</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-07 13:10:08" itemprop="dateCreated datePublished" datetime="2019-12-07T13:10:08+08:00">2019-12-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-02 23:55:54" itemprop="dateModified" datetime="2021-04-02T23:55:54+08:00">2021-04-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="直方图滤波-Histogram-Filter-的算法思想"><a href="#直方图滤波-Histogram-Filter-的算法思想" class="headerlink" title="直方图滤波(Histogram Filter)的算法思想"></a>直方图滤波(Histogram Filter)的算法思想</h1><p>直方图滤波的算法思想在于：它把整个状态空间dom(x(t))切分为互不相交的部分$b_1、b_2、…,b_{n-1}$，使得：</p>
+<p><img src="/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/1524143870919032686cb02.jpeg" alt="无人驾驶高精度定位技术(1)-直方图滤波Histogram Filter"></p>
+<p>然后定义一个新的状态空间$y_t \in \{0,…,n−1\}$，当且仅当$x(t)∈b_i$时，$y_t=i$,由于$y_t$是一个离散的状态空间，我们就可以采用离散贝叶斯算法计算$bel(y_t)$。$bel(y_t)$是对$bel(x_t)$的近似，它给出x(t)在每一个$b_i$的概率，$b_i$划分的越精细，计算的结果就越精确，当然精确的代价是计算成本的上升。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/07/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E4%B9%9D-%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%BB%A4%E6%B3%A2histogram-filter%E5%AE%9A%E4%BD%8D/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2019/09/20/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E9%AB%98%E7%B2%BE%E5%9C%B0%E5%9B%BE-%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -368,20 +479,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -420,7 +531,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">133k</span>
+    <span title="站点总字数">134k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
