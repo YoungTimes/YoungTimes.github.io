@@ -382,27 +382,6 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/Mapping%E6%8A%80%E6%9C%AF/</loc>
-    <lastmod>2021-04-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/</loc>
-    <lastmod>2021-04-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6Mapping/</loc>
-    <lastmod>2021-04-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://example.com/tags/PID-Control/</loc>
     <lastmod>2021-04-18</lastmod>
     <changefreq>daily</changefreq>
@@ -439,6 +418,27 @@
   
   <url>
     <loc>http://example.com/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2021-04-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/Mapping%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2021-04-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/</loc>
+    <lastmod>2021-04-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6Mapping/</loc>
     <lastmod>2021-04-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
