@@ -303,7 +303,18 @@
   <entry>
     <title>投资材料</title>
     <url>/2021/04/17/personal-investment-md/</url>
-    <content><![CDATA[<h1 id="中国平安"><a href="#中国平安" class="headerlink" title="中国平安"></a>中国平安</h1><p>1、历史PE数据(来源：<a href="https://caibaoshuo.com/terms/601318/pe_ratio">https://caibaoshuo.com/terms/601318/pe_ratio</a>)</p>
+    <content><![CDATA[<h1 id="投资指标"><a href="#投资指标" class="headerlink" title="投资指标"></a>投资指标</h1><h2 id="市盈率"><a href="#市盈率" class="headerlink" title="市盈率"></a>市盈率</h2><p>股票的市盈率(Price-to-Earning Ratio，P/E)，指每股市价(P)除以每股盈余(EPS)，通常作为股票是高估抑或低估的指标。</p>
+<p>市盈率的计算公式有两个：</p>
+<p>第一个是最广为人知的，即市盈率(P/E)=每股市价(P)/每股收益(EPS)；</p>
+<p>第二个是很容易被用错的，即市盈率(P/E)=总市值/归属于母公司普通股股东的利润(以下简称归母净利)；</p>
+<p>为什么市盈率是用总市值除以归母净利，而不是直接除以净利润呢？</p>
+<p>这主要是因为分子项中的总市值，对应的是母公司普通股股东享有的总价值；因而，市盈率公式中的分母项，对应的也应该是属于母公司普通股股东享有的净利润，而不应该包含少数股东享有的净利润，这样公式的内在逻辑才能具备一致性。</p>
+<span id="more"></span>
+
+<p>参考材料: </p>
+<p><a href="https://news.futunn.com/post/7044146?src=8&amp;lang=zh-cn&amp;level=1&amp;data_ticket=1610262263650498">https://news.futunn.com/post/7044146?src=8&amp;lang=zh-cn&amp;level=1&amp;data_ticket=1610262263650498</a></p>
+<h1 id="中国平安"><a href="#中国平安" class="headerlink" title="中国平安"></a>中国平安</h1><p>2021.4.18： PE: 9.67 PB: 1.81 市值: 1.38 万亿 企业净值: 9.88 千亿</p>
+<p>1、历史PE数据(来源：<a href="https://caibaoshuo.com/terms/601318/pe_ratio">https://caibaoshuo.com/terms/601318/pe_ratio</a>)</p>
 <table>
 <thead>
 <tr>
@@ -334,76 +345,466 @@
 <td align="center">9.67</td>
 </tr>
 </tbody></table>
-<div id="echarts9845" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts2469" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts9845'));
+        var myChart = echarts.init(document.getElementById('echarts2469'));
         // 指定图表的配置项和数据
         var option = {
-    tooltip : {
-        trigger: 'axis',
-        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
+    title: {
+        text: '中国平安历史PE',
+        x:'center',
+        y:'top',
+        textAlign: 'center'
     },
-    legend: {
-        data:['利润', '支出', '收入']
+    tooltip: {
+        trigger: 'axis'
     },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
+
+    xAxis: {
+        type: 'category',
+        data: ['2012/12', '2013/12', '2014/12', '2015/12', '2016/12', '2017/12', '2018/12', '2019/12', '2020/12', 'TTM(十二个月)']
     },
-    xAxis : [
-        {
-            type : 'value'
-        }
-    ],
-    yAxis : [
-        {
-            type : 'category',
-            axisTick : {show: false},
-            data : ['周一','周二','周三','周四','周五','周六','周日']
-        }
-    ],
-    series : [
-        {
-            name:'利润',
-            type:'bar',
-            itemStyle : {
-                normal: {
-                    label: {show: true, position: 'inside'}
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [17.88, 11.73, 16.91, 12.14, 10.38, 14.36, 9.55, 10.46, 12.94, 9.67],
+        type: 'line',
+        itemStyle : { normal: {label : {show: true}}},
+        markLine: {
+            data: [
+                {symbol: 'none',
+                label: {
+                    position: 'end',
+                    formatter: '最新PE'
+                },
+                yAxis: 9.67
                 }
-            },
-            data:[200, 170, 240, 244, 200, 220, 210]
-        },
-        {
-            name:'收入',
-            type:'bar',
-            stack: '总量',
-            itemStyle: {
-                normal: {
-                    label : {show: true}
-                }
-            },
-            data:[320, 302, 341, 374, 390, 450, 420]
-        },
-        {
-            name:'支出',
-            type:'bar',
-            stack: '总量',
-            itemStyle: {normal: {
-                label : {show: true, position: 'left'}
-            }},
-            data:[-120, -132, -101, -134, -190, -230, -210]
+            ]
         }
-    ]
-};
+    }]
+}
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
-</script>]]></content>
+</script>
+
+<div id="echarts749" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echarts749'));
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '中国平安历史归母净利润',
+        x:'center',
+        y:'top',
+        textAlign: 'center'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+
+    xAxis: {
+        type: 'category',
+        data: ['2019Q1', '2019Q2', '2019Q3', '2019Q4', '2020Q1', '2020Q2', '2020Q3', '2020Q4']
+    },
+    yAxis: [
+        {
+            type: 'value'
+        },
+        {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} %'
+            }
+        }
+    ],
+    series: 
+    [
+        {
+            data: [1272.19, 1469.85, 1575.74, 1494.07, 1299.53, 1204.14, 1228.81, 1430.99],
+            type: 'bar',
+            itemStyle : { normal: {label : {show: true}}},
+        },
+        {
+            type: 'line',
+            yAxisIndex: 1,
+            data: [38.68, 41.66, 54.23, 39.11, 2.15, -18.08, -22.02, -4.22],
+            itemStyle : { normal: {label : {show: true}}},
+        }
+    ]
+}
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+</script>
+
+<div id="echarts7153" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echarts7153'));
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '中国平安历史营业收入',
+        x:'center',
+        y:'top',
+        textAlign: 'center'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+
+    xAxis: {
+        type: 'category',
+        data: ['2019Q1', '2019Q2', '2019Q3', '2019Q4', '2020Q1', '2020Q2', '2020Q3', '2020Q4']
+    },
+    yAxis: [
+        {
+            type: 'value'
+        },
+        {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} %'
+            }
+        }
+    ],
+    series: 
+    [
+        {
+            data: [10437.72, 10796.87, 11171.05, 11688.67, 11188.78, 11596.68, 11931.86, 12183.15],
+            type: 'bar',
+            itemStyle : { normal: {label : {show: true}}},
+        },
+        {
+            type: 'line',
+            yAxisIndex: 1,
+            data: [11.47, 12.07, 13.95, 19.66, 7.2, 7.41, 6.81, 4.23],
+            itemStyle : { normal: {label : {show: true}}},
+        }
+    ]
+}
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+</script>
+
+
+<h1 id="融创中国"><a href="#融创中国" class="headerlink" title="融创中国"></a>融创中国</h1><p>2021.04.18  PE: 3.47 PB: 0.97 市值: 1.45 千亿 企业净值: 2.11 千亿</p>
+<p>1、历史PE数据(来源：<a href="https://caibaoshuo.com/terms/01918/pe_ratio">https://caibaoshuo.com/terms/01918/pe_ratio</a>)</p>
+<table>
+<thead>
+<tr>
+<th align="center">年份</th>
+<th align="center">2012/12</th>
+<th align="center">2013/12</th>
+<th align="center">2014/12</th>
+<th align="center">2015/12</th>
+<th align="center">2016/12</th>
+<th align="center">2017/12</th>
+<th align="center">2018/12</th>
+<th align="center">2019/12</th>
+<th align="center">TTM(十二个月)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">P/E</td>
+<td align="center">5.54</td>
+<td align="center">3.78</td>
+<td align="center">6.54</td>
+<td align="center">5.13</td>
+<td align="center">8.0</td>
+<td align="center">9.98</td>
+<td align="center">5.92</td>
+<td align="center">6.98</td>
+<td align="center">3.47</td>
+</tr>
+</tbody></table>
+<div id="echarts5746" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echarts5746'));
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '融创中国历史PE',
+        x:'center',
+        y:'top',
+        textAlign: 'center'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+
+    xAxis: {
+        type: 'category',
+        data: ['2012/12', '2013/12', '2014/12', '2015/12', '2016/12', '2017/12', '2018/12', '2019/12', 'TTM(十二个月)']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [5.54, 3.78, 6.54, 5.13, 8.0, 9.98, 5.92, 6.98, 3.47],
+        type: 'line',
+        itemStyle : { normal: {label : {show: true}}},
+        markLine: {
+            data: [
+                {symbol: 'none',
+                label: {
+                    position: 'end',
+                    formatter: '最新PE'
+                },
+                yAxis: 3.47
+                }
+            ]
+        }
+    }]
+}
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+</script>
+
+<p>2、历史PB数据(来源：<a href="https://caibaoshuo.com/terms/01918/pb_ratio">https://caibaoshuo.com/terms/01918/pb_ratio</a>)</p>
+<table>
+<thead>
+<tr>
+<th align="center">年份</th>
+<th align="center">2012</th>
+<th align="center">2013</th>
+<th align="center">2014</th>
+<th align="center">2015</th>
+<th align="center">2016</th>
+<th align="center">2017</th>
+<th align="center">2018</th>
+<th align="center">2019</th>
+<th align="center">TTM(十二个月)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">PB</td>
+<td align="center">1.51</td>
+<td align="center">0.88</td>
+<td align="center">1.29</td>
+<td align="center">0.88</td>
+<td align="center">0.66</td>
+<td align="center">2.23</td>
+<td align="center">1.57</td>
+<td align="center">2.14</td>
+<td align="center">0.97</td>
+</tr>
+</tbody></table>
+<div id="echarts5035" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echarts5035'));
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '融创中国历史PB',
+        x:'center',
+        y:'top',
+        textAlign: 'center'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+
+    xAxis: {
+        type: 'category',
+        data: ['2012/12', '2013/12', '2014/12', '2015/12', '2016/12', '2017/12', '2018/12', '2019/12', 'TTM(十二个月)']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [1.51, 0.88, 1.29, 0.88, 0.66, 2.23, 1.57, 2.14, 0.97],
+        type: 'line',
+        itemStyle : { normal: {label : {show: true}}},
+        markLine: {
+            data: [
+                {symbol: 'none',
+                label: {
+                    position: 'end',
+                    formatter: '最新PB'
+                },
+                yAxis: 0.97
+                }
+            ]
+        }
+    }]
+}
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+</script>
+
+<p>3、历史营收数据(来源：<a href="https://www.sunac.com.cn/mobile/investor.aspx?type=22">https://www.sunac.com.cn/mobile/investor.aspx?type=22</a>)</p>
+<table>
+<thead>
+<tr>
+<th align="center">年份</th>
+<th align="center">2012</th>
+<th align="center">2013</th>
+<th align="center">2014</th>
+<th align="center">2015</th>
+<th align="center">2016</th>
+<th align="center">2017</th>
+<th align="center">2018</th>
+<th align="center">2019</th>
+<th align="center">2020</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">营收(亿)</td>
+<td align="center">208.426</td>
+<td align="center">308.367</td>
+<td align="center">250.72</td>
+<td align="center">230.109</td>
+<td align="center">353.4</td>
+<td align="center">658.7</td>
+<td align="center">1247.5</td>
+<td align="center">1693.2</td>
+<td align="center">2305.9</td>
+</tr>
+</tbody></table>
+<div id="echarts9357" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echarts9357'));
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '中国平安历史营业收入',
+        x:'center',
+        y:'top',
+        textAlign: 'center'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+
+    xAxis: {
+        type: 'category',
+        data: ['2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
+    },
+    yAxis: [
+        {
+            type: 'value'
+        },
+        {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} %'
+            }
+        }
+    ],
+    series: 
+    [
+        {
+            data: [208.426, 308.367, 250.72, 230.109, 353.4, 658.7, 1247.5, 1693.2, 2305.9],
+            type: 'bar',
+            itemStyle : { normal: {label : {show: true}}},
+        },
+        {
+            type: 'line',
+            yAxisIndex: 1,
+            data: [96.55, 47.95, -18.69, -8.22, 53.58, 86.39, 89.39, 35.73, 36.19],
+            itemStyle : { normal: {label : {show: true}}},
+        }
+    ]
+}
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+</script>
+
+<p>4、历史归母净利润(来源：<a href="https://www.sunac.com.cn/mobile/investor.aspx?type=22">https://www.sunac.com.cn/mobile/investor.aspx?type=22</a>)</p>
+<table>
+<thead>
+<tr>
+<th align="center">年份</th>
+<th align="center">2012</th>
+<th align="center">2013</th>
+<th align="center">2014</th>
+<th align="center">2015</th>
+<th align="center">2016</th>
+<th align="center">2017</th>
+<th align="center">2018</th>
+<th align="center">2019</th>
+<th align="center">2020</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">营收(亿)</td>
+<td align="center">26.073</td>
+<td align="center">31.784</td>
+<td align="center">32.221</td>
+<td align="center">32.978</td>
+<td align="center">24.8</td>
+<td align="center">110.0</td>
+<td align="center">165.7</td>
+<td align="center">260.3</td>
+<td align="center">356.4</td>
+</tr>
+</tbody></table>
+<div id="echarts5197" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echarts5197'));
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '中国平安历史净利润',
+        x:'center',
+        y:'top',
+        textAlign: 'center'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+
+    xAxis: {
+        type: 'category',
+        data: ['2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
+    },
+    yAxis: [
+        {
+            type: 'value'
+        },
+        {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} %'
+            }
+        }
+    ],
+    series: 
+    [
+        {
+            data: [26.073, 31.784, 32.221, 32.978, 24.8, 110.0, 165.7, 260.3, 356.4],
+            type: 'bar',
+            itemStyle : { normal: {label : {show: true}}},
+        },
+        {
+            type: 'line',
+            yAxisIndex: 1,
+            data: [10.66, 21.90, 1.37, 2.35, -24.80, 343.55, 50.64, 57.09, 36.92],
+            itemStyle : { normal: {label : {show: true}}},
+        }
+    ]
+}
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+</script>
+
+
+<h1 id="爱奇艺"><a href="#爱奇艺" class="headerlink" title="爱奇艺"></a>爱奇艺</h1><p>| 年份 | 2019Q1 | 2019Q2 | 2019Q3 | 2019Q4 |<br>|:—:|:—:|:—:|:—:|:—:|:—:|<br>| 营收(亿) | 26.073 | 31.784 | 32.221  | 32.978  |</p>
+]]></content>
       <categories>
         <category>-- 投资理财</category>
       </categories>
@@ -722,73 +1123,6 @@
       </tags>
   </entry>
   <entry>
-    <title>自动驾驶中的PID控制算法</title>
-    <url>/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>PID控制算法是一个在工业控制应用中常见的反馈回路算法，它把收集到的数据和一个参考值进行比较，然后把这个差别用于计算新的输入值，从而使得整个系统更加准确而稳定。</p>
-<p>PID控制算法由比例单元(Proportional)、积分单元(Integral)和微分单元(Derivative)三部分组成，通过这三个单元的增益${\displaystyle K_{p}}$，${\displaystyle K_{i}}$和${\displaystyle K_{d}}$来达到理想的控制效果。</p>
-<p>PID主要适用于基本上线性，且动态特性不随时间变化的系统。</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/9e82d77f-d8f5-4d96-87d4-a9a66f0b3575-1024x471.png" alt="图片来源【1】"></p>
-<span id="more"></span>
-
-<p>下面我们主要了解PID控制算法的细节及其在机器人/自动驾驶领域的应用。在机器人/自动驾驶领域，一个常见的任务就是使得机器人/自动驾驶车辆移动到目标轨迹上。如下图所示，车辆以速度v前进，我们的目标是让其沿着Reference Trajectory行驶。Crosstrack Error是目标偏差，PID的目标就是不断缩小该偏差，使其无限接近于0。</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/3ca5ab3d-e0e3-42f6-8579-dfb26e23d188-1024x288.png" alt="图片来源【2】"></p>
-<h1 id="车辆模型"><a href="#车辆模型" class="headerlink" title="车辆模型"></a>车辆模型</h1><p>为了解决上述问题，需要先定义一个车辆模型，用以描述车辆的属性和运动特性。(代码来自Udacity的免费课程Artificial Intelligence for Robotics【2】)。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">robot</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, length=<span class="number">20.0</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Creates robot and initializes location/orientation to 0, 0, 0.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.x = <span class="number">0.0</span></span><br><span class="line">        self.y = <span class="number">0.0</span></span><br><span class="line">        self.orientation = <span class="number">0.0</span></span><br><span class="line">        self.length = length</span><br><span class="line">        self.steering_noise = <span class="number">0.0</span></span><br><span class="line">        self.distance_noise = <span class="number">0.0</span></span><br><span class="line">        self.steering_drift = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set</span>(<span class="params">self, x, y, orientation</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Sets a robot coordinate.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line">        self.orientation = orientation % (<span class="number">2.0</span> * np.pi)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_noise</span>(<span class="params">self, steering_noise, distance_noise</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Sets the noise parameters.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># makes it possible to change the noise parameters</span></span><br><span class="line">        <span class="comment"># this is often useful in particle filters</span></span><br><span class="line">        self.steering_noise = steering_noise</span><br><span class="line">        self.distance_noise = distance_noise</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_steering_drift</span>(<span class="params">self, drift</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Sets the systematical steering drift parameter</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.steering_drift = drift</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">move</span>(<span class="params">self, steering, distance, tolerance=<span class="number">0.001</span>, max_steering_angle=np.pi / <span class="number">4.0</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        steering = front wheel steering angle, limited by max_steering_angle</span></span><br><span class="line"><span class="string">        distance = total distance driven, most be non-negative</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> steering &gt; max_steering_angle:</span><br><span class="line">            steering = max_steering_angle</span><br><span class="line">        <span class="keyword">if</span> steering &lt; -max_steering_angle:</span><br><span class="line">            steering = -max_steering_angle</span><br><span class="line">        <span class="keyword">if</span> distance &lt; <span class="number">0.0</span>:</span><br><span class="line">            distance = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># apply noise</span></span><br><span class="line">        steering2 = random.gauss(steering, self.steering_noise)</span><br><span class="line">        distance2 = random.gauss(distance, self.distance_noise)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># apply steering drift</span></span><br><span class="line">        steering2 += self.steering_drift</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Execute motion</span></span><br><span class="line">        turn = np.tan(steering2) * distance2 / self.length</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">abs</span>(turn) &lt; tolerance:</span><br><span class="line">            <span class="comment"># approximate by straight line motion</span></span><br><span class="line">            self.x += distance2 * np.cos(self.orientation)</span><br><span class="line">            self.y += distance2 * np.sin(self.orientation)</span><br><span class="line">            self.orientation = (self.orientation + turn) % (<span class="number">2.0</span> * np.pi)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># approximate bicycle model for motion</span></span><br><span class="line">            radius = distance2 / turn</span><br><span class="line">            cx = self.x - (np.sin(self.orientation) * radius)</span><br><span class="line">            cy = self.y + (np.cos(self.orientation) * radius)</span><br><span class="line">            self.orientation = (self.orientation + turn) % (<span class="number">2.0</span> * np.pi)</span><br><span class="line">            self.x = cx + (np.sin(self.orientation) * radius)</span><br><span class="line">            self.y = cy - (np.cos(self.orientation) * radius)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;[x=%.5f y=%.5f orient=%.5f]&#x27;</span> % (self.x, self.y, self.orientation)</span><br></pre></td></tr></table></figure>
-
-<h1 id="Proportional-Control"><a href="#Proportional-Control" class="headerlink" title="Proportional Control"></a>Proportional Control</h1><p>Proportional Control考虑当前偏差，偏差越大就让车辆越快的向中心线靠拢。</p>
-<p>$$\alpha = \tau \cdot \text{CTE}$$</p>
-<p>上式中，$\alpha$是车辆的Steering Angle，$\tau$是增益系数，$\text{CTE}$是Cross Track Error。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">param</span>):</span></span><br><span class="line">    myrobot = robot()</span><br><span class="line">    myrobot.<span class="built_in">set</span>(<span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>)</span><br><span class="line">    speed = <span class="number">1.0</span> <span class="comment"># motion distance is equalt to speed (we assume time = 1)</span></span><br><span class="line">    N = <span class="number">100</span> </span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        crosstrack_error = myrobot.y</span><br><span class="line">        steer = -param * crosstrack_error</span><br><span class="line">        myrobot.move(steer, speed)</span><br><span class="line"></span><br><span class="line">run(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
-
-<p>仅对车辆施加Proportional Control的车辆运动效果如下(绿色的是车辆运动轨迹，红色是目标轨迹):</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/0f3d6a29-e910-44b8-bf97-f0e7f5331d54-1024x379.png"></p>
-<p>做一个动图，看起来更加直观。可以看到，车辆发生了overshoot的问题，沿着目标轨迹上下震荡，始终不能做到稳定的沿着目标轨迹运动。</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/b5feb663-9974-4485-931a-adef0864b6af.gif"></p>
-<p>我们调大增益系数，从$\tau = 0.1$到$\tau = 0.3$，观察到车辆震荡的频率更高了。</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/1d519af5-915b-4665-964a-7164f81e2323-1024x391.png"></p>
-<h1 id="P-amp-D-Control"><a href="#P-amp-D-Control" class="headerlink" title="P&amp;D Control"></a>P&amp;D Control</h1><p>为了解决OverShoot引起的震荡问题，引入Derivative Control。 Derivative Control考虑CTE的变化，并根据变化反方向校正Steering Angle，使得车辆可以平滑的靠近目标轨迹。</p>
-<p>$$ \alpha = -\tau_p \cdot \text{CTE} - \tau_d \cdot \frac{d}{dt} \text{CTE} $$</p>
-<p>代码实现:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">robot = Robot()</span><br><span class="line">robot.<span class="built_in">set</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">robot, tau_p, tau_d, n=<span class="number">150</span>, speed=<span class="number">1.0</span></span>):</span></span><br><span class="line">    x_trajectory = []</span><br><span class="line">    y_trajectory = []</span><br><span class="line"></span><br><span class="line">    crosstrack_error = robot.y</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        diff_crosstrack_error = robot.y - crosstrack_error</span><br><span class="line">        steer = -tau_p * crosstrack_error - tau_d * diff_crosstrack_error </span><br><span class="line">        crosstrack_error = robot.y</span><br><span class="line">        robot.move(steer, speed)</span><br><span class="line"></span><br><span class="line">        x_trajectory.append(robot.x)</span><br><span class="line">        y_trajectory.append(robot.y)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x_trajectory, y_trajectory</span><br><span class="line"></span><br><span class="line">x_trajectory, y_trajectory = run(robot, <span class="number">0.3</span>, <span class="number">3.0</span>)</span><br><span class="line">n = <span class="built_in">len</span>(x_trajectory)</span><br><span class="line"></span><br><span class="line">fig, (ax1, ax2) = plt.subplots(<span class="number">2</span>, <span class="number">1</span>, figsize=(<span class="number">8</span>, <span class="number">8</span>))</span><br><span class="line">ax1.plot(x_trajectory, np.zeros(n), <span class="string">&#x27;r&#x27;</span>, label=<span class="string">&#x27;reference&#x27;</span>)</span><br><span class="line">ax1.plot(x_trajectory, y_trajectory, <span class="string">&#x27;g&#x27;</span>, label=<span class="string">&#x27;PD controller&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>当$\tau_p = 0.1, \tau_d = 3.0$时的效果：</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/bd159693-a2e1-47ee-95fa-a2deaf4ebec0-1024x386.png"></p>
-<p>当$\tau_p = 0.2, \tau_d = 3.0$时的效果：</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/e68b1903-9b5b-4ef9-8a9c-0b8db66f0417-1024x392.png"></p>
-<p>当$\tau_p = 0.3, \tau_d = 3.0$时的效果：</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/ca441fc0-409f-4077-9a52-8ce83e2db793-1024x392.png"></p>
-<p>看起来已经很完美了，但是实际还存在一个系统偏差(Systematic Bias)的问题。如下图所示，控制指令要求车辆转向为0度，但实际上它转了0.5度，这种误差对于人类司机来讲，会自动校正；但是对于自动驾驶系统，需要消除这种误差。</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/03564ae0-2b25-43dd-b29c-984d9c4d8f47.png" alt="图片来源【2】"></p>
-<p>给Robot增加一个drift：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">robot.set_steering_drift(<span class="number">10.0</span> * math.pi / <span class="number">180.0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>可以看到由于系统误差的存在，导致最终车辆稳定在一个非目标位置。</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/efb4e82f-9c1f-4102-ac8d-448c8b258de4-1024x390.png" alt="图片来源【2】"></p>
-<h1 id="PID-Control"><a href="#PID-Control" class="headerlink" title="PID Control"></a>PID Control</h1><p>如何解决系统偏差导致的目标偏差的问题？直观的感觉是，需要向右打方向盘，校正车辆的行驶方向，使得车辆不断靠近目标轨迹。这就是Integral Control的效果。</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/63a96606-6f1b-4338-a5be-9e6735da7ad6-1024x469.png"></p>
-<p>$$ \alpha = -\tau_p \cdot \text{CTE} - \tau_d \cdot \frac{d}{dt} \text{CTE} - \tau_i \text{CTE} $$</p>
-<p>代码实现：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">robot = Robot()</span><br><span class="line">robot.<span class="built_in">set</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">robot.set_steering_drift(<span class="number">10.0</span> * math.pi / <span class="number">180.0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">robot, tau_p, tau_d, tau_i, n=<span class="number">200</span>, speed=<span class="number">1.0</span></span>):</span></span><br><span class="line">    x_trajectory = []</span><br><span class="line">    y_trajectory = []</span><br><span class="line"></span><br><span class="line">    int_crosstrack_error = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    crosstrack_error = robot.y</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        diff_crosstrack_error = robot.y - crosstrack_error</span><br><span class="line"></span><br><span class="line">        crosstrack_error = robot.y</span><br><span class="line">        int_crosstrack_error += crosstrack_error</span><br><span class="line"></span><br><span class="line">        steer = -tau_p * crosstrack_error - tau_d * diff_crosstrack_error -tau_i * int_crosstrack_error</span><br><span class="line"></span><br><span class="line">        robot.move(steer, speed)</span><br><span class="line"></span><br><span class="line">        x_trajectory.append(robot.x)</span><br><span class="line">        y_trajectory.append(robot.y)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x_trajectory, y_trajectory</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">x_trajectory, y_trajectory = run(robot, <span class="number">0.2</span>, <span class="number">3.0</span>, <span class="number">0.004</span>)</span><br><span class="line">n = <span class="built_in">len</span>(x_trajectory)</span><br><span class="line"></span><br><span class="line">plt.plot(x_trajectory, y_trajectory, <span class="string">&#x27;g&#x27;</span>, label=<span class="string">&#x27;PID controller&#x27;</span>)</span><br><span class="line">plt.plot(x_trajectory, np.zeros(n), <span class="string">&#x27;r&#x27;</span>, label=<span class="string">&#x27;reference&#x27;</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>实际效果如下:</p>
-<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/0a6aee53-4c06-490f-9dfe-ee3f83fda0d7-1024x765.png"></p>
-<p>本文代码均来自：Udacity的Artificial Intelligence for Robotics。</p>
-<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>1.<a href="https://zh.wikipedia.org/wiki/PID%E6%8E%A7%E5%88%B6%E5%99%A8">https://zh.wikipedia.org/wiki/PID%E6%8E%A7%E5%88%B6%E5%99%A8</a></p>
-<p>2.Udacity的Artificial Intelligence for Robotics</p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-      </categories>
-      <tags>
-        <tag>PID Control</tag>
-        <tag>PID控制算法</tag>
-        <tag>Proportional Control</tag>
-        <tag>Robot Control</tag>
-        <tag>机器人控制</tag>
-        <tag>自动驾驶控制</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>自动驾驶Mapping-占位栅格图(Occupancy Grid Map)</title>
     <url>/2020/02/01/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6mapping-%E5%8D%A0%E4%BD%8D%E6%A0%85%E6%A0%BC%E5%9B%BEoccupancy-grid-map/</url>
     <content><![CDATA[<p>前面文章《自动驾驶运动规划(Motion Planning)》中提到可以使用占位图(Occupancy Grid Map)表示自动驾驶行驶区域的哪些区域被障碍物(如静止的车辆、路中间的石墩子、树木、路肩等)占用，Motion Planning模块会通过查询占位地图避开这些道路障碍物，避免与它们碰撞，从而达到安全驾驶的目的。</p>
@@ -882,6 +1216,73 @@
         <tag>Mapping技术</tag>
         <tag>占位栅格地图</tag>
         <tag>自动驾驶Mapping</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>自动驾驶中的PID控制算法</title>
+    <url>/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>PID控制算法是一个在工业控制应用中常见的反馈回路算法，它把收集到的数据和一个参考值进行比较，然后把这个差别用于计算新的输入值，从而使得整个系统更加准确而稳定。</p>
+<p>PID控制算法由比例单元(Proportional)、积分单元(Integral)和微分单元(Derivative)三部分组成，通过这三个单元的增益${\displaystyle K_{p}}$，${\displaystyle K_{i}}$和${\displaystyle K_{d}}$来达到理想的控制效果。</p>
+<p>PID主要适用于基本上线性，且动态特性不随时间变化的系统。</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/9e82d77f-d8f5-4d96-87d4-a9a66f0b3575-1024x471.png" alt="图片来源【1】"></p>
+<span id="more"></span>
+
+<p>下面我们主要了解PID控制算法的细节及其在机器人/自动驾驶领域的应用。在机器人/自动驾驶领域，一个常见的任务就是使得机器人/自动驾驶车辆移动到目标轨迹上。如下图所示，车辆以速度v前进，我们的目标是让其沿着Reference Trajectory行驶。Crosstrack Error是目标偏差，PID的目标就是不断缩小该偏差，使其无限接近于0。</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/3ca5ab3d-e0e3-42f6-8579-dfb26e23d188-1024x288.png" alt="图片来源【2】"></p>
+<h1 id="车辆模型"><a href="#车辆模型" class="headerlink" title="车辆模型"></a>车辆模型</h1><p>为了解决上述问题，需要先定义一个车辆模型，用以描述车辆的属性和运动特性。(代码来自Udacity的免费课程Artificial Intelligence for Robotics【2】)。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">robot</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, length=<span class="number">20.0</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Creates robot and initializes location/orientation to 0, 0, 0.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.x = <span class="number">0.0</span></span><br><span class="line">        self.y = <span class="number">0.0</span></span><br><span class="line">        self.orientation = <span class="number">0.0</span></span><br><span class="line">        self.length = length</span><br><span class="line">        self.steering_noise = <span class="number">0.0</span></span><br><span class="line">        self.distance_noise = <span class="number">0.0</span></span><br><span class="line">        self.steering_drift = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set</span>(<span class="params">self, x, y, orientation</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Sets a robot coordinate.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line">        self.orientation = orientation % (<span class="number">2.0</span> * np.pi)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_noise</span>(<span class="params">self, steering_noise, distance_noise</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Sets the noise parameters.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># makes it possible to change the noise parameters</span></span><br><span class="line">        <span class="comment"># this is often useful in particle filters</span></span><br><span class="line">        self.steering_noise = steering_noise</span><br><span class="line">        self.distance_noise = distance_noise</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_steering_drift</span>(<span class="params">self, drift</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Sets the systematical steering drift parameter</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.steering_drift = drift</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">move</span>(<span class="params">self, steering, distance, tolerance=<span class="number">0.001</span>, max_steering_angle=np.pi / <span class="number">4.0</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        steering = front wheel steering angle, limited by max_steering_angle</span></span><br><span class="line"><span class="string">        distance = total distance driven, most be non-negative</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> steering &gt; max_steering_angle:</span><br><span class="line">            steering = max_steering_angle</span><br><span class="line">        <span class="keyword">if</span> steering &lt; -max_steering_angle:</span><br><span class="line">            steering = -max_steering_angle</span><br><span class="line">        <span class="keyword">if</span> distance &lt; <span class="number">0.0</span>:</span><br><span class="line">            distance = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># apply noise</span></span><br><span class="line">        steering2 = random.gauss(steering, self.steering_noise)</span><br><span class="line">        distance2 = random.gauss(distance, self.distance_noise)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># apply steering drift</span></span><br><span class="line">        steering2 += self.steering_drift</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Execute motion</span></span><br><span class="line">        turn = np.tan(steering2) * distance2 / self.length</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">abs</span>(turn) &lt; tolerance:</span><br><span class="line">            <span class="comment"># approximate by straight line motion</span></span><br><span class="line">            self.x += distance2 * np.cos(self.orientation)</span><br><span class="line">            self.y += distance2 * np.sin(self.orientation)</span><br><span class="line">            self.orientation = (self.orientation + turn) % (<span class="number">2.0</span> * np.pi)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># approximate bicycle model for motion</span></span><br><span class="line">            radius = distance2 / turn</span><br><span class="line">            cx = self.x - (np.sin(self.orientation) * radius)</span><br><span class="line">            cy = self.y + (np.cos(self.orientation) * radius)</span><br><span class="line">            self.orientation = (self.orientation + turn) % (<span class="number">2.0</span> * np.pi)</span><br><span class="line">            self.x = cx + (np.sin(self.orientation) * radius)</span><br><span class="line">            self.y = cy - (np.cos(self.orientation) * radius)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;[x=%.5f y=%.5f orient=%.5f]&#x27;</span> % (self.x, self.y, self.orientation)</span><br></pre></td></tr></table></figure>
+
+<h1 id="Proportional-Control"><a href="#Proportional-Control" class="headerlink" title="Proportional Control"></a>Proportional Control</h1><p>Proportional Control考虑当前偏差，偏差越大就让车辆越快的向中心线靠拢。</p>
+<p>$$\alpha = \tau \cdot \text{CTE}$$</p>
+<p>上式中，$\alpha$是车辆的Steering Angle，$\tau$是增益系数，$\text{CTE}$是Cross Track Error。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">param</span>):</span></span><br><span class="line">    myrobot = robot()</span><br><span class="line">    myrobot.<span class="built_in">set</span>(<span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>)</span><br><span class="line">    speed = <span class="number">1.0</span> <span class="comment"># motion distance is equalt to speed (we assume time = 1)</span></span><br><span class="line">    N = <span class="number">100</span> </span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        crosstrack_error = myrobot.y</span><br><span class="line">        steer = -param * crosstrack_error</span><br><span class="line">        myrobot.move(steer, speed)</span><br><span class="line"></span><br><span class="line">run(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>仅对车辆施加Proportional Control的车辆运动效果如下(绿色的是车辆运动轨迹，红色是目标轨迹):</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/0f3d6a29-e910-44b8-bf97-f0e7f5331d54-1024x379.png"></p>
+<p>做一个动图，看起来更加直观。可以看到，车辆发生了overshoot的问题，沿着目标轨迹上下震荡，始终不能做到稳定的沿着目标轨迹运动。</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/b5feb663-9974-4485-931a-adef0864b6af.gif"></p>
+<p>我们调大增益系数，从$\tau = 0.1$到$\tau = 0.3$，观察到车辆震荡的频率更高了。</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/1d519af5-915b-4665-964a-7164f81e2323-1024x391.png"></p>
+<h1 id="P-amp-D-Control"><a href="#P-amp-D-Control" class="headerlink" title="P&amp;D Control"></a>P&amp;D Control</h1><p>为了解决OverShoot引起的震荡问题，引入Derivative Control。 Derivative Control考虑CTE的变化，并根据变化反方向校正Steering Angle，使得车辆可以平滑的靠近目标轨迹。</p>
+<p>$$ \alpha = -\tau_p \cdot \text{CTE} - \tau_d \cdot \frac{d}{dt} \text{CTE} $$</p>
+<p>代码实现:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">robot = Robot()</span><br><span class="line">robot.<span class="built_in">set</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">robot, tau_p, tau_d, n=<span class="number">150</span>, speed=<span class="number">1.0</span></span>):</span></span><br><span class="line">    x_trajectory = []</span><br><span class="line">    y_trajectory = []</span><br><span class="line"></span><br><span class="line">    crosstrack_error = robot.y</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        diff_crosstrack_error = robot.y - crosstrack_error</span><br><span class="line">        steer = -tau_p * crosstrack_error - tau_d * diff_crosstrack_error </span><br><span class="line">        crosstrack_error = robot.y</span><br><span class="line">        robot.move(steer, speed)</span><br><span class="line"></span><br><span class="line">        x_trajectory.append(robot.x)</span><br><span class="line">        y_trajectory.append(robot.y)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x_trajectory, y_trajectory</span><br><span class="line"></span><br><span class="line">x_trajectory, y_trajectory = run(robot, <span class="number">0.3</span>, <span class="number">3.0</span>)</span><br><span class="line">n = <span class="built_in">len</span>(x_trajectory)</span><br><span class="line"></span><br><span class="line">fig, (ax1, ax2) = plt.subplots(<span class="number">2</span>, <span class="number">1</span>, figsize=(<span class="number">8</span>, <span class="number">8</span>))</span><br><span class="line">ax1.plot(x_trajectory, np.zeros(n), <span class="string">&#x27;r&#x27;</span>, label=<span class="string">&#x27;reference&#x27;</span>)</span><br><span class="line">ax1.plot(x_trajectory, y_trajectory, <span class="string">&#x27;g&#x27;</span>, label=<span class="string">&#x27;PD controller&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>当$\tau_p = 0.1, \tau_d = 3.0$时的效果：</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/bd159693-a2e1-47ee-95fa-a2deaf4ebec0-1024x386.png"></p>
+<p>当$\tau_p = 0.2, \tau_d = 3.0$时的效果：</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/e68b1903-9b5b-4ef9-8a9c-0b8db66f0417-1024x392.png"></p>
+<p>当$\tau_p = 0.3, \tau_d = 3.0$时的效果：</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/ca441fc0-409f-4077-9a52-8ce83e2db793-1024x392.png"></p>
+<p>看起来已经很完美了，但是实际还存在一个系统偏差(Systematic Bias)的问题。如下图所示，控制指令要求车辆转向为0度，但实际上它转了0.5度，这种误差对于人类司机来讲，会自动校正；但是对于自动驾驶系统，需要消除这种误差。</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/03564ae0-2b25-43dd-b29c-984d9c4d8f47.png" alt="图片来源【2】"></p>
+<p>给Robot增加一个drift：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">robot.set_steering_drift(<span class="number">10.0</span> * math.pi / <span class="number">180.0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到由于系统误差的存在，导致最终车辆稳定在一个非目标位置。</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/efb4e82f-9c1f-4102-ac8d-448c8b258de4-1024x390.png" alt="图片来源【2】"></p>
+<h1 id="PID-Control"><a href="#PID-Control" class="headerlink" title="PID Control"></a>PID Control</h1><p>如何解决系统偏差导致的目标偏差的问题？直观的感觉是，需要向右打方向盘，校正车辆的行驶方向，使得车辆不断靠近目标轨迹。这就是Integral Control的效果。</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/63a96606-6f1b-4338-a5be-9e6735da7ad6-1024x469.png"></p>
+<p>$$ \alpha = -\tau_p \cdot \text{CTE} - \tau_d \cdot \frac{d}{dt} \text{CTE} - \tau_i \text{CTE} $$</p>
+<p>代码实现：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">robot = Robot()</span><br><span class="line">robot.<span class="built_in">set</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">robot.set_steering_drift(<span class="number">10.0</span> * math.pi / <span class="number">180.0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">robot, tau_p, tau_d, tau_i, n=<span class="number">200</span>, speed=<span class="number">1.0</span></span>):</span></span><br><span class="line">    x_trajectory = []</span><br><span class="line">    y_trajectory = []</span><br><span class="line"></span><br><span class="line">    int_crosstrack_error = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    crosstrack_error = robot.y</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        diff_crosstrack_error = robot.y - crosstrack_error</span><br><span class="line"></span><br><span class="line">        crosstrack_error = robot.y</span><br><span class="line">        int_crosstrack_error += crosstrack_error</span><br><span class="line"></span><br><span class="line">        steer = -tau_p * crosstrack_error - tau_d * diff_crosstrack_error -tau_i * int_crosstrack_error</span><br><span class="line"></span><br><span class="line">        robot.move(steer, speed)</span><br><span class="line"></span><br><span class="line">        x_trajectory.append(robot.x)</span><br><span class="line">        y_trajectory.append(robot.y)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x_trajectory, y_trajectory</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">x_trajectory, y_trajectory = run(robot, <span class="number">0.2</span>, <span class="number">3.0</span>, <span class="number">0.004</span>)</span><br><span class="line">n = <span class="built_in">len</span>(x_trajectory)</span><br><span class="line"></span><br><span class="line">plt.plot(x_trajectory, y_trajectory, <span class="string">&#x27;g&#x27;</span>, label=<span class="string">&#x27;PID controller&#x27;</span>)</span><br><span class="line">plt.plot(x_trajectory, np.zeros(n), <span class="string">&#x27;r&#x27;</span>, label=<span class="string">&#x27;reference&#x27;</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>实际效果如下:</p>
+<p><img src="/2020/10/02/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%B8%AD%E7%9A%84pid%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/0a6aee53-4c06-490f-9dfe-ee3f83fda0d7-1024x765.png"></p>
+<p>本文代码均来自：Udacity的Artificial Intelligence for Robotics。</p>
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>1.<a href="https://zh.wikipedia.org/wiki/PID%E6%8E%A7%E5%88%B6%E5%99%A8">https://zh.wikipedia.org/wiki/PID%E6%8E%A7%E5%88%B6%E5%99%A8</a></p>
+<p>2.Udacity的Artificial Intelligence for Robotics</p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>PID Control</tag>
+        <tag>PID控制算法</tag>
+        <tag>Proportional Control</tag>
+        <tag>Robot Control</tag>
+        <tag>机器人控制</tag>
+        <tag>自动驾驶控制</tag>
       </tags>
   </entry>
   <entry>
@@ -1377,6 +1778,91 @@
 <p>山不是山，水不是水，投资也不再是那个投资。投资信仰变成了人生信仰，我得到比金钱重要千万倍的东西。投资除了带给我金钱之外，也改变了我的人生观。让家庭更和谐，心灵更自由，身体更健康，朋友更尊重，这绝对不是用钱就能买来的财富，这是比金钱更高维度的财富。投资无法解决所有问题，甚至我越来越觉得，不能解决大部分问题。有钱有时间有精力，只是第一个条件，有了条件跨进一个新的维度，下一步其实更关键，你拥有金钱时间之后，你选择做什么？别以为有钱了家人就会爱戴你，别以为有钱了朋友就会尊重你, 别以为有钱了你的心灵就会获得平静，别以为有钱了健康就会随之而来，还差一万光年。</p>
 <p>年轻的时候一无所有，我想当然的认为，有了一百万，家人就会更尊敬我更爱我，就不会产生矛盾。很快，我赚了一生的第一个一百万，但情况并没有改善，矛盾依旧。我想，可能因为我还不够富有，如果能够有一千万，一定能够改善了。过了几年，资产又增长了十倍，我突然醒悟到，家人的爱，与你拥有多少钱毫无关系。很多人甚至越有钱，家庭矛盾越大。因为你越有钱，你自以为自己能力越大，越认为自己了不起，越认为其他人应该尊重你应该礼让于你，越是自我为中心，矛盾便越大。所以我醒悟了，我开始追求金钱之外的修行。投资在一般人眼中只是为了赚钱，我是为了修行。这是借由投资的修行，真正从财务自由，到达了人生自由。</p>
 <p>全心全意无限包容地去爱家人，孩子的成长全程陪伴在身边。首先我要把自己做好，首先我要主动去爱，主动去付出，言传身教。我不再求了，我不再自以为中心，然后又慢慢的，身边所有的人，又受到我的感染，最终结果又变成了以我为中心，但此中心已非彼中心，以前别人是因为怕我，现在别人是因为爱我尊重我，以我为精神领导。家庭非常和谐的统一在一起。整个家庭，从我的父母，到我的妻子，再到我的三个孩子，他们都非常清楚明白，投资便是今后百年的发展战略。一旦形成这种高度统一的凝聚力，家庭，就升华成家族。我们每个人心中，深刻理解了这个家族百年发展的大战略，再没有任何阻力阻碍家庭的百年复利战略</p>
+]]></content>
+      <categories>
+        <category>人生感悟</category>
+      </categories>
+      <tags>
+        <tag>投资理财</tag>
+        <tag>人生感悟</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>查理·芒格经典演讲-在有鱼的地方钓鱼</title>
+    <url>/2021/05/22/%E6%9F%A5%E7%90%86%C2%B7%E8%8A%92%E6%A0%BC%E7%BB%8F%E5%85%B8%E6%BC%94%E8%AE%B2-%E5%9C%A8%E6%9C%89%E9%B1%BC%E7%9A%84%E5%9C%B0%E6%96%B9%E9%92%93%E9%B1%BC/</url>
+    <content><![CDATA[<h1 id="一、常识：平常人没有的常识"><a href="#一、常识：平常人没有的常识" class="headerlink" title="一、常识：平常人没有的常识"></a>一、常识：平常人没有的常识</h1><p>伯克希尔哈撒韦能取得巨大的成功，DailyJournal（《每日期刊》）能小有成就，没什么秘诀，就是追求基本的道德和健全的常识。</p>
+<p>大家都知道，所谓常识，是平常人没有的常识。我们在说某个人有常识的时候，我们其实是说，他具备平常人没有的常识。人们都以为具备常识很简单，其实很难。</p>
+<p>我举个例子。大量高智商的人进入了投资领域，都想方设法要比普通人做得更好。许多高智商的人蜂拥而至，在投资领域形成了别处罕见的景象，于是，怪事发生了。加州曾经有一家非常大的投资咨询公司，为了超过其他同行，它想到了一个点子。</p>
+<p>他们是这么想的：我们手下有这么多青年才俊，个个是沃顿、哈佛等名校毕业的高材生，他们都为了搞懂公司、为了搞懂市场趋势、为了搞懂一切，不遗余力地拼命工作，只要让这些青年才俊每人都拿出他认为最好的一个投资机会，我们把所有最好的机会集中起来形成组合，必然能遥遥领先指数啊。</p>
+<p>这家投资公司的人能觉得这样的点子行得通，是因为他们接受的教育太次了。他们满怀信心地付诸行动，结果毫无悬念地一败涂地。他们又试了一次，一败涂地。他们试了第三次，仍然失败。</p>
+<p>几百年前，炼金术士幻想把铅变成金子。炼金术士想得很美，他们觉得买来大量的铅，施一下魔法，把铅变成金子，就发大财了。刚才说的这家投资公司，没比几百年前的炼金术士高明到哪去，它不过是妄想把铅变成金子的现代翻版，根本成不了。本来我可以把这个道理讲给他们的，但是他们也没问过我啊。</p>
+<p>值得人深思的是，这家投资公司集中了全球各地的精英，甚至包括许多来自中国的高智商精英，中国人的平均智商比其他国家的人略高一些。其实，这个问题很简单。这点子看起来行得通，为什么在实际中却行不通？你不妨自己想一想，为什么会这样。</p>
+<p>你们都接受过高等学府的教育，我敢说，在座的人之中，没几个真能把这事儿解释清楚。我想借此给大家上一课。你们怎么能不知道呢？投资领域可是美国的一个重要行业。在这么重要的一个行业，出现了如此惨重的失败，我们应该能给出一个解释啊！</p>
+<p>能回答出这个问题的人，肯定是在大学一年级的课堂上，全神贯注地听讲了的。令人遗憾的是，即使你把这个问题拿到一所高等学府的金融系，让那的教授回答，他们也答不对。我把这个问题留给你们思考，因为我想让你们感到困惑。</p>
+<p>我接着说下一话题了。其实，这个问题，你们应该能答上来。从这个问题，我们可以看出来，即使是一些非常简单的事，要保持理智也特别不容易。人们有太多太多错误的想法，都是不可能行得通的。人们错误的想法为什么行不通，你们却讲不出来。</p>
+<p>如果你们接受了良好的教育，应该能一眼看透。我理解的「接受了良好的教育」，是知道什么时候教授是错的，而且知道什么是对的。教授说什么，就是什么，这谁都做得到。关键在于，你要分辨，教授讲的东西，哪些对，哪些错，这才是接受了良好教育的人。</p>
+<h1 id="二、一生抓住少数几个机会，够了！"><a href="#二、一生抓住少数几个机会，够了！" class="headerlink" title="二、一生抓住少数几个机会，够了！"></a>二、一生抓住少数几个机会，够了！</h1><p>回到投资领域，至少在未来相当长的一段时间内，如果你主动选股，并且妄想无所不知，你仍然跑不赢指数。</p>
+<p>在伯克希尔哈撒韦，在DailyJournal，我们一直比平均水平做得好。问题来了，我们怎么做到的呢？我们怎么做到的呢？答案很简单。我们追求做得更少。</p>
+<p>我们从来没天真地以为把一批青年才俊招进来，就能无所不知，无论是汤罐头、航空航天，还是公用事业什么的，都能比别人懂得更多。</p>
+<p>我们从来没这么妄想过。我们从来没以为自己能做到，不管在什么领域，我们都能获取到真正有用的信息。我们不把自己装成无所不知。我们始终很清楚，只要我们特别用功，我们能准确找到少数几个机会。这少数几个机会足够了。只求找到少数几个机会，我们的预期更合乎情理。</p>
+<p>假如你像我前面提到的那家投资咨询机构一样，你去问沃伦·巴菲特同样的问题：「告诉我你今年最看好的投资机会。」然后，你买入沃伦找到的那个最好的投资机会，你肯定能赚翻了。沃伦不可能妄想无所不知，他告诉你的只会是一两只股票。投资咨询机构雄心勃勃，沃伦更知道克制自己。</p>
+<p>我的太姥爷，也就是我妈妈的爷爷，对我帮助很大。我太姥爷是一位拓荒者。他来到爱荷华州的时候身无分文，但是年轻，身体好。他参加了与印第安人打的那场黑鹰战争，在战争中当了上尉。后来，他在爱荷华州定居下来，每次，在出现土地非常廉价的机会时，他就非常有头脑地出手，大笔买入。</p>
+<p>最后，他成了小镇上最有钱的人，还拥有银行。他受人尊敬，有个大家庭，过着非常幸福的生活。他刚在爱荷华州定居的时候，一英亩土地还不到一美元，他一直住在爱荷华州，亲眼看到了富足的现代文明在这片肥沃的土地上兴起。我太姥爷说，他赶上了好时候，一辈子活到90岁，老天能给他几个大机会。</p>
+<p>他这一生幸福长寿，主要是老天给他的那几个机会来临时，他抓住了。每年夏天，当孙子辈的孩子们围绕在他膝下时，我太姥爷总是一遍一遍地讲这个故事。我妈妈对钱不感兴趣，但是她记住了我太姥爷讲的故事，并且讲给了我听。我和我妈妈不一样，我知道我太姥爷做得对。</p>
+<p>所以说，我还很小的时候，我就知道了，重大的机会、属于我的机会，只要少数几个，关键要让自己做好准备，当少数几个机会到来的时候，把它们抓住了。大型投资咨询机构里的那些人，他们可不是这么想的。他们自以为，他们研究一百万个东西，就能搞懂一百万个东西。</p>
+<p>玩好投资这个游戏，关键在于少数几次机会，你确实能看出来，一个机会比其他一般的机会都好，而且你很清楚，自己比别人知道的更多。像我说的这么做，只要抓住少数几个机会，足够了。</p>
+<p>沃伦经常说：「一个人，居住在一座欣欣向荣的小城里，他有这座小城里三家最好的公司的股份，这么分散还不够吗？」只要这三家公司都是拔尖的，绝对够分散了。广为流传的凯利公式可以告诉我们，在自己占有胜算的时候，在每笔交易上应该押下多少筹码。你的胜算越大、成功的概率越高，你下的注应该越大。</p>
+<h1 id="三、在有鱼的地方钓鱼！切记！"><a href="#三、在有鱼的地方钓鱼！切记！" class="headerlink" title="三、在有鱼的地方钓鱼！切记！"></a>三、在有鱼的地方钓鱼！切记！</h1><p>钓鱼的第一条规则是，在有鱼的地方钓鱼。钓鱼的第二条规则是，记住第一条规则。我们很多人去了鳕鱼已经被钓光了的地方，还想钓上鳕鱼来。在竞争极其激烈的环境中，你再怎么努力都没用。在投资领域，即使很小的机会，也有人在跟踪。</p>
+<p>有一次，我参加密歇根大学的投资委员会会议，会议上其中一位取得成功的投资者来自伦敦。这位投资者在伦敦是怎么投资的呢？他看中了撒哈拉以南非洲地区。撒哈拉以南非洲地区上市的公司很少，只能找到几个在粉单市场上市的银行股，于是他买入了这些银行股，能买的量很少。</p>
+<p>非洲的穷人逐渐改变把钱放在家里的习惯，越来越多的人开始把钱存入银行，这位投资者也越来越赚钱。最后，他赚了很多钱。没有别人投资非洲的小银行，只有他自己。可惜，这个小小的利基很快被填上了。</p>
+<p>作为基金经理，投资撒哈拉以南非洲地区的小银行，为客户赚了钱，下一个投资机会上哪儿找去？利基填平是很快的。一个在伦敦的基金经理都能去买非洲小银行的股票，你说赚钱的利基还能剩下多少？太难了。</p>
+<h1 id="四、走正道，路越走越宽"><a href="#四、走正道，路越走越宽" class="headerlink" title="四、走正道，路越走越宽"></a>四、走正道，路越走越宽</h1><p>在我们生活的现代世界中，有人专门拉别人下水，教别人频繁交易股票。在我看来，这和教唆年轻人吸食海洛因没什么两样。蠢到家了。一个已经赚到钱的人，怎么可能以教唆别人炒股发财为生？</p>
+<p>电视也是个神奇的地方，在电视上我们经常看见，有人说「我手里这本书可以教会你每年赚3倍，你只要付邮费就能得到这本书。」一个人，突然发现了每年赚3倍的秘诀，怎么可能还在网上卖书？太可笑了。我说的这一幕是现代商业的写照。人们每天都在做这样的事，还自以为自己是对社会有益的公民。</p>
+<p>我再讲个小故事，也是关于现代生活的，希望你能从中得到启发。这个故事发生在从前。有个人，他有一匹好马。这是一匹骏马，步履轻盈、毛发光亮。这匹马什么都好，就一个毛病。有时候，它突然脾气暴躁、性情顽劣，谁要是当时骑着它，非得被摔得断胳膊断腿不可。</p>
+<p>这个人找到了兽医，他问兽医：「该怎么治治这匹马呢？」兽医说：「很简单，我有办法。」这个人说：「快告诉我吧。」兽医说：「你在你这匹马表现很好的时候，把它卖掉。」</p>
+<p>总的来说，沃伦（指沃伦·巴菲特）和我，我们两个人从来没为了赚钱，忽悠傻子从我们手里接货。我们赚钱，靠的是在买的时候赚。如果我们卖的是狗屎，我们不会把狗屎说成包治关节炎。</p>
+<p>我觉得，别去骗人，还是像我们这么活着比较好。在现实中，骗子总是有。就说那些江湖骗子吧，他们蒙人的伎俩多着呢。总有骗子利用人性的弱点牟利。我们必须增加自己的智慧，才能远离种种欺诈。</p>
+<p>彼得·考夫曼（《穷查理宝典：芒格的智慧箴言录》作者）和我说过很多次：「如果骗子知道做老实人能赚多少钱，他们肯定都不当骗子了。」沃伦也讲过一句很经典的话，他说：「走正道，路越走越宽。」此言不虚。</p>
+<h1 id="五、慢一点，我们不在乎"><a href="#五、慢一点，我们不在乎" class="headerlink" title="五、慢一点，我们不在乎"></a>五、慢一点，我们不在乎</h1><p>有些道理很简单，却真的很受用。DailyJournal做的是难做的生意，为法院等政府部门服务的工作不好做。法院等政府部门需要自动化。别人想占法院等政府部门的便宜，我们没有。我们只是一家小公司，我们做得很辛苦，我们也逐渐占领了很多市场。</p>
+<p>速度虽然慢，但前景光明。有钱的好处在于，慢一点儿，我们不在乎。那我们是怎么有钱的呢？我们记住了我太姥爷的话，机会只有少数几个，当一个机会来临时，我们扑过去把它抓住。想一想，你们的人生是不是这样？</p>
+<p>再讲一个我的亲身经历。1970年代，我犯了个错误，一笔该做的投资，我没做。没犯这个错的话，芒格家族的财富是现在的两倍。我犯的那个错太傻了。我错过了那个机会，否则我的资产是现在的两倍。生活就是这样，错过一两个机会，难免的。</p>
+<h1 id="六、找对象得找比自己优秀的"><a href="#六、找对象得找比自己优秀的" class="headerlink" title="六、找对象得找比自己优秀的"></a>六、找对象得找比自己优秀的</h1><p>我们身边总有这样的人，他们找到了比自己更优秀的伴侣。他们做出了明智的决定，也是幸运的决定。找到比自己优秀的伴侣，这是多少钱都买不来的。许多人是年轻时无意间找到了比自己更优秀的伴侣。</p>
+<p>其实，未必要碰运气，可以有意识地去追求。很多人身上贴着醒目的标签，上面写着「危险，危险，切勿靠近」，还有人迎着往前冲。（现场大笑）不应该啊。你们笑归笑，这绝对是后果很严重的错误。</p>
+<h1 id="七、老成这样了，为啥还能开心？"><a href="#七、老成这样了，为啥还能开心？" class="headerlink" title="七、老成这样了，为啥还能开心？"></a>七、老成这样了，为啥还能开心？</h1><p>我们这个董事会里的人，大家一起做特立独行的事，共度人生的坎坷，算是够奇葩的了，毕竟我们年纪都这么大了。盖瑞·威尔科克斯(GaryWilcox)算我们这里的年轻人了。我们是个很独特的董事会。这个案例也值得各位思考。</p>
+<p>你看我，岁数这么大了，老成这样了，还活得很开心。怎么做到的呢？这是另一个话题了。</p>
+<p>你们愿意听，我再讲两个小故事。下面这个故事是编出来的，但是很启发人。</p>
+<p>一位年轻人去拜访莫扎特。他说：「莫扎特，我想写交响乐。」莫扎特说：「你多大了？」年轻人说：「我23。」莫扎特说：「你太年轻了，写不了交响乐。」年轻人说：「可是，莫扎特，你10岁的时候就开始写交响乐了啊。」</p>
+<p>莫扎特说：「没错，可我那时候没四处问别人该怎么写。」还有一个关于莫扎特的故事。莫扎特可以说是人类有史以来最伟大的音乐天才。他的生活过得怎么样呢？莫扎特一肚子愤懑，郁郁寡欢，英年早逝。</p>
+<p>莫扎特怎么活成了这样呢？他做了两件事，谁做了这两件事都足以陷入痛苦。莫扎特不知道量入为出，在金钱上挥霍无度，这是第一件。第二件，他内心充满了嫉妒和抱怨。谁要是挥霍无度，还充满嫉妒和抱怨，一定能活得又苦又惨，早早离开人间。想活的苦，想死的早，请学莫扎特。</p>
+<p>那个年轻人请教莫扎特如何写交响乐，你们从这个年轻人的故事中也能学到一个道理。这个道理是：有的东西，有的人学不会。有的人天生就比你强，你再怎么努力，也总有人比你更强。我的心态是：「那又怎样？」我们现场的这些人，有哪一个是非得站上世界之巅不可的吗？没那个必要。</p>
+<p>帝王将相修了那么多规模庞大的陵墓，我总觉得很可笑。难道他们是为了让后世的人羡慕自己？让后世的人在走过他们的陵墓时希望能住进去？（现场笑声）</p>
+<p>总之，我们一路走来，很享受其中的过程，最后也做得很好。你可以自己去研究一下，在DailyJournal公司，在伯克希尔哈撒韦公司的历史上，一共做了多少个重大决定。重大的决定，平均算下来，每年没几个。</p>
+<p>这个游戏的玩法是：始终留在这个游戏里，盯住了，在稀有的机会出现时，别让它溜走，要知道每个普通人能分到的机会并不多。</p>
+<h1 id="八、如何低成本地从错误中爬出来？"><a href="#八、如何低成本地从错误中爬出来？" class="headerlink" title="八、如何低成本地从错误中爬出来？"></a>八、如何低成本地从错误中爬出来？</h1><p>赚钱的秘诀是节约支出、生活简朴。沃伦和我，我们年轻没钱的时候，我们都是省着花钱，把钱攒下来投资。坚持一辈子，最后很富足。这道理谁都能懂。</p>
+<p>生活中需要解决的另外一个问题是：怎么才能不付出过高的代价，从错误中爬出来？从错误中爬出来，我们做到了。伯克希尔哈撒韦，它最开始的生意是什么？穷途末路的百货商店、穷途末路的新英格兰纺织公司、穷途末路的印花票公司。</p>
+<p>伯克希尔哈撒韦是从这些烂生意里爬出来的。好在我们买得非常便宜，虽然一手烂牌，我们还是打得很好。最后伯克希尔能取得成功，是因为我们换了一条路，改成了买好生意。我们能成功，不是因为我们善于解决难题，而是因为我们善于远离难题。我们只是找简单的事做。</p>
+<p>DailyJournal公司，我们刚买的时候，它的生意很好做。现在DailyJournal做的软件生意，很难做。公司的老同事都还健在，在种种机缘巧合下，新的软件生意做得还可以。这生意有潜力，我们也愿意做下去。报纸已经走向衰落，有几家报纸能像DailyJournal一样，账上躺着数亿美元的股票，还经营着有前途的新生意？我们是最后的莫西干人。</p>
+<h1 id="九、提问环节"><a href="#九、提问环节" class="headerlink" title="九、提问环节"></a>九、提问环节</h1><p>问：您有一句金句，我特别喜欢。您说过，您在招聘的时候，一个人智商130，但认为自己的智商120，另一个人智商150，但认为自己的智商170，您会选择前者，因为后者能把你搞死。</p>
+<p>芒格：这说的不是埃隆·马斯克吗？我当然要选知道自己几斤几两的人，不选那些自不量力的人。我自己会这样选，但我也学到了生活中一个非常重要的道理。这个道理是和霍华德·阿曼森学的。他讲过这样一句话：「千万别低估高估自己的人。」</p>
+<p>高估自己的自大狂偶尔竟然能成大事，这是现代生活中让人很不爽的一部分。我已经学会适应了。自大狂偶尔能成为大赢家，但我不愿一群自大狂在我眼前晃来晃去，我选择谨慎的人。</p>
+<p>问：您说，好机会虽然好，如果做过了，却要吃大苦头。如何不完全错过，又不做过头？如何才能避免进场太晚？如何判断好机会已经过头了？</p>
+<p>芒格：把问题彻底想明白，问题就解决了一半。你已经说了，这是个矛盾：好机会，刚开始进场的时候，潜力十足；好机会，做过了头，危机四伏。你脑子里清醒地绷着这根弦，什么机会，是什么类型的，自己去分。这个问题，你已经解决一半了，你不需要我帮你。你自己已经知道该怎么做了。既要看到潜力，又要看到危机。</p>
+<p>问：在伯克希尔的致股东信中，您也写了伯克希尔的过去和未来，您讲到了伯克希尔之所以能取得成功的几个原则。我的问题是，伯克希尔作为一家控股公司遵守了一些原则，取得了巨大的成功和优异的记录，为什么其他公司不和伯克希尔学？</p>
+<p>芒格：我觉得最主要的原因是学不来。例如，像宝洁这样的大公司，它的固有文化、它的官僚作风，早已根深蒂固，你说怎么能把宝洁变得像伯克希尔哈撒韦一样？这个问题可以直接分到「太难」一类。太难了，已经不可救药了。</p>
+<p>人们还是没意识到官僚主义的危害有多大。伯克希尔能取得今天的成就，原因之一在于总部根本没几个人。伯克希尔没官僚主义的毛病。伯克希尔有几位内部审计员，总部有时候派他们出去巡查。总的来说，我们没官僚主义的毛病。</p>
+<p>没有官僚主义，上层的管理者又头脑清晰，这是我们的巨大优势。</p>
+<p>问：我的问题是关于长期利率和复利的。过去几年，利率一直很低，很难找到实现长期复利的策略。除了投资伯克希尔、价值投资、指数投资，请问能以高复利长期投资的机会在哪里？</p>
+<p>芒格：你问我如何实现理想化的高复利，我的建议是，降低你的预期。我觉得，在一段时间里，应该很难。让预期符合实际，对你有好处，你不至于抓狂。我们经常听到有人说，从几百年以来最严重的那场大萧条到现在，不计算通货膨胀，投资股票指数的年收益率是10%。扣除通货膨胀，大概是7%左右。</p>
+<p>在这么长的时间里，7%和10%能拉开巨大的差距。我们就算实际收益率是每年7%。取得这个收益率的时机非常完美，恰好是在大萧条之后开始并且经历了人类历史上最繁荣的时期。从现在开始投资，实际收益率完全可能只有3%或2%。未来人们投资的年收益率是5%，通货膨胀是3%，这样的情况完全可能出现。</p>
+<p>真出现了这种情况，正确的心态是告诉自己：「即使出现了这种情况，我也能活得很好。」我们这些老年人生活的那个年代，哪有你们将来的生活条件好，你们有什么可郁闷的？</p>
+<p>除了正确的心态，如果将来投资更难了，你应该采取什么实际行动呢？答案很简单，因为难度提高了，你应该更努力。可能你努力了一辈子，最后超过了5%，得到的是6%，你应该高兴。</p>
+<p>问：在分析一家公司时，您更看重投资收益率这样的定量指标，还是品牌优势、管理层素质这样的定性因素？</p>
+<p>芒格：我们关注定性因素，我们也关注其他因素。总的来说，在具体情况下，什么因素重要，我们就关注什么因素。什么因素重要，需要具体问题、具体分析。我们总是遵守常识——平常人没有的常识。我刚才讲了，把很多东西扔到「太难」的一堆里，这是平常人没有的常识之一。</p>
+<p>问：我还处于不知道自己的能力圈在哪的人生阶段。我想请教您，您是怎么找到自己的能力圈的？</p>
+<p>芒格：知道自己的能力圈边界非常非常重要。连边界在哪都不知道，怎么能算是能力圈？没那个能力，却以为自己有，肯定要犯大错。我觉得，你得始终对比自己能做到什么、别人能做到什么，你需要始终坚定地保持理性，特别是别自己骗自己。</p>
+<p>从我一生的阅历来看，理性地认识自己的能力这项特质主要是由基因决定的。我觉得像沃伦和我这样的人是天生的。后天的教育很重要，但是，我认为，我们生下来就具备了投资成功所需的性格。我没办法让你回到娘胎中重生。</p>
+<p>问：今天的很多问题都是在问您长寿、幸福的秘诀是什么。</p>
+<p>芒格：这个很好回答，因为道理很简单：不嫉妒，不抱怨，不过度消费；面对什么困难，都保持乐观的心态，交靠谱的人，做本分的事……都是些简单的道理，也都是些老掉牙的道理。做到了，一生受益。</p>
 ]]></content>
       <categories>
         <category>人生感悟</category>
