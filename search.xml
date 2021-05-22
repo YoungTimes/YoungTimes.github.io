@@ -345,11 +345,11 @@
 <td align="center">9.67</td>
 </tr>
 </tbody></table>
-<div id="echarts2469" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts2631" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts2469'));
+        var myChart = echarts.init(document.getElementById('echarts2631'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -390,11 +390,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts749" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts5666" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts749'));
+        var myChart = echarts.init(document.getElementById('echarts5666'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -441,11 +441,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts7153" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts2172" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts7153'));
+        var myChart = echarts.init(document.getElementById('echarts2172'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -523,11 +523,11 @@
 <td align="center">3.47</td>
 </tr>
 </tbody></table>
-<div id="echarts5746" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts2402" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts5746'));
+        var myChart = echarts.init(document.getElementById('echarts2402'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -597,11 +597,11 @@
 <td align="center">0.97</td>
 </tr>
 </tbody></table>
-<div id="echarts5035" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts6433" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts5035'));
+        var myChart = echarts.init(document.getElementById('echarts6433'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -671,11 +671,11 @@
 <td align="center">2305.9</td>
 </tr>
 </tbody></table>
-<div id="echarts9357" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts8905" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts9357'));
+        var myChart = echarts.init(document.getElementById('echarts8905'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -751,11 +751,11 @@
 <td align="center">356.4</td>
 </tr>
 </tbody></table>
-<div id="echarts5197" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts8187" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts5197'));
+        var myChart = echarts.init(document.getElementById('echarts8187'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -1795,6 +1795,8 @@
 <p>我举个例子。大量高智商的人进入了投资领域，都想方设法要比普通人做得更好。许多高智商的人蜂拥而至，在投资领域形成了别处罕见的景象，于是，怪事发生了。加州曾经有一家非常大的投资咨询公司，为了超过其他同行，它想到了一个点子。</p>
 <p>他们是这么想的：我们手下有这么多青年才俊，个个是沃顿、哈佛等名校毕业的高材生，他们都为了搞懂公司、为了搞懂市场趋势、为了搞懂一切，不遗余力地拼命工作，只要让这些青年才俊每人都拿出他认为最好的一个投资机会，我们把所有最好的机会集中起来形成组合，必然能遥遥领先指数啊。</p>
 <p>这家投资公司的人能觉得这样的点子行得通，是因为他们接受的教育太次了。他们满怀信心地付诸行动，结果毫无悬念地一败涂地。他们又试了一次，一败涂地。他们试了第三次，仍然失败。</p>
+<span id="more"></span>
+
 <p>几百年前，炼金术士幻想把铅变成金子。炼金术士想得很美，他们觉得买来大量的铅，施一下魔法，把铅变成金子，就发大财了。刚才说的这家投资公司，没比几百年前的炼金术士高明到哪去，它不过是妄想把铅变成金子的现代翻版，根本成不了。本来我可以把这个道理讲给他们的，但是他们也没问过我啊。</p>
 <p>值得人深思的是，这家投资公司集中了全球各地的精英，甚至包括许多来自中国的高智商精英，中国人的平均智商比其他国家的人略高一些。其实，这个问题很简单。这点子看起来行得通，为什么在实际中却行不通？你不妨自己想一想，为什么会这样。</p>
 <p>你们都接受过高等学府的教育，我敢说，在座的人之中，没几个真能把这事儿解释清楚。我想借此给大家上一课。你们怎么能不知道呢？投资领域可是美国的一个重要行业。在这么重要的一个行业，出现了如此惨重的失败，我们应该能给出一个解释啊！</p>
