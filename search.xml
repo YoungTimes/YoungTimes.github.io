@@ -235,72 +235,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mobileye REM地图</title>
-    <url>/2021/03/14/mobileye-rem-map-md/</url>
-    <content><![CDATA[<h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
-<p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
-<span id="more"></span>
-
-<p><img src="/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
-<h1 id="高精地图的挑战"><a href="#高精地图的挑战" class="headerlink" title="高精地图的挑战"></a>高精地图的挑战</h1><h2 id="规模化-Scale"><a href="#规模化-Scale" class="headerlink" title="规模化-Scale"></a>规模化-Scale</h2><p>如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那就不存在规模化的问题。但是2025年之后，自动驾驶会在消费者层面全面落地，用户需要驾车到任意想去的地方，在这种场景下，Scale是一个无法规避的问题。</p>
-<h2 id="鲜度-Fresh"><a href="#鲜度-Fresh" class="headerlink" title="鲜度-Fresh"></a>鲜度-Fresh</h2><p>理想情况下，地图是在实时更新的。当物理环境发生变化时，需要实时反映到地图上。月级更新、甚至天级更新都是不够的，我们需要做到分钟级，甚至更短。</p>
-<h2 id="精度-Accuracy"><a href="#精度-Accuracy" class="headerlink" title="精度-Accuracy"></a>精度-Accuracy</h2><p>车载系统(OnBoard System)检测的车辆和行人需要与高精地图(High Definiation Map)实现厘米级精度的匹配，因此地图的精度至关重要。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_challange.png" alt="高精地图挑战"></p>
-<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="/2021/03/14/mobileye-rem-map-md/common_approach_map.png" alt="高精地图通用制作方法"></p>
-<h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_geometric.png"></p>
-<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="/2021/03/14/mobileye-rem-map-md/semantic_map.png"></p>
-<p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/drivable_path.png"></p>
-<p>如下图所示，转向规则千奇百怪：禁止红灯右转，完全停车后允许红灯右转，绿灯禁止左转，绿灯Yield后允许左转…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/priority_map.png"></p>
-<p>如下图所示，红绿灯异常复杂，识别车道、人行横道与红绿灯的关联关系难度很大…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_association.png"></p>
-<p>如下图所示，除非地图可以表达所有的3D要素，否则很难自动化的计算出车道的最优Stop/Yield Point。但是表达所有的3D信息对于地图来说又是不现实的…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/stop_point.png"></p>
-<p>影响车辆行驶速度的因素有很多，道路几何、限速、文化等，难以量化，但它对Smooth Driving体验至关重要…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/smooth_driving.png"></p>
-<h1 id="Mobileye如何解决这些问题"><a href="#Mobileye如何解决这些问题" class="headerlink" title="Mobileye如何解决这些问题"></a>Mobileye如何解决这些问题</h1><p>scalability依赖众包数据生成Millions Map Agents；Accuracy不是全局的Accuracy，而是局部的Accuracy，相对于道路上的静态元素位置。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/av_map.png"></p>
-<p>REM的处理流程如下，首先从成百上千辆车获取检测信息(没有使用差分GPS，而是使用了普通的GPS)，这些数据传送到云端；每辆车Detection的角度不同，由于遮挡等原因，每辆车检测的landmark也有差异，将这些数据进行Alignment处理，生成高精度的地图数据；最后，Modeling And Semantics负责生成地图的语义数据。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/rem_process.png"></p>
-<h2 id="Harvesting"><a href="#Harvesting" class="headerlink" title="Harvesting"></a>Harvesting</h2><p>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
-<p>Mobileye Harvesting的数据量为10K/公里，这些检测的数据会被发送到云端。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/harvesting.png"></p>
-<h2 id="Aligning-Drives"><a href="#Aligning-Drives" class="headerlink" title="Aligning Drives"></a>Aligning Drives</h2><p>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_align_drive.png"></p>
-<p>由于GPS存在误差，每个车辆检测的道路元素位置都存在噪声，所以只依靠简单的位置求均值是不可行的。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/align_noise.png"></p>
-<p>Align之后可以明显的看到两条Driving Path(蓝色)和两侧的道路边界(红色)。对齐的过程是靠几何运算进行。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/path_align.png"></p>
-<p>仅仅靠聚类(Clustering)和Spline Fiting得到下图右上角的结果，这个结果不是特别理想。后来通过神经网络生成高精度地图，效果好了很多。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/model_process.png"></p>
-<h1 id="为什么语义理解离不开众包"><a href="#为什么语义理解离不开众包" class="headerlink" title="为什么语义理解离不开众包"></a>为什么语义理解离不开众包</h1><p>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
-<p>如下右图所示，众包数据提供了复杂场景下的所有可通行路径。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_driving_path.png"></p>
-<p>如下图所示，通过众包数据可以获得红绿灯与车道的关联关系、Yield Sign的Stop Point、Crosswalk与红绿灯的关联关系等。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_assocation.png"></p>
-<p>如下左图所示，通过检测哪个Drive Path的Stop Point比较多，我们可以从众包数据中获取到没有Traffic Sign情况下各个道路的路权优先级。</p>
-<p>如下中图所示，我们可以从众包数据学习到在路口其它司机的停车位置。</p>
-<p>如下右图所示，从众包数据可以学习到，在无保护左转的场景下车辆的Stop Point。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_more_info.png"></p>
-<p>众包数据是获得各个道路Common Speed的唯一高效的方法，Common Speed提供了当道路没有车辆时候AV车的目标行驶速度。采用这种方法可以使得无论在哪个国家、地区，或者不同的道路类型，AV车都可以自然的融入车流。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_speed.png"></p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>到目前为止，Mobileye与超过6家汽车制造厂商合作，每天可以覆盖800万公里的路网更新。预计到2024年，每天覆盖的路网会达到10亿公里。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/mobileye_situation.png"></p>
-<p><strong>说明</strong>： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
-<p>YouTube链接：<br><a href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-      </categories>
-      <tags>
-        <tag>自动驾驶</tag>
-        <tag>高精地图</tag>
-        <tag>Mobileye</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>投资材料</title>
     <url>/2021/04/17/personal-investment-md/</url>
     <content><![CDATA[<h1 id="投资指标"><a href="#投资指标" class="headerlink" title="投资指标"></a>投资指标</h1><h2 id="市盈率"><a href="#市盈率" class="headerlink" title="市盈率"></a>市盈率</h2><p>股票的市盈率(Price-to-Earning Ratio，P/E)，指每股市价(P)除以每股盈余(EPS)，通常作为股票是高估抑或低估的指标。</p>
@@ -345,11 +279,11 @@
 <td align="center">9.67</td>
 </tr>
 </tbody></table>
-<div id="echarts1499" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts1829" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts1499'));
+        var myChart = echarts.init(document.getElementById('echarts1829'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -390,11 +324,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts5318" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts3249" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts5318'));
+        var myChart = echarts.init(document.getElementById('echarts3249'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -441,11 +375,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts2870" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts8246" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts2870'));
+        var myChart = echarts.init(document.getElementById('echarts8246'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -523,11 +457,11 @@
 <td align="center">3.47</td>
 </tr>
 </tbody></table>
-<div id="echarts8814" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts9119" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts8814'));
+        var myChart = echarts.init(document.getElementById('echarts9119'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -597,11 +531,11 @@
 <td align="center">0.97</td>
 </tr>
 </tbody></table>
-<div id="echarts3669" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts8899" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts3669'));
+        var myChart = echarts.init(document.getElementById('echarts8899'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -671,11 +605,11 @@
 <td align="center">2305.9</td>
 </tr>
 </tbody></table>
-<div id="echarts5205" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts9845" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts5205'));
+        var myChart = echarts.init(document.getElementById('echarts9845'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -751,11 +685,11 @@
 <td align="center">356.4</td>
 </tr>
 </tbody></table>
-<div id="echarts8068" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts6930" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts8068'));
+        var myChart = echarts.init(document.getElementById('echarts6930'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -811,6 +745,72 @@
       <tags>
         <tag>个人投资</tag>
         <tag>投资理财</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mobileye REM地图</title>
+    <url>/2021/03/14/mobileye-rem-map-md/</url>
+    <content><![CDATA[<h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
+<p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
+<span id="more"></span>
+
+<p><img src="/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
+<h1 id="高精地图的挑战"><a href="#高精地图的挑战" class="headerlink" title="高精地图的挑战"></a>高精地图的挑战</h1><h2 id="规模化-Scale"><a href="#规模化-Scale" class="headerlink" title="规模化-Scale"></a>规模化-Scale</h2><p>如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那就不存在规模化的问题。但是2025年之后，自动驾驶会在消费者层面全面落地，用户需要驾车到任意想去的地方，在这种场景下，Scale是一个无法规避的问题。</p>
+<h2 id="鲜度-Fresh"><a href="#鲜度-Fresh" class="headerlink" title="鲜度-Fresh"></a>鲜度-Fresh</h2><p>理想情况下，地图是在实时更新的。当物理环境发生变化时，需要实时反映到地图上。月级更新、甚至天级更新都是不够的，我们需要做到分钟级，甚至更短。</p>
+<h2 id="精度-Accuracy"><a href="#精度-Accuracy" class="headerlink" title="精度-Accuracy"></a>精度-Accuracy</h2><p>车载系统(OnBoard System)检测的车辆和行人需要与高精地图(High Definiation Map)实现厘米级精度的匹配，因此地图的精度至关重要。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_challange.png" alt="高精地图挑战"></p>
+<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="/2021/03/14/mobileye-rem-map-md/common_approach_map.png" alt="高精地图通用制作方法"></p>
+<h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_geometric.png"></p>
+<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="/2021/03/14/mobileye-rem-map-md/semantic_map.png"></p>
+<p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/drivable_path.png"></p>
+<p>如下图所示，转向规则千奇百怪：禁止红灯右转，完全停车后允许红灯右转，绿灯禁止左转，绿灯Yield后允许左转…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/priority_map.png"></p>
+<p>如下图所示，红绿灯异常复杂，识别车道、人行横道与红绿灯的关联关系难度很大…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_association.png"></p>
+<p>如下图所示，除非地图可以表达所有的3D要素，否则很难自动化的计算出车道的最优Stop/Yield Point。但是表达所有的3D信息对于地图来说又是不现实的…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/stop_point.png"></p>
+<p>影响车辆行驶速度的因素有很多，道路几何、限速、文化等，难以量化，但它对Smooth Driving体验至关重要…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/smooth_driving.png"></p>
+<h1 id="Mobileye如何解决这些问题"><a href="#Mobileye如何解决这些问题" class="headerlink" title="Mobileye如何解决这些问题"></a>Mobileye如何解决这些问题</h1><p>scalability依赖众包数据生成Millions Map Agents；Accuracy不是全局的Accuracy，而是局部的Accuracy，相对于道路上的静态元素位置。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/av_map.png"></p>
+<p>REM的处理流程如下，首先从成百上千辆车获取检测信息(没有使用差分GPS，而是使用了普通的GPS)，这些数据传送到云端；每辆车Detection的角度不同，由于遮挡等原因，每辆车检测的landmark也有差异，将这些数据进行Alignment处理，生成高精度的地图数据；最后，Modeling And Semantics负责生成地图的语义数据。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/rem_process.png"></p>
+<h2 id="Harvesting"><a href="#Harvesting" class="headerlink" title="Harvesting"></a>Harvesting</h2><p>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
+<p>Mobileye Harvesting的数据量为10K/公里，这些检测的数据会被发送到云端。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/harvesting.png"></p>
+<h2 id="Aligning-Drives"><a href="#Aligning-Drives" class="headerlink" title="Aligning Drives"></a>Aligning Drives</h2><p>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_align_drive.png"></p>
+<p>由于GPS存在误差，每个车辆检测的道路元素位置都存在噪声，所以只依靠简单的位置求均值是不可行的。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/align_noise.png"></p>
+<p>Align之后可以明显的看到两条Driving Path(蓝色)和两侧的道路边界(红色)。对齐的过程是靠几何运算进行。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/path_align.png"></p>
+<p>仅仅靠聚类(Clustering)和Spline Fiting得到下图右上角的结果，这个结果不是特别理想。后来通过神经网络生成高精度地图，效果好了很多。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/model_process.png"></p>
+<h1 id="为什么语义理解离不开众包"><a href="#为什么语义理解离不开众包" class="headerlink" title="为什么语义理解离不开众包"></a>为什么语义理解离不开众包</h1><p>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
+<p>如下右图所示，众包数据提供了复杂场景下的所有可通行路径。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_driving_path.png"></p>
+<p>如下图所示，通过众包数据可以获得红绿灯与车道的关联关系、Yield Sign的Stop Point、Crosswalk与红绿灯的关联关系等。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_assocation.png"></p>
+<p>如下左图所示，通过检测哪个Drive Path的Stop Point比较多，我们可以从众包数据中获取到没有Traffic Sign情况下各个道路的路权优先级。</p>
+<p>如下中图所示，我们可以从众包数据学习到在路口其它司机的停车位置。</p>
+<p>如下右图所示，从众包数据可以学习到，在无保护左转的场景下车辆的Stop Point。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_more_info.png"></p>
+<p>众包数据是获得各个道路Common Speed的唯一高效的方法，Common Speed提供了当道路没有车辆时候AV车的目标行驶速度。采用这种方法可以使得无论在哪个国家、地区，或者不同的道路类型，AV车都可以自然的融入车流。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_speed.png"></p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>到目前为止，Mobileye与超过6家汽车制造厂商合作，每天可以覆盖800万公里的路网更新。预计到2024年，每天覆盖的路网会达到10亿公里。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/mobileye_situation.png"></p>
+<p><strong>说明</strong>： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
+<p>YouTube链接：<br><a href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
+        <tag>Mobileye</tag>
       </tags>
   </entry>
   <entry>
@@ -903,6 +903,8 @@
     <content><![CDATA[<p>人脑是一个复杂的学习机器，通过记住日常事件(比如“麻雀会飞”和“鸽子会飞”)，并将这些知识抽象出规则，应用于我们以前从未见过的事物(“有翅膀的动物会飞”)。除此之外，记忆还允许我们进一步完善我们的规则(比如“企鹅不能飞”)。那么在机器智能中，我们能否通过结合记忆和抽象规则的力量来教计算机像人类一样学习呢？</p>
 <p>这不是一个容易回答的问题，但是通过联合训练一个Wide Linear Model(用于记忆)和一个Deep Neural Network(用于泛化)，我们可以结合两者的优势, 提升神经网络的表现，在谷歌，我们称之为Wide &amp; Deep Learning。该模型对于具有稀疏输入(具有大量可能特征值的分类特征)的通用大规模回归和分类问题非常有用，例如推荐系统、搜索和排名问题。</p>
 <p><img src="/2021/05/29/tensorflow-wide-deep-learning/deep_linear_model.png" alt="图片来源[1]"></p>
+<span id="more"></span>
+
 <h1 id="Wide-amp-Deep-Learning工作原理"><a href="#Wide-amp-Deep-Learning工作原理" class="headerlink" title="Wide &amp; Deep Learning工作原理"></a>Wide &amp; Deep Learning工作原理</h1><p>假设有一个FoodIO的应用程序，用户只需要说出他/她想要什么样的食物，该应用程序能够预测用户最喜欢的菜并送到用户面前。衡量推荐效果的指标是消费率(用户吃了这道菜，得分为1；否则得分为0)。该如何实现呢？</p>
 <p><strong>基于规则匹配</strong></p>
 <p>按照简单的规则(比如返回与查询中最多字符匹配的项目)匹配。不幸的是，你发现按照这个实现方法的消费率很低，因为存在很多误匹配，比如人们喊“fried chicken”最终得到“chicken fried rice”），所以你决定添加机器学习来从数据中学习。</p>
@@ -916,7 +918,17 @@
 <p><img src="/2021/05/29/tensorflow-wide-deep-learning/deep_wide_model.png" alt="图片来源[1]"></p>
 <p>Deep Neural Network有时泛化不合理，从而推荐一些不相关的食物。通过对历史数据分析，可以发现有些用户的搜索目标非常明确，比如“iced decaf latte with nonfat milk”，虽然“hot latte with whole milk”在embedding space中非常相近，但并不意味着它是一个替代候选项。实际上，类似的问题数不胜数。所以为什么不把wide model和deep model结合起来呢。</p>
 <p>于是FoodIO 4.0诞生了，如上图所示，query=”fried chicken” and item=”chicken fried rice” 这一类Feature会在Deep Model和Wide Model同时Training，Wide Model可以记住更多的规则，Deep Model可以泛化相似的内容。</p>
+<h1 id="TensorFlow实现代码"><a href="#TensorFlow实现代码" class="headerlink" title="TensorFlow实现代码"></a>TensorFlow实现代码</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> Model</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> concatenate</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Input</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.utils <span class="keyword">import</span> plot_model</span><br></pre></td></tr></table></figure>
+
+<p>Functional API的实现</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># define inputs</span></span><br><span class="line">input_a = Input(shape=[<span class="number">1</span>], name=<span class="string">&quot;Wide_Input&quot;</span>)</span><br><span class="line">input_b = Input(shape=[<span class="number">1</span>], name=<span class="string">&quot;Deep_Input&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># define deep path</span></span><br><span class="line">hidden_1 = Dense(<span class="number">30</span>, activation=<span class="string">&quot;relu&quot;</span>)(input_b)</span><br><span class="line">hidden_2 = Dense(<span class="number">30</span>, activation=<span class="string">&quot;relu&quot;</span>)(hidden_1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># define merged path</span></span><br><span class="line">concat = concatenate([input_a, hidden_2])</span><br><span class="line">output = Dense(<span class="number">1</span>, name=<span class="string">&quot;Output&quot;</span>)(concat)</span><br><span class="line"></span><br><span class="line"><span class="comment"># define another output for the deep path</span></span><br><span class="line">aux_output = Dense(<span class="number">1</span>,name=<span class="string">&quot;aux_Output&quot;</span>)(hidden_2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># build the model</span></span><br><span class="line">model = Model(inputs=[input_a, input_b], outputs=[output, aux_output])</span><br><span class="line"></span><br><span class="line"><span class="comment"># visualize the architecture</span></span><br><span class="line">plot_model(model)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/05/29/tensorflow-wide-deep-learning/deep_wide_model_plot.png"></p>
+<p>使用Class方式实现</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># inherit from the Model base class</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WideAndDeepModel</span>(<span class="params">Model</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, units=<span class="number">30</span>, activation=<span class="string">&#x27;relu&#x27;</span>, **kwargs</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;initializes the instance attributes&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(**kwargs)</span><br><span class="line">        self.hidden1 = Dense(units, activation=activation)</span><br><span class="line">        self.hidden2 = Dense(units, activation=activation)</span><br><span class="line">        self.main_output = Dense(<span class="number">1</span>)</span><br><span class="line">        self.aux_output = Dense(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, inputs</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;defines the network architecture&#x27;&#x27;&#x27;</span></span><br><span class="line">        input_A, input_B = inputs</span><br><span class="line">        hidden1 = self.hidden1(input_B)</span><br><span class="line">        hidden2 = self.hidden2(hidden1)</span><br><span class="line">        concat = concatenate([input_A, hidden2])</span><br><span class="line">        main_output = self.main_output(concat)</span><br><span class="line">        aux_output = self.aux_output(hidden2)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> main_output, aux_output</span><br></pre></td></tr></table></figure>
+
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1、<a href="https://ai.googleblog.com/2016/06/wide-deep-learning-better-together-with.html">https://ai.googleblog.com/2016/06/wide-deep-learning-better-together-with.html</a></p>
+<p>2、Coursera课程-Custom Models, Layers, and Loss Functions with TensorFlow</p>
 ]]></content>
       <categories>
         <category>DeepLearning</category>
