@@ -20,21 +20,26 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Keras中内置了很多Loss函数，可以满足基本的使用需求，但是稍微复杂的一点的应用需要需要自定义Loss函数，这里主要记录几种常用的写法。 自定义Loss函数Keras中Loss函数的输入是固定的：预测值(Prediction)和真值(Ground Truth)。">
+  <meta name="description" content="人脑是一个复杂的学习机器，通过记住日常事件(比如“麻雀会飞”和“鸽子会飞”)，并将这些知识抽象出规则，应用于我们以前从未见过的事物(“有翅膀的动物会飞”)。除此之外，记忆还允许我们进一步完善我们的规则(比如“企鹅不能飞”)。那么在机器智能中，我们能否通过结合记忆和抽象规则的力量来教计算机像人类一样学习呢？ 这不是一个容易回答的问题，但是通过联合训练一个Wide Linear Model(用于记忆)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tensorflow-自定义Loss函数">
-<meta property="og:url" content="http://example.com/2021/04/17/tensorflow-loss-function-md/index.html">
+<meta property="og:title" content="Wide Deep Learning">
+<meta property="og:url" content="http://example.com/2021/05/29/tensorflow-wide-deep-learning/index.html">
 <meta property="og:site_name" content="半杯茶的小酒杯">
-<meta property="og:description" content="Keras中内置了很多Loss函数，可以满足基本的使用需求，但是稍微复杂的一点的应用需要需要自定义Loss函数，这里主要记录几种常用的写法。 自定义Loss函数Keras中Loss函数的输入是固定的：预测值(Prediction)和真值(Ground Truth)。">
+<meta property="og:description" content="人脑是一个复杂的学习机器，通过记住日常事件(比如“麻雀会飞”和“鸽子会飞”)，并将这些知识抽象出规则，应用于我们以前从未见过的事物(“有翅膀的动物会飞”)。除此之外，记忆还允许我们进一步完善我们的规则(比如“企鹅不能飞”)。那么在机器智能中，我们能否通过结合记忆和抽象规则的力量来教计算机像人类一样学习呢？ 这不是一个容易回答的问题，但是通过联合训练一个Wide Linear Model(用于记忆)">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-04-17T03:28:54.000Z">
-<meta property="article:modified_time" content="2021-05-29T03:01:54.301Z">
+<meta property="og:image" content="http://example.com/2021/05/29/tensorflow-wide-deep-learning/deep_linear_model.png">
+<meta property="og:image" content="http://example.com/2021/05/29/tensorflow-wide-deep-learning/linear_model.png">
+<meta property="og:image" content="http://example.com/2021/05/29/tensorflow-wide-deep-learning/deep_model.png">
+<meta property="og:image" content="http://example.com/2021/05/29/tensorflow-wide-deep-learning/deep_wide_model.png">
+<meta property="article:published_time" content="2021-05-29T03:03:18.000Z">
+<meta property="article:modified_time" content="2021-05-30T03:18:05.645Z">
 <meta property="article:author" content="Young Times">
 <meta property="article:tag" content="Tensorflow">
 <meta property="article:tag" content="Keras">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/05/29/tensorflow-wide-deep-learning/deep_linear_model.png">
 
-<link rel="canonical" href="http://example.com/2021/04/17/tensorflow-loss-function-md/">
+<link rel="canonical" href="http://example.com/2021/05/29/tensorflow-wide-deep-learning/">
 
 
 <script id="page-configurations">
@@ -47,7 +52,7 @@
   };
 </script>
 
-  <title>Tensorflow-自定义Loss函数 | 半杯茶的小酒杯</title>
+  <title>Wide Deep Learning | 半杯茶的小酒杯</title>
   
 
 
@@ -195,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/17/tensorflow-loss-function-md/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/29/tensorflow-wide-deep-learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/header.jpg">
@@ -208,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Tensorflow-自定义Loss函数
+          Wide Deep Learning
         </h1>
 
         <div class="post-meta">
@@ -218,14 +223,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-04-17 11:28:54" itemprop="dateCreated datePublished" datetime="2021-04-17T11:28:54+08:00">2021-04-17</time>
+              <time title="创建时间：2021-05-29 11:03:18" itemprop="dateCreated datePublished" datetime="2021-05-29T11:03:18+08:00">2021-05-29</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-29 11:01:54" itemprop="dateModified" datetime="2021-05-29T11:01:54+08:00">2021-05-29</time>
+                <time title="修改时间：2021-05-30 11:18:05" itemprop="dateModified" datetime="2021-05-30T11:18:05+08:00">2021-05-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,8 +258,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/04/17/tensorflow-loss-function-md/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/17/tensorflow-loss-function-md/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/05/29/tensorflow-wide-deep-learning/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/29/tensorflow-wide-deep-learning/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -283,17 +288,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Keras中内置了很多Loss函数，可以满足基本的使用需求，但是稍微复杂的一点的应用需要需要自定义Loss函数，这里主要记录几种常用的写法。</p>
-<h1 id="自定义Loss函数"><a href="#自定义Loss函数" class="headerlink" title="自定义Loss函数"></a>自定义Loss函数</h1><p>Keras中Loss函数的输入是固定的：预测值(Prediction)和真值(Ground Truth)。</p>
-<span id="more"></span>
+        <p>人脑是一个复杂的学习机器，通过记住日常事件(比如“麻雀会飞”和“鸽子会飞”)，并将这些知识抽象出规则，应用于我们以前从未见过的事物(“有翅膀的动物会飞”)。除此之外，记忆还允许我们进一步完善我们的规则(比如“企鹅不能飞”)。那么在机器智能中，我们能否通过结合记忆和抽象规则的力量来教计算机像人类一样学习呢？</p>
+<p>这不是一个容易回答的问题，但是通过联合训练一个Wide Linear Model(用于记忆)和一个Deep Neural Network(用于泛化)，我们可以结合两者的优势, 提升神经网络的表现，在谷歌，我们称之为Wide &amp; Deep Learning。该模型对于具有稀疏输入(具有大量可能特征值的分类特征)的通用大规模回归和分类问题非常有用，例如推荐系统、搜索和排名问题。</p>
+<p><img src="/2021/05/29/tensorflow-wide-deep-learning/deep_linear_model.png" alt="图片来源[1]"></p>
+<h1 id="Wide-amp-Deep-Learning工作原理"><a href="#Wide-amp-Deep-Learning工作原理" class="headerlink" title="Wide &amp; Deep Learning工作原理"></a>Wide &amp; Deep Learning工作原理</h1><p>假设有一个FoodIO的应用程序，用户只需要说出他/她想要什么样的食物，该应用程序能够预测用户最喜欢的菜并送到用户面前。衡量推荐效果的指标是消费率(用户吃了这道菜，得分为1；否则得分为0)。该如何实现呢？</p>
+<p><strong>基于规则匹配</strong></p>
+<p>按照简单的规则(比如返回与查询中最多字符匹配的项目)匹配。不幸的是，你发现按照这个实现方法的消费率很低，因为存在很多误匹配，比如人们喊“fried chicken”最终得到“chicken fried rice”），所以你决定添加机器学习来从数据中学习。</p>
+<p><strong>Wide Model</strong></p>
+<p><img src="/2021/05/29/tensorflow-wide-deep-learning/linear_model.png"></p>
+<p>在第二个版本中，你想记住适合每个查询的最优查询结果。因此你在TensorFlow中训练一个线性模型，通过Query Item与Traget Label的相关性预测每个商品的消费概率P(consumption|query, item)，FeedIO返回消费率最高的选项。在第二个版本中，模型学习到特征AND(query=”fried chicken”, item=”chicken and waffles”)的消费概率更大，而 AND(query=”fried chicken”, item=”chicken Fried Rice”)虽然字符匹配最多，而消费概率并不是最大。因此FoodIO 2.0在记住用户喜好方面做得非常好，更受用户喜爱。</p>
+<p><strong>Deep Model</strong></p>
+<p><img src="/2021/05/29/tensorflow-wide-deep-learning/deep_model.png" alt="图片来源[1]"></p>
+<p>后来你发现用户厌倦了这些推荐食物，他们希望能够推荐一些相似但是不同的美食。所以需要训练一个Deep Feed-forward Neural Network，将Query和Item嵌入到低维向量空间，将Query和Item的匹配进行泛化。当人们要“fried chicken”时，经常也不介意给他们推荐“burgers”。</p>
+<p><strong>Combining Wide and Deep models</strong></p>
+<p><img src="/2021/05/29/tensorflow-wide-deep-learning/deep_wide_model.png" alt="图片来源[1]"></p>
+<p>Deep Neural Network有时泛化不合理，从而推荐一些不相关的食物。通过对历史数据分析，可以发现有些用户的搜索目标非常明确，比如“iced decaf latte with nonfat milk”，虽然“hot latte with whole milk”在embedding space中非常相近，但并不意味着它是一个替代候选项。实际上，类似的问题数不胜数。所以为什么不把wide model和deep model结合起来呢。</p>
+<p>于是FoodIO 4.0诞生了，如上图所示，query=”fried chicken” and item=”chicken fried rice” 这一类Feature会在Deep Model和Wide Model同时Training，Wide Model可以记住更多的规则，Deep Model可以泛化相似的内容。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>1、<a target="_blank" rel="noopener" href="https://ai.googleblog.com/2016/06/wide-deep-learning-better-together-with.html">https://ai.googleblog.com/2016/06/wide-deep-learning-better-together-with.html</a></p>
 
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"></span><br><span class="line"><span class="comment"># function that accepts the ground truth and predictions</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_huber_loss</span>(<span class="params">y_true, y_pred</span>):</span></span><br><span class="line">    error = y_true - y_pred</span><br><span class="line">    is_small_error = tf.<span class="built_in">abs</span>(error) &lt;= threshold</span><br><span class="line">    small_error_loss = tf.square(error) / <span class="number">2</span></span><br><span class="line">    big_error_loss = threshold * (tf.<span class="built_in">abs</span>(error) - (<span class="number">0.5</span> * threshold))</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> tf.where(is_small_error, small_error_loss, big_error_loss) </span><br></pre></td></tr></table></figure>
-
-<h1 id="增加自定义参数"><a href="#增加自定义参数" class="headerlink" title="增加自定义参数"></a>增加自定义参数</h1><p>有时我们需要在Loss函数中添加一些可配置的超参数(Hyperparameter)，可使用下面两种方法：</p>
-<h2 id="使用Wrapper-Function"><a href="#使用Wrapper-Function" class="headerlink" title="使用Wrapper Function"></a>使用Wrapper Function</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrapper function that accepts the hyperparameter</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_huber_loss_with_threshold</span>(<span class="params">threshold</span>):</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment"># function that accepts the ground truth and predictions</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">my_huber_loss</span>(<span class="params">y_true, y_pred</span>):</span></span><br><span class="line">        error = y_true - y_pred</span><br><span class="line">        is_small_error = tf.<span class="built_in">abs</span>(error) &lt;= threshold</span><br><span class="line">        small_error_loss = tf.square(error) / <span class="number">2</span></span><br><span class="line">        big_error_loss = threshold * (tf.<span class="built_in">abs</span>(error) - (<span class="number">0.5</span> * threshold))</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> tf.where(is_small_error, small_error_loss, big_error_loss) </span><br><span class="line"></span><br><span class="line">    <span class="comment"># return the inner function tuned by the hyperparameter</span></span><br><span class="line">    <span class="keyword">return</span> my_huber_loss</span><br></pre></td></tr></table></figure>
-
-<h2 id="使用自定义Class"><a href="#使用自定义Class" class="headerlink" title="使用自定义Class"></a>使用自定义Class</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.losses <span class="keyword">import</span> Loss</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHuberLoss</span>(<span class="params">Loss</span>):</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment"># initialize instance attributes</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, threshold=<span class="number">1</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.threshold = threshold</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute loss</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, y_true, y_pred</span>):</span></span><br><span class="line">        error = y_true - y_pred</span><br><span class="line">        is_small_error = tf.<span class="built_in">abs</span>(error) &lt;= self.threshold</span><br><span class="line">        small_error_loss = tf.square(error) / <span class="number">2</span></span><br><span class="line">        big_error_loss = self.threshold * (tf.<span class="built_in">abs</span>(error) - (<span class="number">0.5</span> * self.threshold))</span><br><span class="line">        <span class="keyword">return</span> tf.where(is_small_error, small_error_loss, big_error_loss)</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -308,7 +320,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2021/04/17/tensorflow-loss-function-md/" title="Tensorflow-自定义Loss函数">http://example.com/2021/04/17/tensorflow-loss-function-md/</a>
+    <a href="http://example.com/2021/05/29/tensorflow-wide-deep-learning/" title="Wide Deep Learning">http://example.com/2021/05/29/tensorflow-wide-deep-learning/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -329,13 +341,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/04/05/tensorflow-Sequential-API-vs-Functional-API/" rel="prev" title="Tensorflow-使用Functional API构建Model">
-      <i class="fa fa-chevron-left"></i> Tensorflow-使用Functional API构建Model
+    <a href="/2021/05/22/%E6%9F%A5%E7%90%86%C2%B7%E8%8A%92%E6%A0%BC%E7%BB%8F%E5%85%B8%E6%BC%94%E8%AE%B2-%E5%9C%A8%E6%9C%89%E9%B1%BC%E7%9A%84%E5%9C%B0%E6%96%B9%E9%92%93%E9%B1%BC/" rel="prev" title="查理·芒格经典演讲-在有鱼的地方钓鱼">
+      <i class="fa fa-chevron-left"></i> 查理·芒格经典演讲-在有鱼的地方钓鱼
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/04/17/personal-investment-md/" rel="next" title="投资材料">
-      投资材料 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -395,7 +404,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Loss%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">自定义Loss函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8F%82%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">增加自定义参数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Wrapper-Function"><span class="nav-number">2.1.</span> <span class="nav-text">使用Wrapper Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89Class"><span class="nav-number">2.2.</span> <span class="nav-text">使用自定义Class</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Wide-amp-Deep-Learning%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">Wide &amp; Deep Learning工作原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
