@@ -235,6 +235,72 @@
       </tags>
   </entry>
   <entry>
+    <title>Mobileye REM地图</title>
+    <url>/2021/03/14/mobileye-rem-map-md/</url>
+    <content><![CDATA[<h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
+<p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
+<span id="more"></span>
+
+<p><img src="/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
+<h1 id="高精地图的挑战"><a href="#高精地图的挑战" class="headerlink" title="高精地图的挑战"></a>高精地图的挑战</h1><h2 id="规模化-Scale"><a href="#规模化-Scale" class="headerlink" title="规模化-Scale"></a>规模化-Scale</h2><p>如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那就不存在规模化的问题。但是2025年之后，自动驾驶会在消费者层面全面落地，用户需要驾车到任意想去的地方，在这种场景下，Scale是一个无法规避的问题。</p>
+<h2 id="鲜度-Fresh"><a href="#鲜度-Fresh" class="headerlink" title="鲜度-Fresh"></a>鲜度-Fresh</h2><p>理想情况下，地图是在实时更新的。当物理环境发生变化时，需要实时反映到地图上。月级更新、甚至天级更新都是不够的，我们需要做到分钟级，甚至更短。</p>
+<h2 id="精度-Accuracy"><a href="#精度-Accuracy" class="headerlink" title="精度-Accuracy"></a>精度-Accuracy</h2><p>车载系统(OnBoard System)检测的车辆和行人需要与高精地图(High Definiation Map)实现厘米级精度的匹配，因此地图的精度至关重要。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_challange.png" alt="高精地图挑战"></p>
+<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="/2021/03/14/mobileye-rem-map-md/common_approach_map.png" alt="高精地图通用制作方法"></p>
+<h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_geometric.png"></p>
+<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="/2021/03/14/mobileye-rem-map-md/semantic_map.png"></p>
+<p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/drivable_path.png"></p>
+<p>如下图所示，转向规则千奇百怪：禁止红灯右转，完全停车后允许红灯右转，绿灯禁止左转，绿灯Yield后允许左转…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/priority_map.png"></p>
+<p>如下图所示，红绿灯异常复杂，识别车道、人行横道与红绿灯的关联关系难度很大…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_association.png"></p>
+<p>如下图所示，除非地图可以表达所有的3D要素，否则很难自动化的计算出车道的最优Stop/Yield Point。但是表达所有的3D信息对于地图来说又是不现实的…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/stop_point.png"></p>
+<p>影响车辆行驶速度的因素有很多，道路几何、限速、文化等，难以量化，但它对Smooth Driving体验至关重要…</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/smooth_driving.png"></p>
+<h1 id="Mobileye如何解决这些问题"><a href="#Mobileye如何解决这些问题" class="headerlink" title="Mobileye如何解决这些问题"></a>Mobileye如何解决这些问题</h1><p>scalability依赖众包数据生成Millions Map Agents；Accuracy不是全局的Accuracy，而是局部的Accuracy，相对于道路上的静态元素位置。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/av_map.png"></p>
+<p>REM的处理流程如下，首先从成百上千辆车获取检测信息(没有使用差分GPS，而是使用了普通的GPS)，这些数据传送到云端；每辆车Detection的角度不同，由于遮挡等原因，每辆车检测的landmark也有差异，将这些数据进行Alignment处理，生成高精度的地图数据；最后，Modeling And Semantics负责生成地图的语义数据。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/rem_process.png"></p>
+<h2 id="Harvesting"><a href="#Harvesting" class="headerlink" title="Harvesting"></a>Harvesting</h2><p>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
+<p>Mobileye Harvesting的数据量为10K/公里，这些检测的数据会被发送到云端。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/harvesting.png"></p>
+<h2 id="Aligning-Drives"><a href="#Aligning-Drives" class="headerlink" title="Aligning Drives"></a>Aligning Drives</h2><p>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/map_align_drive.png"></p>
+<p>由于GPS存在误差，每个车辆检测的道路元素位置都存在噪声，所以只依靠简单的位置求均值是不可行的。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/align_noise.png"></p>
+<p>Align之后可以明显的看到两条Driving Path(蓝色)和两侧的道路边界(红色)。对齐的过程是靠几何运算进行。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/path_align.png"></p>
+<p>仅仅靠聚类(Clustering)和Spline Fiting得到下图右上角的结果，这个结果不是特别理想。后来通过神经网络生成高精度地图，效果好了很多。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/model_process.png"></p>
+<h1 id="为什么语义理解离不开众包"><a href="#为什么语义理解离不开众包" class="headerlink" title="为什么语义理解离不开众包"></a>为什么语义理解离不开众包</h1><p>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
+<p>如下右图所示，众包数据提供了复杂场景下的所有可通行路径。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_driving_path.png"></p>
+<p>如下图所示，通过众包数据可以获得红绿灯与车道的关联关系、Yield Sign的Stop Point、Crosswalk与红绿灯的关联关系等。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_assocation.png"></p>
+<p>如下左图所示，通过检测哪个Drive Path的Stop Point比较多，我们可以从众包数据中获取到没有Traffic Sign情况下各个道路的路权优先级。</p>
+<p>如下中图所示，我们可以从众包数据学习到在路口其它司机的停车位置。</p>
+<p>如下右图所示，从众包数据可以学习到，在无保护左转的场景下车辆的Stop Point。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_more_info.png"></p>
+<p>众包数据是获得各个道路Common Speed的唯一高效的方法，Common Speed提供了当道路没有车辆时候AV车的目标行驶速度。采用这种方法可以使得无论在哪个国家、地区，或者不同的道路类型，AV车都可以自然的融入车流。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_speed.png"></p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>到目前为止，Mobileye与超过6家汽车制造厂商合作，每天可以覆盖800万公里的路网更新。预计到2024年，每天覆盖的路网会达到10亿公里。</p>
+<p><img src="/2021/03/14/mobileye-rem-map-md/mobileye_situation.png"></p>
+<p><strong>说明</strong>： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
+<p>YouTube链接：<br><a href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
+        <tag>Mobileye</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>投资材料</title>
     <url>/2021/04/17/personal-investment-md/</url>
     <content><![CDATA[<h1 id="投资指标"><a href="#投资指标" class="headerlink" title="投资指标"></a>投资指标</h1><h2 id="市盈率"><a href="#市盈率" class="headerlink" title="市盈率"></a>市盈率</h2><p>股票的市盈率(Price-to-Earning Ratio，P/E)，指每股市价(P)除以每股盈余(EPS)，通常作为股票是高估抑或低估的指标。</p>
@@ -279,11 +345,11 @@
 <td align="center">9.67</td>
 </tr>
 </tbody></table>
-<div id="echarts1829" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts2021" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts1829'));
+        var myChart = echarts.init(document.getElementById('echarts2021'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -324,11 +390,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts3249" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts3706" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts3249'));
+        var myChart = echarts.init(document.getElementById('echarts3706'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -375,11 +441,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts8246" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts1985" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts8246'));
+        var myChart = echarts.init(document.getElementById('echarts1985'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -457,11 +523,11 @@
 <td align="center">3.47</td>
 </tr>
 </tbody></table>
-<div id="echarts9119" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts2766" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts9119'));
+        var myChart = echarts.init(document.getElementById('echarts2766'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -531,11 +597,11 @@
 <td align="center">0.97</td>
 </tr>
 </tbody></table>
-<div id="echarts8899" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts9886" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts8899'));
+        var myChart = echarts.init(document.getElementById('echarts9886'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -605,11 +671,11 @@
 <td align="center">2305.9</td>
 </tr>
 </tbody></table>
-<div id="echarts9845" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts4683" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts9845'));
+        var myChart = echarts.init(document.getElementById('echarts4683'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -685,11 +751,11 @@
 <td align="center">356.4</td>
 </tr>
 </tbody></table>
-<div id="echarts6930" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts8900" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts6930'));
+        var myChart = echarts.init(document.getElementById('echarts8900'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -745,72 +811,6 @@
       <tags>
         <tag>个人投资</tag>
         <tag>投资理财</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mobileye REM地图</title>
-    <url>/2021/03/14/mobileye-rem-map-md/</url>
-    <content><![CDATA[<h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
-<p>理论上来讲，可以在车载系统检测和获取所有道路信息(可行驶路径、车道优先级、红绿灯与车道的关联关系、车道与人行横道与红绿灯的关系等)，但是目前的AI能力无法保证实现很高的MTBF(Mean Time Between Failures, 平均无故障时间)，所以需要提前把这些信息都准备好。</p>
-<span id="more"></span>
-
-<p><img src="/2021/03/14/mobileye-rem-map-md/hdmap_motivation.png" alt="Motivation Behind HDMap"></p>
-<h1 id="高精地图的挑战"><a href="#高精地图的挑战" class="headerlink" title="高精地图的挑战"></a>高精地图的挑战</h1><h2 id="规模化-Scale"><a href="#规模化-Scale" class="headerlink" title="规模化-Scale"></a>规模化-Scale</h2><p>如果自动驾驶车辆只在一个区域、一个城市、或者几个城市运营，那就不存在规模化的问题。但是2025年之后，自动驾驶会在消费者层面全面落地，用户需要驾车到任意想去的地方，在这种场景下，Scale是一个无法规避的问题。</p>
-<h2 id="鲜度-Fresh"><a href="#鲜度-Fresh" class="headerlink" title="鲜度-Fresh"></a>鲜度-Fresh</h2><p>理想情况下，地图是在实时更新的。当物理环境发生变化时，需要实时反映到地图上。月级更新、甚至天级更新都是不够的，我们需要做到分钟级，甚至更短。</p>
-<h2 id="精度-Accuracy"><a href="#精度-Accuracy" class="headerlink" title="精度-Accuracy"></a>精度-Accuracy</h2><p>车载系统(OnBoard System)检测的车辆和行人需要与高精地图(High Definiation Map)实现厘米级精度的匹配，因此地图的精度至关重要。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_challange.png" alt="高精地图挑战"></p>
-<h1 id="通用高精地图制作方法的缺陷"><a href="#通用高精地图制作方法的缺陷" class="headerlink" title="通用高精地图制作方法的缺陷"></a>通用高精地图制作方法的缺陷</h1><p><img src="/2021/03/14/mobileye-rem-map-md/common_approach_map.png" alt="高精地图通用制作方法"></p>
-<h2 id="全局坐标系下厘米级精度不是必需的"><a href="#全局坐标系下厘米级精度不是必需的" class="headerlink" title="全局坐标系下厘米级精度不是必需的"></a>全局坐标系下厘米级精度不是必需的</h2><p>AV车辆行驶过程中只关注周围几百米范围即可，所以只要这个范围内的足够准确即可。至于几公里之外的全局精度，Who Care…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_geometric.png"></p>
-<h2 id="语义层数据生产难以自动化"><a href="#语义层数据生产难以自动化" class="headerlink" title="语义层数据生产难以自动化"></a>语义层数据生产难以自动化</h2><p><img src="/2021/03/14/mobileye-rem-map-md/semantic_map.png"></p>
-<p>如下图所示，没有车道线的双向车道，单从图像观察，难以识别它的Drive Path。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/drivable_path.png"></p>
-<p>如下图所示，转向规则千奇百怪：禁止红灯右转，完全停车后允许红灯右转，绿灯禁止左转，绿灯Yield后允许左转…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/priority_map.png"></p>
-<p>如下图所示，红绿灯异常复杂，识别车道、人行横道与红绿灯的关联关系难度很大…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_association.png"></p>
-<p>如下图所示，除非地图可以表达所有的3D要素，否则很难自动化的计算出车道的最优Stop/Yield Point。但是表达所有的3D信息对于地图来说又是不现实的…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/stop_point.png"></p>
-<p>影响车辆行驶速度的因素有很多，道路几何、限速、文化等，难以量化，但它对Smooth Driving体验至关重要…</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/smooth_driving.png"></p>
-<h1 id="Mobileye如何解决这些问题"><a href="#Mobileye如何解决这些问题" class="headerlink" title="Mobileye如何解决这些问题"></a>Mobileye如何解决这些问题</h1><p>scalability依赖众包数据生成Millions Map Agents；Accuracy不是全局的Accuracy，而是局部的Accuracy，相对于道路上的静态元素位置。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/av_map.png"></p>
-<p>REM的处理流程如下，首先从成百上千辆车获取检测信息(没有使用差分GPS，而是使用了普通的GPS)，这些数据传送到云端；每辆车Detection的角度不同，由于遮挡等原因，每辆车检测的landmark也有差异，将这些数据进行Alignment处理，生成高精度的地图数据；最后，Modeling And Semantics负责生成地图的语义数据。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/rem_process.png"></p>
-<h2 id="Harvesting"><a href="#Harvesting" class="headerlink" title="Harvesting"></a>Harvesting</h2><p>下图中黄色的框是车辆检测的landmarks和lane marks，同时车辆会尝试检测driving path等语义信息，一辆车可能检测不准确，但是成百上千的过路车辆会让检测结果越来越好。</p>
-<p>Mobileye Harvesting的数据量为10K/公里，这些检测的数据会被发送到云端。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/harvesting.png"></p>
-<h2 id="Aligning-Drives"><a href="#Aligning-Drives" class="headerlink" title="Aligning Drives"></a>Aligning Drives</h2><p>检测每个RSD中每个元素的6D Pose，然后对齐相同位置的元素，得到厘米度精度的driving path等信息。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/map_align_drive.png"></p>
-<p>由于GPS存在误差，每个车辆检测的道路元素位置都存在噪声，所以只依靠简单的位置求均值是不可行的。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/align_noise.png"></p>
-<p>Align之后可以明显的看到两条Driving Path(蓝色)和两侧的道路边界(红色)。对齐的过程是靠几何运算进行。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/path_align.png"></p>
-<p>仅仅靠聚类(Clustering)和Spline Fiting得到下图右上角的结果，这个结果不是特别理想。后来通过神经网络生成高精度地图，效果好了很多。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/model_process.png"></p>
-<h1 id="为什么语义理解离不开众包"><a href="#为什么语义理解离不开众包" class="headerlink" title="为什么语义理解离不开众包"></a>为什么语义理解离不开众包</h1><p>如下左图所示，通过众包数据可以在没有Lane Marking的道路上获取Driving Path。</p>
-<p>如下右图所示，众包数据提供了复杂场景下的所有可通行路径。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_driving_path.png"></p>
-<p>如下图所示，通过众包数据可以获得红绿灯与车道的关联关系、Yield Sign的Stop Point、Crosswalk与红绿灯的关联关系等。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_assocation.png"></p>
-<p>如下左图所示，通过检测哪个Drive Path的Stop Point比较多，我们可以从众包数据中获取到没有Traffic Sign情况下各个道路的路权优先级。</p>
-<p>如下中图所示，我们可以从众包数据学习到在路口其它司机的停车位置。</p>
-<p>如下右图所示，从众包数据可以学习到，在无保护左转的场景下车辆的Stop Point。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_more_info.png"></p>
-<p>众包数据是获得各个道路Common Speed的唯一高效的方法，Common Speed提供了当道路没有车辆时候AV车的目标行驶速度。采用这种方法可以使得无论在哪个国家、地区，或者不同的道路类型，AV车都可以自然的融入车流。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/crowd_speed.png"></p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>到目前为止，Mobileye与超过6家汽车制造厂商合作，每天可以覆盖800万公里的路网更新。预计到2024年，每天覆盖的路网会达到10亿公里。</p>
-<p><img src="/2021/03/14/mobileye-rem-map-md/mobileye_situation.png"></p>
-<p><strong>说明</strong>： 本文所有内容都来源于Mobileye CEO Amnon Shashua教授在2021 CES的分享。</p>
-<p>YouTube链接：<br><a href="https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s">https://www.youtube.com/watch?v=B7YNj66GxRA&amp;t=301s</a></p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-      </categories>
-      <tags>
-        <tag>自动驾驶</tag>
-        <tag>高精地图</tag>
-        <tag>Mobileye</tag>
       </tags>
   </entry>
   <entry>
@@ -876,6 +876,101 @@
       </tags>
   </entry>
   <entry>
+    <title>Tensorflow Callback</title>
+    <url>/2021/06/06/tensorflow-callback/</url>
+    <content><![CDATA[<h1 id="Ungraded-Lab-Keras-custom-callbacks"><a href="#Ungraded-Lab-Keras-custom-callbacks" class="headerlink" title="Ungraded Lab: Keras custom callbacks"></a>Ungraded Lab: Keras custom callbacks</h1><p>A custom callback is a powerful tool to customize the behavior of a Keras model during training, evaluation, or inference. Towards the end of this guide, there will be demos of creating a couple of simple callback applications to get you started on your custom callback.</p>
+<span id="more"></span>
+
+<h2 id="Imports"><a href="#Imports" class="headerlink" title="Imports"></a>Imports</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> IPython.display <span class="keyword">import</span> Image <span class="keyword">as</span> IPyImage</span><br><span class="line"><span class="keyword">import</span> imageio</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;Version: &quot;</span>, tf.__version__)</span><br><span class="line">tf.get_logger().setLevel(<span class="string">&#x27;INFO&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Version:  2.1.0
+</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Define the Keras model to add callbacks to</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_model</span>():</span></span><br><span class="line">    model = tf.keras.Sequential()</span><br><span class="line">    model.add(tf.keras.layers.Dense(<span class="number">1</span>, activation = <span class="string">&#x27;linear&#x27;</span>, input_dim = <span class="number">784</span>))</span><br><span class="line">    model.<span class="built_in">compile</span>(optimizer=tf.keras.optimizers.RMSprop(lr=<span class="number">0.1</span>), loss=<span class="string">&#x27;mean_squared_error&#x27;</span>, metrics=[<span class="string">&#x27;mae&#x27;</span>])</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+
+<p>Then, load the MNIST data for training and testing from Keras datasets API:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Load example MNIST data and pre-process it</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()</span><br><span class="line">x_train = x_train.reshape(<span class="number">60000</span>, <span class="number">784</span>).astype(<span class="string">&#x27;float32&#x27;</span>) / <span class="number">255</span></span><br><span class="line">x_test = x_test.reshape(<span class="number">10000</span>, <span class="number">784</span>).astype(<span class="string">&#x27;float32&#x27;</span>) / <span class="number">255</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
+11493376/11490434 [==============================] - 0s 0us/step
+</code></pre>
+<p>Now, define a simple custom callback to track the start and end of every batch of data. During those calls, it prints the index of the current batch.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyCustomCallback</span>(<span class="params">tf.keras.callbacks.Callback</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_train_batch_begin</span>(<span class="params">self, batch, logs=<span class="literal">None</span></span>):</span></span><br><span class="line">        print(<span class="string">&#x27;Training: batch &#123;&#125; begins at &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(batch, datetime.datetime.now().time()))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_train_batch_end</span>(<span class="params">self, batch, logs=<span class="literal">None</span></span>):</span></span><br><span class="line">        print(<span class="string">&#x27;Training: batch &#123;&#125; ends at &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(batch, datetime.datetime.now().time()))</span><br></pre></td></tr></table></figure>
+
+<p>Providing a callback to model methods such as <code>tf.keras.Model.fit()</code> ensures the methods are called at those stages:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = get_model()</span><br><span class="line">_ = model.fit(x_train, y_train,</span><br><span class="line">          batch_size=<span class="number">64</span>,</span><br><span class="line">          epochs=<span class="number">1</span>,</span><br><span class="line">          steps_per_epoch=<span class="number">5</span>,</span><br><span class="line">          verbose=<span class="number">0</span>,</span><br><span class="line">          callbacks=[MyCustomCallback()])</span><br></pre></td></tr></table></figure>
+
+<pre><code>Training: batch 0 begins at 01:23:01.160647
+Training: batch 0 ends at 01:23:01.411860
+Training: batch 1 begins at 01:23:01.412184
+Training: batch 1 ends at 01:23:01.413542
+Training: batch 2 begins at 01:23:01.413876
+Training: batch 2 ends at 01:23:01.414788
+Training: batch 3 begins at 01:23:01.415102
+Training: batch 3 ends at 01:23:01.415993
+Training: batch 4 begins at 01:23:01.416309
+Training: batch 4 ends at 01:23:01.417249
+</code></pre>
+<h2 id="An-overview-of-callback-methods"><a href="#An-overview-of-callback-methods" class="headerlink" title="An overview of callback methods"></a>An overview of callback methods</h2><h3 id="Common-methods-for-training-testing-predicting"><a href="#Common-methods-for-training-testing-predicting" class="headerlink" title="Common methods for training/testing/predicting"></a>Common methods for training/testing/predicting</h3><p>For training, testing, and predicting, following methods are provided to be overridden.</p>
+<h4 id="on-train-test-predict-begin-self-logs-None"><a href="#on-train-test-predict-begin-self-logs-None" class="headerlink" title="on_(train|test|predict)_begin(self, logs=None)"></a><code>on_(train|test|predict)_begin(self, logs=None)</code></h4><p>Called at the beginning of <code>fit</code>/<code>evaluate</code>/<code>predict</code>.</p>
+<h4 id="on-train-test-predict-end-self-logs-None"><a href="#on-train-test-predict-end-self-logs-None" class="headerlink" title="on_(train|test|predict)_end(self, logs=None)"></a><code>on_(train|test|predict)_end(self, logs=None)</code></h4><p>Called at the end of <code>fit</code>/<code>evaluate</code>/<code>predict</code>.</p>
+<h4 id="on-train-test-predict-batch-begin-self-batch-logs-None"><a href="#on-train-test-predict-batch-begin-self-batch-logs-None" class="headerlink" title="on_(train|test|predict)_batch_begin(self, batch, logs=None)"></a><code>on_(train|test|predict)_batch_begin(self, batch, logs=None)</code></h4><p>Called right before processing a batch during training/testing/predicting. Within this method, <code>logs</code> is a dict with <code>batch</code> and <code>size</code> available keys, representing the current batch number and the size of the batch.</p>
+<h4 id="on-train-test-predict-batch-end-self-batch-logs-None"><a href="#on-train-test-predict-batch-end-self-batch-logs-None" class="headerlink" title="on_(train|test|predict)_batch_end(self, batch, logs=None)"></a><code>on_(train|test|predict)_batch_end(self, batch, logs=None)</code></h4><p>Called at the end of training/testing/predicting a batch. Within this method, <code>logs</code> is a dict containing the stateful metrics result.</p>
+<h3 id="Training-specific-methods"><a href="#Training-specific-methods" class="headerlink" title="Training specific methods"></a>Training specific methods</h3><p>In addition, for training, following are provided.</p>
+<h4 id="on-epoch-begin-self-epoch-logs-None"><a href="#on-epoch-begin-self-epoch-logs-None" class="headerlink" title="on_epoch_begin(self, epoch, logs=None)"></a><code>on_epoch_begin(self, epoch, logs=None)</code></h4><p>Called at the beginning of an epoch during training.</p>
+<h4 id="on-epoch-end-self-epoch-logs-None"><a href="#on-epoch-end-self-epoch-logs-None" class="headerlink" title="on_epoch_end(self, epoch, logs=None)"></a><code>on_epoch_end(self, epoch, logs=None)</code></h4><p>Called at the end of an epoch during training.</p>
+<h3 id="Usage-of-logs-dict"><a href="#Usage-of-logs-dict" class="headerlink" title="Usage of logs dict"></a>Usage of <code>logs</code> dict</h3><p>The <code>logs</code> dict contains the loss value, and all the metrics at the end of a batch or epoch. Example includes the loss and mean absolute error.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">callback = tf.keras.callbacks.LambdaCallback(</span><br><span class="line">    on_epoch_end=<span class="keyword">lambda</span> epoch,logs: </span><br><span class="line">    print(<span class="string">&quot;Epoch: &#123;&#125;, Val/Train loss ratio: &#123;:.2f&#125;&quot;</span>.<span class="built_in">format</span>(epoch, logs[<span class="string">&quot;val_loss&quot;</span>] / logs[<span class="string">&quot;loss&quot;</span>]))</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">model = get_model()</span><br><span class="line">_ = model.fit(x_train, y_train,</span><br><span class="line">          validation_data=(x_test, y_test),</span><br><span class="line">          batch_size=<span class="number">64</span>,</span><br><span class="line">          epochs=<span class="number">3</span>,</span><br><span class="line">          verbose=<span class="number">0</span>,</span><br><span class="line">          callbacks=[callback])</span><br></pre></td></tr></table></figure>
+
+<pre><code>Epoch: 0, Val/Train loss ratio: 0.79
+Epoch: 1, Val/Train loss ratio: 0.53
+Epoch: 2, Val/Train loss ratio: 1.47
+</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DetectOverfittingCallback</span>(<span class="params">tf.keras.callbacks.Callback</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, threshold=<span class="number">0.7</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>(DetectOverfittingCallback, self).__init__()</span><br><span class="line">        self.threshold = threshold</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_epoch_end</span>(<span class="params">self, epoch, logs=<span class="literal">None</span></span>):</span></span><br><span class="line">        ratio = logs[<span class="string">&quot;val_loss&quot;</span>] / logs[<span class="string">&quot;loss&quot;</span>]</span><br><span class="line">        print(<span class="string">&quot;Epoch: &#123;&#125;, Val/Train loss ratio: &#123;:.2f&#125;&quot;</span>.<span class="built_in">format</span>(epoch, ratio))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ratio &gt; self.threshold:</span><br><span class="line">            print(<span class="string">&quot;Stopping training...&quot;</span>)</span><br><span class="line">            self.model.stop_training = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">model = get_model()</span><br><span class="line">_ = model.fit(x_train, y_train,</span><br><span class="line">              validation_data=(x_test, y_test),</span><br><span class="line">              batch_size=<span class="number">64</span>,</span><br><span class="line">              epochs=<span class="number">3</span>,</span><br><span class="line">              verbose=<span class="number">0</span>,</span><br><span class="line">              callbacks=[DetectOverfittingCallback()])</span><br></pre></td></tr></table></figure>
+
+<pre><code>Epoch: 0, Val/Train loss ratio: 0.88
+Stopping training...
+</code></pre>
+<p>Similarly, one can provide callbacks in <code>evaluate()</code> calls.</p>
+<h2 id="Custom-callback-to-Visualize-predictions"><a href="#Custom-callback-to-Visualize-predictions" class="headerlink" title="Custom callback to Visualize predictions"></a>Custom callback to Visualize predictions</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Load example MNIST data and pre-process it</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()</span><br><span class="line">x_train = x_train.reshape(<span class="number">60000</span>, <span class="number">784</span>).astype(<span class="string">&#x27;float32&#x27;</span>) / <span class="number">255</span></span><br><span class="line">x_test = x_test.reshape(<span class="number">10000</span>, <span class="number">784</span>).astype(<span class="string">&#x27;float32&#x27;</span>) / <span class="number">255</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Visualization utilities</span></span><br><span class="line">plt.rc(<span class="string">&#x27;font&#x27;</span>, size=<span class="number">20</span>)</span><br><span class="line">plt.rc(<span class="string">&#x27;figure&#x27;</span>, figsize=(<span class="number">15</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">display_digits</span>(<span class="params">inputs, outputs, ground_truth, epoch, n=<span class="number">10</span></span>):</span></span><br><span class="line">    plt.clf()</span><br><span class="line"></span><br><span class="line">    plt.yticks([])</span><br><span class="line">    plt.grid(<span class="literal">None</span>)</span><br><span class="line">    inputs = np.reshape(inputs, [n, <span class="number">28</span>, <span class="number">28</span>])</span><br><span class="line">    inputs = np.swapaxes(inputs, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    inputs = np.reshape(inputs, [<span class="number">28</span>, <span class="number">28</span>*n])</span><br><span class="line">    plt.imshow(inputs)</span><br><span class="line">    plt.xticks([<span class="number">28</span>*x+<span class="number">14</span> <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(n)], outputs)</span><br><span class="line">    <span class="keyword">for</span> i,t <span class="keyword">in</span> <span class="built_in">enumerate</span>(plt.gca().xaxis.get_ticklabels()):</span><br><span class="line">        <span class="keyword">if</span> outputs[i] == ground_truth[i]: </span><br><span class="line">            t.set_color(<span class="string">&#x27;green&#x27;</span>) </span><br><span class="line">        <span class="keyword">else</span>: </span><br><span class="line">            t.set_color(<span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">    plt.grid(<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">GIF_PATH = <span class="string">&#x27;./animation.gif&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VisCallback</span>(<span class="params">tf.keras.callbacks.Callback</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, inputs, ground_truth, display_freq=<span class="number">10</span>, n_samples=<span class="number">10</span></span>):</span></span><br><span class="line">        self.inputs = inputs</span><br><span class="line">        self.ground_truth = ground_truth</span><br><span class="line">        self.images = []</span><br><span class="line">        self.display_freq = display_freq</span><br><span class="line">        self.n_samples = n_samples</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_epoch_end</span>(<span class="params">self, epoch, logs=<span class="literal">None</span></span>):</span></span><br><span class="line">        <span class="comment"># Randomly sample data</span></span><br><span class="line">        indexes = np.random.choice(<span class="built_in">len</span>(self.inputs), size=self.n_samples)</span><br><span class="line">        X_test, y_test = self.inputs[indexes], self.ground_truth[indexes]</span><br><span class="line">        predictions = np.argmax(self.model.predict(X_test), axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Plot the digits</span></span><br><span class="line">        display_digits(X_test, predictions, y_test, epoch, n=self.display_freq)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Save the figure</span></span><br><span class="line">        buf = io.BytesIO()</span><br><span class="line">        plt.savefig(buf, <span class="built_in">format</span>=<span class="string">&#x27;png&#x27;</span>)</span><br><span class="line">        buf.seek(<span class="number">0</span>)</span><br><span class="line">        image = Image.<span class="built_in">open</span>(buf)</span><br><span class="line">        self.images.append(np.array(image))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Display the digits every &#x27;display_freq&#x27; number of epochs</span></span><br><span class="line">        <span class="keyword">if</span> epoch % self.display_freq == <span class="number">0</span>:</span><br><span class="line">            plt.show()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_train_end</span>(<span class="params">self, logs=<span class="literal">None</span></span>):</span></span><br><span class="line">        imageio.mimsave(GIF_PATH, self.images, fps=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_model</span>():</span></span><br><span class="line">    model = tf.keras.Sequential()</span><br><span class="line">    model.add(tf.keras.layers.Dense(<span class="number">32</span>, activation=<span class="string">&#x27;linear&#x27;</span>, input_dim=<span class="number">784</span>))</span><br><span class="line">    model.add(tf.keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line">    model.<span class="built_in">compile</span>(optimizer=tf.keras.optimizers.RMSprop(lr=<span class="number">1e-4</span>), loss=<span class="string">&#x27;sparse_categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = get_model()</span><br><span class="line">model.fit(x_train, y_train,</span><br><span class="line">          batch_size=<span class="number">64</span>,</span><br><span class="line">          epochs=<span class="number">20</span>,</span><br><span class="line">          verbose=<span class="number">0</span>,</span><br><span class="line">          callbacks=[VisCallback(x_test, y_test)])</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/2021/06/06/tensorflow-callback/output_21_0.png" alt="png"></p>
+<p><img src="/2021/06/06/tensorflow-callback/output_21_1.png" alt="png"></p>
+<pre><code>&lt;tensorflow.python.keras.callbacks.History at 0x7fcaf766e150&gt;
+</code></pre>
+<p><img src="/2021/06/06/tensorflow-callback/output_21_3.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">SCALE = <span class="number">60</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># FYI, the format is set to PNG here to bypass checks for acceptable embeddings</span></span><br><span class="line">IPyImage(GIF_PATH, <span class="built_in">format</span>=<span class="string">&#x27;png&#x27;</span>, width=<span class="number">15</span> * SCALE, height=<span class="number">3</span> * SCALE) </span><br></pre></td></tr></table></figure>
+
+
+
+
+<p><img src="/2021/06/06/tensorflow-callback/output_22_0.png" alt="png"></p>
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>来源：Coursera -&gt; Custom Models, Layers, and Loss Functions with TensorFlow</p>
+]]></content>
+      <categories>
+        <category>DeepLearning</category>
+      </categories>
+      <tags>
+        <tag>Tensorflow</tag>
+        <tag>Keras</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Tensorflow-自定义Loss函数</title>
     <url>/2021/04/17/tensorflow-loss-function-md/</url>
     <content><![CDATA[<p>Keras中内置了很多Loss函数，可以满足基本的使用需求，但是稍微复杂的一点的应用需要需要自定义Loss函数，这里主要记录几种常用的写法。</p>
@@ -888,7 +983,63 @@
 <h1 id="增加自定义参数"><a href="#增加自定义参数" class="headerlink" title="增加自定义参数"></a>增加自定义参数</h1><p>有时我们需要在Loss函数中添加一些可配置的超参数(Hyperparameter)，可使用下面两种方法：</p>
 <h2 id="使用Wrapper-Function"><a href="#使用Wrapper-Function" class="headerlink" title="使用Wrapper Function"></a>使用Wrapper Function</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># wrapper function that accepts the hyperparameter</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_huber_loss_with_threshold</span>(<span class="params">threshold</span>):</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment"># function that accepts the ground truth and predictions</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">my_huber_loss</span>(<span class="params">y_true, y_pred</span>):</span></span><br><span class="line">        error = y_true - y_pred</span><br><span class="line">        is_small_error = tf.<span class="built_in">abs</span>(error) &lt;= threshold</span><br><span class="line">        small_error_loss = tf.square(error) / <span class="number">2</span></span><br><span class="line">        big_error_loss = threshold * (tf.<span class="built_in">abs</span>(error) - (<span class="number">0.5</span> * threshold))</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> tf.where(is_small_error, small_error_loss, big_error_loss) </span><br><span class="line"></span><br><span class="line">    <span class="comment"># return the inner function tuned by the hyperparameter</span></span><br><span class="line">    <span class="keyword">return</span> my_huber_loss</span><br></pre></td></tr></table></figure>
 
-<h2 id="使用自定义Class"><a href="#使用自定义Class" class="headerlink" title="使用自定义Class"></a>使用自定义Class</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.losses <span class="keyword">import</span> Loss</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHuberLoss</span>(<span class="params">Loss</span>):</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment"># initialize instance attributes</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, threshold=<span class="number">1</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.threshold = threshold</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute loss</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, y_true, y_pred</span>):</span></span><br><span class="line">        error = y_true - y_pred</span><br><span class="line">        is_small_error = tf.<span class="built_in">abs</span>(error) &lt;= self.threshold</span><br><span class="line">        small_error_loss = tf.square(error) / <span class="number">2</span></span><br><span class="line">        big_error_loss = self.threshold * (tf.<span class="built_in">abs</span>(error) - (<span class="number">0.5</span> * self.threshold))</span><br><span class="line">        <span class="keyword">return</span> tf.where(is_small_error, small_error_loss, big_error_loss)</span><br></pre></td></tr></table></figure>]]></content>
+<h2 id="使用自定义Class"><a href="#使用自定义Class" class="headerlink" title="使用自定义Class"></a>使用自定义Class</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.losses <span class="keyword">import</span> Loss</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHuberLoss</span>(<span class="params">Loss</span>):</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment"># initialize instance attributes</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, threshold=<span class="number">1</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.threshold = threshold</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute loss</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, y_true, y_pred</span>):</span></span><br><span class="line">        error = y_true - y_pred</span><br><span class="line">        is_small_error = tf.<span class="built_in">abs</span>(error) &lt;= self.threshold</span><br><span class="line">        small_error_loss = tf.square(error) / <span class="number">2</span></span><br><span class="line">        big_error_loss = self.threshold * (tf.<span class="built_in">abs</span>(error) - (<span class="number">0.5</span> * self.threshold))</span><br><span class="line">        <span class="keyword">return</span> tf.where(is_small_error, small_error_loss, big_error_loss)</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>来源：Coursera -&gt; Custom Models, Layers, and Loss Functions with TensorFlow</p>
+]]></content>
+      <categories>
+        <category>DeepLearning</category>
+      </categories>
+      <tags>
+        <tag>Tensorflow</tag>
+        <tag>Keras</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Tensorflow 2.0-简化版ResNet实现</title>
+    <url>/2021/05/30/tensorflow-simple-resnet/</url>
+    <content><![CDATA[<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> tensorflow_datasets <span class="keyword">as</span> tfds</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Layer</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h1 id="Implement-Model-subclasses"><a href="#Implement-Model-subclasses" class="headerlink" title="Implement Model subclasses"></a>Implement Model subclasses</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IdentityBlock</span>(<span class="params">tf.keras.Model</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, filters, kernel_size</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(IdentityBlock, self).__init__(name=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        self.conv1 = tf.keras.layers.Conv2D(filters, kernel_size, padding=<span class="string">&#x27;same&#x27;</span>)</span><br><span class="line">        self.bn1 = tf.keras.layers.BatchNormalization()</span><br><span class="line"></span><br><span class="line">        self.conv2 = tf.keras.layers.Conv2D(filters, kernel_size, padding=<span class="string">&#x27;same&#x27;</span>)</span><br><span class="line">        self.bn2 = tf.keras.layers.BatchNormalization()</span><br><span class="line"></span><br><span class="line">        self.act = tf.keras.layers.Activation(<span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">        self.add = tf.keras.layers.Add()</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, input_tensor</span>):</span></span><br><span class="line">        x = self.conv1(input_tensor)</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = self.act(x)</span><br><span class="line"></span><br><span class="line">        x = self.conv2(x)</span><br><span class="line">        x = self.bn2(x)</span><br><span class="line"></span><br><span class="line">        x = self.add([x, input_tensor])</span><br><span class="line">        x = self.act(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResNet</span>(<span class="params">tf.keras.Model</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, num_classes</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(ResNet, self).__init__()</span><br><span class="line">        self.conv = tf.keras.layers.Conv2D(<span class="number">64</span>, <span class="number">7</span>, padding=<span class="string">&#x27;same&#x27;</span>)</span><br><span class="line">        self.bn = tf.keras.layers.BatchNormalization()</span><br><span class="line">        self.act = tf.keras.layers.Activation(<span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">        self.max_pool = tf.keras.layers.MaxPool2D((<span class="number">3</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Use the Identity blocks that you just defined</span></span><br><span class="line">        self.id1a = IdentityBlock(<span class="number">64</span>, <span class="number">3</span>)</span><br><span class="line">        self.id1b = IdentityBlock(<span class="number">64</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">        self.global_pool = tf.keras.layers.GlobalAveragePooling2D()</span><br><span class="line">        self.classifier = tf.keras.layers.Dense(num_classes, activation=<span class="string">&#x27;softmax&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, inputs</span>):</span></span><br><span class="line">        x = self.conv(inputs)</span><br><span class="line">        x = self.bn(x)</span><br><span class="line">        x = self.act(x)</span><br><span class="line">        x = self.max_pool(x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># insert the identity blocks in the middle of the network</span></span><br><span class="line">        x = self.id1a(x)</span><br><span class="line">        x = self.id1b(x)</span><br><span class="line"></span><br><span class="line">        x = self.global_pool(x)</span><br><span class="line">        <span class="keyword">return</span> self.classifier(x)</span><br></pre></td></tr></table></figure>
+
+<h1 id="Training-the-Model"><a href="#Training-the-Model" class="headerlink" title="Training the Model"></a>Training the Model</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># utility function to normalize the images and return (image, label) pairs.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">features</span>):</span></span><br><span class="line">    <span class="keyword">return</span> tf.cast(features[<span class="string">&#x27;image&#x27;</span>], tf.float32) / <span class="number">255.</span>, features[<span class="string">&#x27;label&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># create a ResNet instance with 10 output units for MNIST</span></span><br><span class="line">resnet = ResNet(<span class="number">10</span>)</span><br><span class="line">resnet.<span class="built_in">compile</span>(optimizer=<span class="string">&#x27;adam&#x27;</span>, loss=<span class="string">&#x27;sparse_categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># load and preprocess the dataset</span></span><br><span class="line">dataset = tfds.load(<span class="string">&#x27;mnist&#x27;</span>, split=tfds.Split.TRAIN, data_dir=<span class="string">&#x27;./data&#x27;</span>)</span><br><span class="line">dataset = dataset.<span class="built_in">map</span>(preprocess).batch(<span class="number">32</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># train the model.</span></span><br><span class="line">resnet.fit(dataset, epochs=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>来源：Coursera -&gt; Custom Models, Layers, and Loss Functions with TensorFlow</p>
+]]></content>
+      <categories>
+        <category>DeepLearning</category>
+      </categories>
+      <tags>
+        <tag>Tensorflow</tag>
+        <tag>Keras</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Tensorflow-VGG</title>
+    <url>/2021/06/05/tensorflow-vgg/</url>
+    <content><![CDATA[<h1 id="基础知识-Python动态创建变量"><a href="#基础知识-Python动态创建变量" class="headerlink" title="基础知识-Python动态创建变量"></a>基础知识-Python动态创建变量</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Define a small class MyClass</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="comment"># One class variable &#x27;a&#x27; is set to 1</span></span><br><span class="line">        self.var1 = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create an object of type MyClass()</span></span><br><span class="line">my_obj = MyClass()</span><br></pre></td></tr></table></figure>
+
+<p>查看一个Class的所有变量有两种方法：my_obj.__dict__， vars(my_obj)</p>
+<span id="more"></span>
+
+<p>动态增加变量的方法如下：</p>
+<p>方法一：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add a new instance variable and give it a value</span></span><br><span class="line">my_obj.var2 = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Calls vars() again to see the object&#x27;s instance variables</span></span><br><span class="line"><span class="built_in">vars</span>(my_obj)</span><br></pre></td></tr></table></figure>
+
+<p>输出: {‘var1’: 1, ‘var2’: 2}</p>
+<p>方法二：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Call vars, passing in the object.  Then access the __dict__ dictionary using square brackets</span></span><br><span class="line"><span class="built_in">vars</span>(my_obj)[<span class="string">&#x27;var3&#x27;</span>] = <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Call vars() to see the object&#x27;s instance variables</span></span><br><span class="line"><span class="built_in">vars</span>(my_obj)</span><br></pre></td></tr></table></figure>
+
+<p>输出：{‘var1’: 1, ‘var2’: 2, ‘var3’: 3}</p>
+<h1 id="VGG网络"><a href="#VGG网络" class="headerlink" title="VGG网络"></a>VGG网络</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> tensorflow_datasets <span class="keyword">as</span> tfds</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Block</span>(<span class="params">tf.keras.Model</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, filters, kernel_size, repetitions, pool_size=<span class="number">2</span>, strides=<span class="number">2</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>(Block, self).__init__()</span><br><span class="line">        self.filters = filters</span><br><span class="line">        self.kernel_size = kernel_size</span><br><span class="line">        self.repetitions = repetitions</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Define a conv2D_0, conv2D_1, etc based on the number of repetitions</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(repetitions):</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># Define a Conv2D layer, specifying filters, kernel_size, activation and padding.</span></span><br><span class="line">            <span class="built_in">vars</span>(self)[<span class="string">f&#x27;conv2D_<span class="subst">&#123;i&#125;</span>&#x27;</span>] = tf.keras.layers.Conv2D(</span><br><span class="line">                filters = self.filters,</span><br><span class="line">                kernel_size = self.kernel_size,</span><br><span class="line">                padding = <span class="string">&#x27;same&#x27;</span>,</span><br><span class="line">                activation = <span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Define the max pool layer that will be added after the Conv2D blocks</span></span><br><span class="line">        self.max_pool = tf.keras.layers.MaxPooling2D(</span><br><span class="line">                        pool_size = pool_size,</span><br><span class="line">                        strides = strides)</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, inputs</span>):</span></span><br><span class="line">        <span class="comment"># access the class&#x27;s conv2D_0 layer</span></span><br><span class="line">        conv2D_0 = <span class="built_in">vars</span>(self)[<span class="string">&#x27;conv2D_0&#x27;</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Connect the conv2D_0 layer to inputs</span></span><br><span class="line">        x = conv2D_0(inputs)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># for the remaining conv2D_i layers from 1 to `repetitions` they will be connected to the previous layer</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, self.repetitions):<span class="comment"># YOUR CODE HERE,# YOUR CODE HERE):</span></span><br><span class="line">            <span class="comment"># access conv2D_i by formatting the integer `i`. (hint: check how these were saved using `vars()` earlier)</span></span><br><span class="line">            conv2D_i = <span class="built_in">vars</span>(self)[<span class="string">f&#x27;conv2D_<span class="subst">&#123;i&#125;</span>&#x27;</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># Use the conv2D_i and connect it to the previous layer</span></span><br><span class="line">            x = conv2D_i(x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Finally, add the max_pool layer</span></span><br><span class="line">        max_pool = self.max_pool(x)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> max_pool</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyVGG</span>(<span class="params">tf.keras.Model</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, num_classes</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(MyVGG, self).__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Creating blocks of VGG with the following </span></span><br><span class="line">        <span class="comment"># (filters, kernel_size, repetitions) configurations</span></span><br><span class="line">        self.block_a = Block(<span class="number">64</span>, <span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">        self.block_b = Block(<span class="number">128</span>, <span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">        self.block_c = Block(<span class="number">256</span>, <span class="number">3</span>, <span class="number">3</span>)</span><br><span class="line">        self.block_d = Block(<span class="number">512</span>, <span class="number">3</span>, <span class="number">3</span>)</span><br><span class="line">        self.block_e = Block(<span class="number">512</span>, <span class="number">3</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Classification head</span></span><br><span class="line">        <span class="comment"># Define a Flatten layer</span></span><br><span class="line">        self.flatten = tf.keras.layers.Flatten()</span><br><span class="line">        <span class="comment"># Create a Dense layer with 256 units and ReLU as the activation function</span></span><br><span class="line">        self.fc = tf.keras.layers.Dense(units = <span class="number">256</span>, activation = <span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">        <span class="comment"># Finally add the softmax classifier using a Dense layer</span></span><br><span class="line">        self.classifier = tf.keras.layers.Dense(units = num_classes, activation = <span class="string">&#x27;softmax&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, inputs</span>):</span></span><br><span class="line">        <span class="comment"># Chain all the layers one after the other</span></span><br><span class="line">        x = self.block_a(inputs)</span><br><span class="line">        x = self.block_b(x)</span><br><span class="line">        x = self.block_c(x)</span><br><span class="line">        x = self.block_d(x)</span><br><span class="line">        x = self.block_e(x)</span><br><span class="line">        x = self.flatten(x)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line">        x = self.classifier(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">dataset = tfds.load(<span class="string">&#x27;cats_vs_dogs&#x27;</span>, split=tfds.Split.TRAIN, data_dir=<span class="string">&#x27;data/&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize VGG with the number of classes </span></span><br><span class="line">vgg = MyVGG(num_classes=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Compile with losses and metrics</span></span><br><span class="line">vgg.<span class="built_in">compile</span>(optimizer=<span class="string">&#x27;adam&#x27;</span>, loss=<span class="string">&#x27;sparse_categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># Define preprocessing function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">features</span>):</span></span><br><span class="line">    <span class="comment"># Resize and normalize</span></span><br><span class="line">    image = tf.image.resize(features[<span class="string">&#x27;image&#x27;</span>], (<span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line">    <span class="keyword">return</span> tf.cast(image, tf.float32) / <span class="number">255.</span>, features[<span class="string">&#x27;label&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Apply transformations to dataset</span></span><br><span class="line">dataset = dataset.<span class="built_in">map</span>(preprocess).batch(<span class="number">32</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Train the custom VGG model</span></span><br><span class="line">vgg.fit(dataset, epochs=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>来源：Coursera -&gt; Custom Models, Layers, and Loss Functions with TensorFlow</p>
+]]></content>
       <categories>
         <category>DeepLearning</category>
       </categories>
