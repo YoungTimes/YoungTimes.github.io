@@ -217,24 +217,6 @@
       </tags>
   </entry>
   <entry>
-    <title>低速自动驾驶车辆的定位与建图</title>
-    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
-    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
-<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
-<span id="more"></span>
-
-<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-      </categories>
-      <tags>
-        <tag>自动驾驶</tag>
-        <tag>高精地图</tag>
-        <tag>Mobileye</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mobileye REM地图</title>
     <url>/2021/03/14/mobileye-rem-map-md/</url>
     <content><![CDATA[<h1 id="为什么需要高精地图"><a href="#为什么需要高精地图" class="headerlink" title="为什么需要高精地图"></a>为什么需要高精地图</h1><p><img src="/2021/03/14/mobileye-rem-map-md/rem_map.png" alt="Mobileye Rem Map"></p>
@@ -301,6 +283,24 @@
       </tags>
   </entry>
   <entry>
+    <title>低速自动驾驶车辆的定位与建图</title>
+    <url>/2021/03/25/localization-mapping-zhixingzhe/</url>
+    <content><![CDATA[<p><img src="/2021/03/25/localization-mapping-zhixingzhe/1.png"></p>
+<p>本文是高翔博士关于低速自动驾驶定位建图的相关介绍。</p>
+<span id="more"></span>
+
+<p><img src="/2021/03/25/localization-mapping-zhixingzhe/2.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/3.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/4.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/5.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/6.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/7.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/8.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/9.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/10.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/11.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/12.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/13.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/14.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/15.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/16.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/17.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/18.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/19.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/20.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/21.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/22.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/23.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/24.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/25.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/26.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/27.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/28.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/29.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/30.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/31.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/32.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/33.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/34.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/35.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/36.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/37.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/38.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/39.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/40.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/41.png"><br><img src="/2021/03/25/localization-mapping-zhixingzhe/42.png"></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>高精地图</tag>
+        <tag>Mobileye</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>投资材料</title>
     <url>/2021/04/17/personal-investment-md/</url>
     <content><![CDATA[<h1 id="投资指标"><a href="#投资指标" class="headerlink" title="投资指标"></a>投资指标</h1><h2 id="市盈率"><a href="#市盈率" class="headerlink" title="市盈率"></a>市盈率</h2><p>股票的市盈率(Price-to-Earning Ratio，P/E)，指每股市价(P)除以每股盈余(EPS)，通常作为股票是高估抑或低估的指标。</p>
@@ -345,11 +345,11 @@
 <td align="center">9.67</td>
 </tr>
 </tbody></table>
-<div id="echarts5846" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts8975" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts5846'));
+        var myChart = echarts.init(document.getElementById('echarts8975'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -390,11 +390,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts6675" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts3616" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts6675'));
+        var myChart = echarts.init(document.getElementById('echarts3616'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -441,11 +441,11 @@
         myChart.setOption(option);
 </script>
 
-<div id="echarts8454" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts3681" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts8454'));
+        var myChart = echarts.init(document.getElementById('echarts3681'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -523,11 +523,11 @@
 <td align="center">3.47</td>
 </tr>
 </tbody></table>
-<div id="echarts8280" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts6854" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts8280'));
+        var myChart = echarts.init(document.getElementById('echarts6854'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -597,11 +597,11 @@
 <td align="center">0.97</td>
 </tr>
 </tbody></table>
-<div id="echarts4862" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts4870" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts4862'));
+        var myChart = echarts.init(document.getElementById('echarts4870'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -671,11 +671,11 @@
 <td align="center">2305.9</td>
 </tr>
 </tbody></table>
-<div id="echarts7549" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts2816" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts7549'));
+        var myChart = echarts.init(document.getElementById('echarts2816'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -751,11 +751,11 @@
 <td align="center">356.4</td>
 </tr>
 </tbody></table>
-<div id="echarts6238" style="width: 85%;height: 400px;margin: 0 auto"></div>
+<div id="echarts638" style="width: 85%;height: 400px;margin: 0 auto"></div>
 <script src="https://cdn.bootcss.com/echarts/3.8.0/echarts.common.min.js"></script>
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echarts6238'));
+        var myChart = echarts.init(document.getElementById('echarts638'));
         // 指定图表的配置项和数据
         var option = {
     title: {
@@ -811,68 +811,6 @@
       <tags>
         <tag>个人投资</tag>
         <tag>投资理财</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RNN预测行人运动轨迹</title>
-    <url>/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/</url>
-    <content><![CDATA[<blockquote>
-<p>最近在研究论文-Social LSTM: Human Trajectory Prediction in Crowded Spaces, 先从最基本的RNN模型入手看看效果。</p>
-<p>本文代码已经上传到Github:<br><a href="https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py">https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py</a></p>
-</blockquote>
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/Screenshot_from_2021-03-28_22-40-11.png"></p>
-<span id="more"></span>
-
-<h1 id="行人轨迹数据集"><a href="#行人轨迹数据集" class="headerlink" title="行人轨迹数据集"></a>行人轨迹数据集</h1><p>数据集来源自[1]，每个数据目录包含一个pixel_pos.csv文件，它的文件格式如下:</p>
-<p>pixel_pose.csv包含4行，它的列数是所有行人轨迹点的数量。</p>
-<p>第一行是所有的Frame Number；</p>
-<p>第二行是所有行人的ID；</p>
-<p>第三行是所有的y坐标；</p>
-<p>第四行是所有的x坐标。</p>
-<p>先看下数据集的内容：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">directory = <span class="string">&quot;./data/eth/univ&quot;</span></span><br><span class="line"></span><br><span class="line">file_path = os.path.join(directory, <span class="string">&#x27;pixel_pos.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line">data = np.genfromtxt(file_path, delimiter=<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the number of pedestrians in the current dataset</span></span><br><span class="line">pedIDs = np.unique(data[<span class="number">1</span>, :])</span><br><span class="line">numPeds = np.size(pedIDs)</span><br><span class="line"></span><br><span class="line">pedIndexLookup = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ped_index, ped_id <span class="keyword">in</span> <span class="built_in">enumerate</span>(pedIDs):</span><br><span class="line">    pedIndexLookup[ped_id] = ped_index</span><br><span class="line"></span><br><span class="line">frameIDs = np.unique(data[<span class="number">0</span>, :])</span><br><span class="line">numFrames = np.size(frameIDs)</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;number of pedestrians is: &#123;&#125;, number of frames is &#123;&#125;&quot;</span>.<span class="built_in">format</span>(numPeds, numFrames))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>将data/eth/univ数据场景的数据可视化如下图所示，每个不同颜色的圆点都是一个运动的行人。</p>
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/315ft-jpfdw.gif"></p>
-<h1 id="RNN模型"><a href="#RNN模型" class="headerlink" title="RNN模型"></a>RNN模型</h1><p>RNN模型参考了[1][2][3]，大概分为三层: 输入层(Embedding)、RNN层(LSTM/GRU)、输出层。</p>
-<p>Embedding层将坐标(x,y)嵌入到64维的向量空间；输出层输出每个预测点的二维高斯分布参数(包含5个参数:mux, muy, sx, sy, corr), 时刻t的预测坐标点最后通过$({x}^{t}, {y}^{t}) \sim \mathcal{N}(\mu_i^t, \sigma_i^t, \rho_i^t)$获取。</p>
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-8f7cdefd76e7c3a3bc9260eee986f828_720w.jpg" alt="TensorFlow Tutorial-RNN文本生成"></p>
-<p>模型代码如下:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model</span>(<span class="params">args</span>):</span></span><br><span class="line">    output_size = <span class="number">5</span></span><br><span class="line">    model = tf.keras.Sequential([</span><br><span class="line">        tf.keras.layers.Dense(args.embedding_size, activation = tf.keras.activations.relu,</span><br><span class="line">            batch_input_shape = [args.batch_size, <span class="literal">None</span>, <span class="number">2</span>]),</span><br><span class="line">        tf.keras.layers.GRU(args.rnn_size,</span><br><span class="line">                            return_sequences=<span class="literal">True</span>,</span><br><span class="line">                            stateful=<span class="literal">True</span>,</span><br><span class="line">                            recurrent_initializer=<span class="string">&#x27;glorot_uniform&#x27;</span>),</span><br><span class="line">        tf.keras.layers.Dense(output_size)</span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
-
-<h1 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h1><h2 id="Loss函数"><a href="#Loss函数" class="headerlink" title="Loss函数"></a>Loss函数</h2><p>模型的Loss函数为所有待预测轨迹点的负对数似然估计之和，模型训练的过程就是最小化所有待预测轨迹的Loss的过程。</p>
-<p>$$<br>L^{i}=-\sum_{t=T_{obs}+1}^{T_{pred}} \log \left(\mathbb{P}\left(x_{t}^{i}, y_{t}^{i} \mid \sigma_{t}^{i}, \mu_{t}^{i}, \rho_{t}^{i}\right)\right)<br>$$</p>
-<p>loss代码如下:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_lossfunc</span>(<span class="params">z_mux, z_muy, z_sx, z_sy, z_corr, x_data, y_data</span>):</span></span><br><span class="line"></span><br><span class="line">    result0 = tf_2d_normal(x_data, y_data, z_mux, z_muy, z_sx, z_sy, z_corr)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># For numerical stability purposes</span></span><br><span class="line">    epsilon = <span class="number">1e-20</span></span><br><span class="line"></span><br><span class="line">    result1 = -tf.math.log(tf.math.maximum(result0, epsilon))  <span class="comment"># Numerical stability</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Sum up all log probabilities for each data point</span></span><br><span class="line">    <span class="keyword">return</span> tf.reduce_sum(result1)</span><br></pre></td></tr></table></figure>
-<h2 id="轨迹预测效果的Metric"><a href="#轨迹预测效果的Metric" class="headerlink" title="轨迹预测效果的Metric"></a>轨迹预测效果的Metric</h2><p>轨迹预测效果的衡量指标为:<strong>Average Displacement Error</strong>和<strong>Final Displacement Error</strong>。</p>
-<p>Average Displacement Error = 所有预测轨迹点与GroundTruth对应轨迹点的空间距离之和/预测轨迹点个数</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_mean_error</span>(<span class="params">pred_traj, true_traj, observed_length</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># The data structure to store all errors</span></span><br><span class="line">    error = np.zeros(<span class="built_in">len</span>(true_traj) - observed_length)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(observed_length, <span class="built_in">len</span>(true_traj)):</span><br><span class="line">        <span class="comment"># The predicted position</span></span><br><span class="line">        pred_pos = pred_traj[i, :]</span><br><span class="line">        <span class="comment"># The true position</span></span><br><span class="line">        true_pos = true_traj[i, :]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># The euclidean distance is the error</span></span><br><span class="line">        error[i-observed_length] = np.linalg.norm(true_pos - pred_pos)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> np.mean(error)</span><br></pre></td></tr></table></figure>
-
-<p>Final Displacement Error = 最后一个预测轨迹点与GroundTruth对应轨迹点的空间距离；</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_final_error</span>(<span class="params">pred_traj, true_traj</span>):</span></span><br><span class="line">    error = np.linalg.norm(pred_traj[-<span class="number">1</span>, :] - true_traj[-<span class="number">1</span>, :])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error</span><br></pre></td></tr></table></figure>
-<h2 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span>(<span class="params">args</span>):</span></span><br><span class="line">    datasets = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">    data_loader = DataLoader(args.batch_size, args.seq_length, datasets, forcePreProcess=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    model = build_model(args)</span><br><span class="line"></span><br><span class="line">    optimizer = tf.keras.optimizers.RMSprop(args.learning_rate)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(args.num_epochs):</span><br><span class="line">        data_loader.reset_batch_pointer()</span><br><span class="line">        model.reset_states()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> batch <span class="keyword">in</span> <span class="built_in">range</span>(data_loader.num_batches):</span><br><span class="line">            start = time.time()</span><br><span class="line"></span><br><span class="line">             x, y = data_loader.next_batch()</span><br><span class="line"></span><br><span class="line">            base_pos = np.array([[e_x[<span class="number">0</span>] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_x))] <span class="keyword">for</span> e_x <span class="keyword">in</span> x])</span><br><span class="line"></span><br><span class="line">            x_offset = x - base_pos</span><br><span class="line">            y_offset = y - base_pos</span><br><span class="line"></span><br><span class="line">            <span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> tape:</span><br><span class="line">                tensor_x = tf.convert_to_tensor(x_offset, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">                logits = model(tensor_x)</span><br><span class="line"></span><br><span class="line">                [o_mux, o_muy, o_sx, o_sy, o_corr] = get_coef(logits)</span><br><span class="line"></span><br><span class="line">                tensor_y = tf.convert_to_tensor(y_offset, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">                [x_data, y_data] = tf.split(tensor_y, <span class="number">2</span>, -<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Compute the loss function</span></span><br><span class="line">                loss = get_lossfunc(o_mux, o_muy, o_sx, o_sy, o_corr, x_data, y_data)</span><br><span class="line"></span><br><span class="line">                mean_error, final_error = calc_prediction_error(o_mux, o_muy, o_sx, o_sy, o_corr, tensor_y, args)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Compute the cost</span></span><br><span class="line">                loss = tf.math.divide(loss, (args.batch_size * args.seq_length))</span><br><span class="line"></span><br><span class="line">                grads = tape.gradient(loss, model.trainable_variables)</span><br><span class="line"></span><br><span class="line">                optimizer.lr.assign(args.learning_rate * (args.decay_rate ** e))</span><br><span class="line">                optimizer.apply_gradients(<span class="built_in">zip</span>(grads, model.trainable_variables))</span><br></pre></td></tr></table></figure>
-
-<p>training过程:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">5195&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.898, time&#x2F;batch &#x3D; 0.583, mean error &#x3D; 0.019682016324174278, final\_error &#x3D; 0.019766580550931393</span><br><span class="line">5196&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.707, time&#x2F;batch &#x3D; 0.583, mean error &#x3D; 0.01821616107675557, final\_error &#x3D; 0.018569258209317922</span><br><span class="line">5197&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.726, time&#x2F;batch &#x3D; 0.581, mean error &#x3D; 0.021631291888964673, final\_error &#x3D; 0.024468516283668577</span><br><span class="line">5198&#x2F;5200 (epoch 199), train\_loss &#x3D; -6.308, time&#x2F;batch &#x3D; 0.595, mean error &#x3D; 0.02178817719841997, final\_error &#x3D; 0.024148114868439735</span><br><span class="line">5199&#x2F;5200 (epoch 199), train\_loss &#x3D; -2.924, time&#x2F;batch &#x3D; 0.603, mean error &#x3D; 0.035233428867844245, final\_error &#x3D; 0.036289180340245364</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-79fae3377250006a5521fb82983b7e62_720w.jpg"></p>
-<p>最后放一些测试效果的图吧，绿色是Ground Truth Trajectory，红色是Prediction Trajectory。</p>
-<p>最终效果中，预测Trajectory与Ground Truth Trajectory的绝对偏差并不大，因为行人的运动速度通常不会太快。但最终的预测趋势与真实的运动意图个人感觉还比较大，不确定是模型的问题，还是行人运动预测难度比较大，单凭LSTM很难搞定。后面再尝试下Social LSTM，看看效果。</p>
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-2c6eca62a722134c41825e200e8bfe51_720w.jpg"></p>
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-7464b730afec00a99d8d4cc9738819a1_720w.jpg"></p>
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-a0b714e1f20cc24717b90d795fc605ea_720w.jpg"></p>
-<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-fd8e403ac5d3c4a411d8e2d2f497368e_720w.jpg"></p>
-<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>1.<a href="https://github.com/xuerenlv/social-lstm-tf">https://github.com/xuerenlv/social-lstm-tf</a><br>2.<a href="https://github.com/quancore/social-lstm">https://github.com/quancore/social-lstm</a><br>3.<a href="https://www.tensorflow.org/tutorials/text/text/_generation?hl=zh-cn">https://www.tensorflow.org/tutorials/text/text\_generation?hl=zh-cn</a></p>
-]]></content>
-      <categories>
-        <category>自动驾驶</category>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>LSTM</tag>
-        <tag>RNN</tag>
-        <tag>行人轨迹预测</tag>
-        <tag>轨迹预测</tag>
       </tags>
   </entry>
   <entry>
@@ -968,6 +906,68 @@ Stopping training...
       <tags>
         <tag>Tensorflow</tag>
         <tag>Keras</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RNN预测行人运动轨迹</title>
+    <url>/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/</url>
+    <content><![CDATA[<blockquote>
+<p>最近在研究论文-Social LSTM: Human Trajectory Prediction in Crowded Spaces, 先从最基本的RNN模型入手看看效果。</p>
+<p>本文代码已经上传到Github:<br><a href="https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py">https://github.com/YoungTimes/GNN/blob/master/Social-LSTM/train.py</a></p>
+</blockquote>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/Screenshot_from_2021-03-28_22-40-11.png"></p>
+<span id="more"></span>
+
+<h1 id="行人轨迹数据集"><a href="#行人轨迹数据集" class="headerlink" title="行人轨迹数据集"></a>行人轨迹数据集</h1><p>数据集来源自[1]，每个数据目录包含一个pixel_pos.csv文件，它的文件格式如下:</p>
+<p>pixel_pose.csv包含4行，它的列数是所有行人轨迹点的数量。</p>
+<p>第一行是所有的Frame Number；</p>
+<p>第二行是所有行人的ID；</p>
+<p>第三行是所有的y坐标；</p>
+<p>第四行是所有的x坐标。</p>
+<p>先看下数据集的内容：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">directory = <span class="string">&quot;./data/eth/univ&quot;</span></span><br><span class="line"></span><br><span class="line">file_path = os.path.join(directory, <span class="string">&#x27;pixel_pos.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line">data = np.genfromtxt(file_path, delimiter=<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Get the number of pedestrians in the current dataset</span></span><br><span class="line">pedIDs = np.unique(data[<span class="number">1</span>, :])</span><br><span class="line">numPeds = np.size(pedIDs)</span><br><span class="line"></span><br><span class="line">pedIndexLookup = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ped_index, ped_id <span class="keyword">in</span> <span class="built_in">enumerate</span>(pedIDs):</span><br><span class="line">    pedIndexLookup[ped_id] = ped_index</span><br><span class="line"></span><br><span class="line">frameIDs = np.unique(data[<span class="number">0</span>, :])</span><br><span class="line">numFrames = np.size(frameIDs)</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;number of pedestrians is: &#123;&#125;, number of frames is &#123;&#125;&quot;</span>.<span class="built_in">format</span>(numPeds, numFrames))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>将data/eth/univ数据场景的数据可视化如下图所示，每个不同颜色的圆点都是一个运动的行人。</p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/315ft-jpfdw.gif"></p>
+<h1 id="RNN模型"><a href="#RNN模型" class="headerlink" title="RNN模型"></a>RNN模型</h1><p>RNN模型参考了[1][2][3]，大概分为三层: 输入层(Embedding)、RNN层(LSTM/GRU)、输出层。</p>
+<p>Embedding层将坐标(x,y)嵌入到64维的向量空间；输出层输出每个预测点的二维高斯分布参数(包含5个参数:mux, muy, sx, sy, corr), 时刻t的预测坐标点最后通过$({x}^{t}, {y}^{t}) \sim \mathcal{N}(\mu_i^t, \sigma_i^t, \rho_i^t)$获取。</p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-8f7cdefd76e7c3a3bc9260eee986f828_720w.jpg" alt="TensorFlow Tutorial-RNN文本生成"></p>
+<p>模型代码如下:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model</span>(<span class="params">args</span>):</span></span><br><span class="line">    output_size = <span class="number">5</span></span><br><span class="line">    model = tf.keras.Sequential([</span><br><span class="line">        tf.keras.layers.Dense(args.embedding_size, activation = tf.keras.activations.relu,</span><br><span class="line">            batch_input_shape = [args.batch_size, <span class="literal">None</span>, <span class="number">2</span>]),</span><br><span class="line">        tf.keras.layers.GRU(args.rnn_size,</span><br><span class="line">                            return_sequences=<span class="literal">True</span>,</span><br><span class="line">                            stateful=<span class="literal">True</span>,</span><br><span class="line">                            recurrent_initializer=<span class="string">&#x27;glorot_uniform&#x27;</span>),</span><br><span class="line">        tf.keras.layers.Dense(output_size)</span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+
+<h1 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h1><h2 id="Loss函数"><a href="#Loss函数" class="headerlink" title="Loss函数"></a>Loss函数</h2><p>模型的Loss函数为所有待预测轨迹点的负对数似然估计之和，模型训练的过程就是最小化所有待预测轨迹的Loss的过程。</p>
+<p>$$<br>L^{i}=-\sum_{t=T_{obs}+1}^{T_{pred}} \log \left(\mathbb{P}\left(x_{t}^{i}, y_{t}^{i} \mid \sigma_{t}^{i}, \mu_{t}^{i}, \rho_{t}^{i}\right)\right)<br>$$</p>
+<p>loss代码如下:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_lossfunc</span>(<span class="params">z_mux, z_muy, z_sx, z_sy, z_corr, x_data, y_data</span>):</span></span><br><span class="line"></span><br><span class="line">    result0 = tf_2d_normal(x_data, y_data, z_mux, z_muy, z_sx, z_sy, z_corr)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># For numerical stability purposes</span></span><br><span class="line">    epsilon = <span class="number">1e-20</span></span><br><span class="line"></span><br><span class="line">    result1 = -tf.math.log(tf.math.maximum(result0, epsilon))  <span class="comment"># Numerical stability</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Sum up all log probabilities for each data point</span></span><br><span class="line">    <span class="keyword">return</span> tf.reduce_sum(result1)</span><br></pre></td></tr></table></figure>
+<h2 id="轨迹预测效果的Metric"><a href="#轨迹预测效果的Metric" class="headerlink" title="轨迹预测效果的Metric"></a>轨迹预测效果的Metric</h2><p>轨迹预测效果的衡量指标为:<strong>Average Displacement Error</strong>和<strong>Final Displacement Error</strong>。</p>
+<p>Average Displacement Error = 所有预测轨迹点与GroundTruth对应轨迹点的空间距离之和/预测轨迹点个数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_mean_error</span>(<span class="params">pred_traj, true_traj, observed_length</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># The data structure to store all errors</span></span><br><span class="line">    error = np.zeros(<span class="built_in">len</span>(true_traj) - observed_length)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(observed_length, <span class="built_in">len</span>(true_traj)):</span><br><span class="line">        <span class="comment"># The predicted position</span></span><br><span class="line">        pred_pos = pred_traj[i, :]</span><br><span class="line">        <span class="comment"># The true position</span></span><br><span class="line">        true_pos = true_traj[i, :]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># The euclidean distance is the error</span></span><br><span class="line">        error[i-observed_length] = np.linalg.norm(true_pos - pred_pos)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> np.mean(error)</span><br></pre></td></tr></table></figure>
+
+<p>Final Displacement Error = 最后一个预测轨迹点与GroundTruth对应轨迹点的空间距离；</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_final_error</span>(<span class="params">pred_traj, true_traj</span>):</span></span><br><span class="line">    error = np.linalg.norm(pred_traj[-<span class="number">1</span>, :] - true_traj[-<span class="number">1</span>, :])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error</span><br></pre></td></tr></table></figure>
+<h2 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span>(<span class="params">args</span>):</span></span><br><span class="line">    datasets = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">    data_loader = DataLoader(args.batch_size, args.seq_length, datasets, forcePreProcess=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    model = build_model(args)</span><br><span class="line"></span><br><span class="line">    optimizer = tf.keras.optimizers.RMSprop(args.learning_rate)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(args.num_epochs):</span><br><span class="line">        data_loader.reset_batch_pointer()</span><br><span class="line">        model.reset_states()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> batch <span class="keyword">in</span> <span class="built_in">range</span>(data_loader.num_batches):</span><br><span class="line">            start = time.time()</span><br><span class="line"></span><br><span class="line">             x, y = data_loader.next_batch()</span><br><span class="line"></span><br><span class="line">            base_pos = np.array([[e_x[<span class="number">0</span>] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_x))] <span class="keyword">for</span> e_x <span class="keyword">in</span> x])</span><br><span class="line"></span><br><span class="line">            x_offset = x - base_pos</span><br><span class="line">            y_offset = y - base_pos</span><br><span class="line"></span><br><span class="line">            <span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> tape:</span><br><span class="line">                tensor_x = tf.convert_to_tensor(x_offset, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">                logits = model(tensor_x)</span><br><span class="line"></span><br><span class="line">                [o_mux, o_muy, o_sx, o_sy, o_corr] = get_coef(logits)</span><br><span class="line"></span><br><span class="line">                tensor_y = tf.convert_to_tensor(y_offset, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">                [x_data, y_data] = tf.split(tensor_y, <span class="number">2</span>, -<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Compute the loss function</span></span><br><span class="line">                loss = get_lossfunc(o_mux, o_muy, o_sx, o_sy, o_corr, x_data, y_data)</span><br><span class="line"></span><br><span class="line">                mean_error, final_error = calc_prediction_error(o_mux, o_muy, o_sx, o_sy, o_corr, tensor_y, args)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Compute the cost</span></span><br><span class="line">                loss = tf.math.divide(loss, (args.batch_size * args.seq_length))</span><br><span class="line"></span><br><span class="line">                grads = tape.gradient(loss, model.trainable_variables)</span><br><span class="line"></span><br><span class="line">                optimizer.lr.assign(args.learning_rate * (args.decay_rate ** e))</span><br><span class="line">                optimizer.apply_gradients(<span class="built_in">zip</span>(grads, model.trainable_variables))</span><br></pre></td></tr></table></figure>
+
+<p>training过程:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">5195&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.898, time&#x2F;batch &#x3D; 0.583, mean error &#x3D; 0.019682016324174278, final\_error &#x3D; 0.019766580550931393</span><br><span class="line">5196&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.707, time&#x2F;batch &#x3D; 0.583, mean error &#x3D; 0.01821616107675557, final\_error &#x3D; 0.018569258209317922</span><br><span class="line">5197&#x2F;5200 (epoch 199), train\_loss &#x3D; -5.726, time&#x2F;batch &#x3D; 0.581, mean error &#x3D; 0.021631291888964673, final\_error &#x3D; 0.024468516283668577</span><br><span class="line">5198&#x2F;5200 (epoch 199), train\_loss &#x3D; -6.308, time&#x2F;batch &#x3D; 0.595, mean error &#x3D; 0.02178817719841997, final\_error &#x3D; 0.024148114868439735</span><br><span class="line">5199&#x2F;5200 (epoch 199), train\_loss &#x3D; -2.924, time&#x2F;batch &#x3D; 0.603, mean error &#x3D; 0.035233428867844245, final\_error &#x3D; 0.036289180340245364</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-79fae3377250006a5521fb82983b7e62_720w.jpg"></p>
+<p>最后放一些测试效果的图吧，绿色是Ground Truth Trajectory，红色是Prediction Trajectory。</p>
+<p>最终效果中，预测Trajectory与Ground Truth Trajectory的绝对偏差并不大，因为行人的运动速度通常不会太快。但最终的预测趋势与真实的运动意图个人感觉还比较大，不确定是模型的问题，还是行人运动预测难度比较大，单凭LSTM很难搞定。后面再尝试下Social LSTM，看看效果。</p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-2c6eca62a722134c41825e200e8bfe51_720w.jpg"></p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-7464b730afec00a99d8d4cc9738819a1_720w.jpg"></p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-a0b714e1f20cc24717b90d795fc605ea_720w.jpg"></p>
+<p><img src="/2020/07/11/rnn%E9%A2%84%E6%B5%8B%E8%A1%8C%E4%BA%BA%E8%BF%90%E5%8A%A8%E8%BD%A8%E8%BF%B9/v2-fd8e403ac5d3c4a411d8e2d2f497368e_720w.jpg"></p>
+<h1 id="参考材料"><a href="#参考材料" class="headerlink" title="参考材料"></a>参考材料</h1><p>1.<a href="https://github.com/xuerenlv/social-lstm-tf">https://github.com/xuerenlv/social-lstm-tf</a><br>2.<a href="https://github.com/quancore/social-lstm">https://github.com/quancore/social-lstm</a><br>3.<a href="https://www.tensorflow.org/tutorials/text/text/_generation?hl=zh-cn">https://www.tensorflow.org/tutorials/text/text\_generation?hl=zh-cn</a></p>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>LSTM</tag>
+        <tag>RNN</tag>
+        <tag>行人轨迹预测</tag>
+        <tag>轨迹预测</tag>
       </tags>
   </entry>
   <entry>
@@ -1832,6 +1832,14 @@ Stopping training...
 
 <p><img src="/visualize_prediction.png"></p>
 ]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>机器学习</tag>
+        <tag>深度学习</tag>
+      </tags>
   </entry>
   <entry>
     <title>Tensorflow-使用Functional API构建Model</title>
@@ -2439,6 +2447,77 @@ Stopping training...
         <tag>绝对定位</tag>
         <tag>车道模型</tag>
         <tag>道路模型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Object Detection</title>
+    <url>/2021/06/14/object_detection/</url>
+    <content><![CDATA[<h1 id="Object-Detection"><a href="#Object-Detection" class="headerlink" title="Object Detection"></a>Object Detection</h1><p>This lab is similar to the previous lab, except now instead of printing out the bounding box coordinates, you can visualize these bounding boxes on top of the image!</p>
+<span id="more"></span>
+
+<h2 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># For running inference on the TF-Hub module.</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow_hub <span class="keyword">as</span> hub</span><br><span class="line"></span><br><span class="line"><span class="comment"># For downloading the image.</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> tempfile</span><br><span class="line"><span class="keyword">from</span> six.moves.urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="keyword">from</span> six <span class="keyword">import</span> BytesIO</span><br><span class="line"></span><br><span class="line"><span class="comment"># For drawing onto the image.</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageColor</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageDraw</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageFont</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageOps</span><br><span class="line"></span><br><span class="line"><span class="comment"># For measuring the inference time.</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print Tensorflow version</span></span><br><span class="line">print(tf.__version__)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check available GPU devices.</span></span><br><span class="line">print(<span class="string">&quot;The following GPU devices are available: %s&quot;</span> % tf.test.gpu_device_name())</span><br></pre></td></tr></table></figure>
+
+<h3 id="Select-and-load-the-model"><a href="#Select-and-load-the-model" class="headerlink" title="Select and load the model"></a>Select and load the model</h3><p>As in the previous lab, you can choose an object detection module. Here are two that we’ve selected for you:</p>
+<ul>
+<li><a href="https://tfhub.dev/tensorflow/ssd_mobilenet_v2/2">ssd + mobilenet V2</a> small and fast.</li>
+<li><a href="https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1">FasterRCNN + InceptionResNet V2</a>: high accuracy</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># you can switch the commented lines here to pick the other model</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ssd mobilenet version 2</span></span><br><span class="line">module_handle = <span class="string">&quot;https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># You can choose inception resnet version 2 instead</span></span><br><span class="line"><span class="comment">#module_handle = &quot;https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Load-the-model"><a href="#Load-the-model" class="headerlink" title="Load the model"></a>Load the model</h4><p>Next, you’ll load the model specified by the <code>module_handle</code>.</p>
+<ul>
+<li>This will take a few minutes to load the model.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = hub.load(module_handle)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Choose-the-default-signature"><a href="#Choose-the-default-signature" class="headerlink" title="Choose the default signature"></a>Choose the default signature</h4><p>As before, you can check the available signatures using <code>.signature.keys()</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># take a look at the available signatures for this particular model</span></span><br><span class="line">model.signatures.keys()</span><br></pre></td></tr></table></figure>
+
+<p>Please choose the ‘default’ signature for your object detector.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">detector = model.signatures[<span class="string">&#x27;default&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="download-and-resize-image"><a href="#download-and-resize-image" class="headerlink" title="download_and_resize_image"></a>download_and_resize_image</h3><p>As you saw in the previous lab, this function downloads an image specified by a given “url”, pre-processes it, and then saves it to disk.</p>
+<ul>
+<li>What new compared to the previous lab is that you an display the image if you set the parameter <code>display=True</code>.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">display_image</span>(<span class="params">image</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Displays an image inside the notebook.</span></span><br><span class="line"><span class="string">    This is used by download_and_resize_image()</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    fig = plt.figure(figsize=(<span class="number">20</span>, <span class="number">15</span>))</span><br><span class="line">    plt.grid(<span class="literal">False</span>)</span><br><span class="line">    plt.imshow(image)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_and_resize_image</span>(<span class="params">url, new_width=<span class="number">256</span>, new_height=<span class="number">256</span>, display=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    Fetches an image online, resizes it and saves it locally.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        url (string) -- link to the image</span></span><br><span class="line"><span class="string">        new_width (int) -- size in pixels used for resizing the width of the image</span></span><br><span class="line"><span class="string">        new_height (int) -- size in pixels used for resizing the length of the image</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        (string) -- path to the saved image</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment"># create a temporary file ending with &quot;.jpg&quot;</span></span><br><span class="line">    _, filename = tempfile.mkstemp(suffix=<span class="string">&quot;.jpg&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># opens the given URL</span></span><br><span class="line">    response = urlopen(url)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># reads the image fetched from the URL</span></span><br><span class="line">    image_data = response.read()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># puts the image data in memory buffer</span></span><br><span class="line">    image_data = BytesIO(image_data)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># opens the image</span></span><br><span class="line">    pil_image = Image.<span class="built_in">open</span>(image_data)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># resizes the image. will crop if aspect ratio is different.</span></span><br><span class="line">    pil_image = ImageOps.fit(pil_image, (new_width, new_height), Image.ANTIALIAS)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># converts to the RGB colorspace</span></span><br><span class="line">    pil_image_rgb = pil_image.convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># saves the image to the temporary file created earlier</span></span><br><span class="line">    pil_image_rgb.save(filename, <span class="built_in">format</span>=<span class="string">&quot;JPEG&quot;</span>, quality=<span class="number">90</span>)</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">&quot;Image downloaded to %s.&quot;</span> % filename)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> display:</span><br><span class="line">        display_image(pil_image)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> filename</span><br></pre></td></tr></table></figure>
+
+<h3 id="Select-and-load-an-image"><a href="#Select-and-load-an-image" class="headerlink" title="Select and load an image"></a>Select and load an image</h3><p>Load a public image from Open Images v4, save locally, and display.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># By Heiko Gorski, Source: https://commons.wikimedia.org/wiki/File:Naxos_Taverna.jpg</span></span><br><span class="line">image_url = <span class="string">&quot;https://upload.wikimedia.org/wikipedia/commons/6/60/Naxos_Taverna.jpg&quot;</span>  <span class="comment">#@param</span></span><br><span class="line">downloaded_image_path = download_and_resize_image(image_url, <span class="number">1280</span>, <span class="number">856</span>, <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Draw-bounding-boxes"><a href="#Draw-bounding-boxes" class="headerlink" title="Draw bounding boxes"></a>Draw bounding boxes</h3><p>To build on what you saw in the previous lab, you can now visualize the predicted bounding boxes, overlaid on top of the image.  </p>
+<ul>
+<li>You can use <code>draw_boxes</code> to do this.  It will use <code>draw_bounding_box_on_image</code> to draw the bounding boxes.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw_bounding_box_on_image</span>(<span class="params">image,</span></span></span><br><span class="line"><span class="function"><span class="params">                               ymin,</span></span></span><br><span class="line"><span class="function"><span class="params">                               xmin,</span></span></span><br><span class="line"><span class="function"><span class="params">                               ymax,</span></span></span><br><span class="line"><span class="function"><span class="params">                               xmax,</span></span></span><br><span class="line"><span class="function"><span class="params">                               color,</span></span></span><br><span class="line"><span class="function"><span class="params">                               font,</span></span></span><br><span class="line"><span class="function"><span class="params">                               thickness=<span class="number">4</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                               display_str_list=(<span class="params"></span>)</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Adds a bounding box to an image.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        image -- the image object</span></span><br><span class="line"><span class="string">        ymin -- bounding box coordinate</span></span><br><span class="line"><span class="string">        xmin -- bounding box coordinate</span></span><br><span class="line"><span class="string">        ymax -- bounding box coordinate</span></span><br><span class="line"><span class="string">        xmax -- bounding box coordinate</span></span><br><span class="line"><span class="string">        color -- color for the bounding box edges</span></span><br><span class="line"><span class="string">        font -- font for class label</span></span><br><span class="line"><span class="string">        thickness -- edge thickness of the bounding box</span></span><br><span class="line"><span class="string">        display_str_list -- class labels for each object detected</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        No return.  The function modifies the `image` argument </span></span><br><span class="line"><span class="string">                    that gets passed into this function</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    draw = ImageDraw.Draw(image)</span><br><span class="line">    im_width, im_height = image.size</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># scale the bounding box coordinates to the height and width of the image</span></span><br><span class="line">    (left, right, top, bottom) = (xmin * im_width, xmax * im_width,</span><br><span class="line">                                ymin * im_height, ymax * im_height)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># define the four edges of the detection box</span></span><br><span class="line">    draw.line([(left, top), (left, bottom), (right, bottom), (right, top),</span><br><span class="line">             (left, top)],</span><br><span class="line">            width=thickness,</span><br><span class="line">            fill=color)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># If the total height of the display strings added to the top of the bounding</span></span><br><span class="line">    <span class="comment"># box exceeds the top of the image, stack the strings below the bounding box</span></span><br><span class="line">    <span class="comment"># instead of above.</span></span><br><span class="line">    display_str_heights = [font.getsize(ds)[<span class="number">1</span>] <span class="keyword">for</span> ds <span class="keyword">in</span> display_str_list]</span><br><span class="line">    <span class="comment"># Each display_str has a top and bottom margin of 0.05x.</span></span><br><span class="line">    total_display_str_height = (<span class="number">1</span> + <span class="number">2</span> * <span class="number">0.05</span>) * <span class="built_in">sum</span>(display_str_heights)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> top &gt; total_display_str_height:</span><br><span class="line">        text_bottom = top</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        text_bottom = top + total_display_str_height</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># Reverse list and print from bottom to top.</span></span><br><span class="line">    <span class="keyword">for</span> display_str <span class="keyword">in</span> display_str_list[::-<span class="number">1</span>]:</span><br><span class="line">        text_width, text_height = font.getsize(display_str)</span><br><span class="line">        margin = np.ceil(<span class="number">0.05</span> * text_height)</span><br><span class="line">        draw.rectangle([(left, text_bottom - text_height - <span class="number">2</span> * margin),</span><br><span class="line">                        (left + text_width, text_bottom)],</span><br><span class="line">                       fill=color)</span><br><span class="line">        draw.text((left + margin, text_bottom - text_height - margin),</span><br><span class="line">                  display_str,</span><br><span class="line">                  fill=<span class="string">&quot;black&quot;</span>,</span><br><span class="line">                  font=font)</span><br><span class="line">        text_bottom -= text_height - <span class="number">2</span> * margin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw_boxes</span>(<span class="params">image, boxes, class_names, scores, max_boxes=<span class="number">10</span>, min_score=<span class="number">0.1</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Overlay labeled boxes on an image with formatted scores and label names.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        image -- the image as a numpy array</span></span><br><span class="line"><span class="string">        boxes -- list of detection boxes</span></span><br><span class="line"><span class="string">        class_names -- list of classes for each detected object</span></span><br><span class="line"><span class="string">        scores -- numbers showing the model&#x27;s confidence in detecting that object</span></span><br><span class="line"><span class="string">        max_boxes -- maximum detection boxes to overlay on the image (default is 10)</span></span><br><span class="line"><span class="string">        min_score -- minimum score required to display a bounding box</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        image -- the image after detection boxes and classes are overlaid on the original image.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    colors = <span class="built_in">list</span>(ImageColor.colormap.values())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        font = ImageFont.truetype(<span class="string">&quot;/usr/share/fonts/truetype/liberation/LiberationSansNarrow-Regular.ttf&quot;</span>,</span><br><span class="line">                              <span class="number">25</span>)</span><br><span class="line">    <span class="keyword">except</span> IOError:</span><br><span class="line">        print(<span class="string">&quot;Font not found, using default font.&quot;</span>)</span><br><span class="line">        font = ImageFont.load_default()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">min</span>(boxes.shape[<span class="number">0</span>], max_boxes)):</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># only display detection boxes that have the minimum score or higher</span></span><br><span class="line">        <span class="keyword">if</span> scores[i] &gt;= min_score:</span><br><span class="line">            ymin, xmin, ymax, xmax = <span class="built_in">tuple</span>(boxes[i])</span><br><span class="line">            display_str = <span class="string">&quot;&#123;&#125;: &#123;&#125;%&quot;</span>.<span class="built_in">format</span>(class_names[i].decode(<span class="string">&quot;ascii&quot;</span>),</span><br><span class="line">                                         <span class="built_in">int</span>(<span class="number">100</span> * scores[i]))</span><br><span class="line">            color = colors[<span class="built_in">hash</span>(class_names[i]) % <span class="built_in">len</span>(colors)]</span><br><span class="line">            image_pil = Image.fromarray(np.uint8(image)).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># draw one bounding box and overlay the class labels onto the image</span></span><br><span class="line">            draw_bounding_box_on_image(image_pil,</span><br><span class="line">                                       ymin,</span><br><span class="line">                                       xmin,</span><br><span class="line">                                       ymax,</span><br><span class="line">                                       xmax,</span><br><span class="line">                                       color,</span><br><span class="line">                                       font,</span><br><span class="line">                                       display_str_list=[display_str])</span><br><span class="line">            np.copyto(image, np.array(image_pil))</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> image</span><br></pre></td></tr></table></figure>
+
+<h3 id="run-detector"><a href="#run-detector" class="headerlink" title="run_detector"></a>run_detector</h3><p>This function will take in the object detection model <code>detector</code> and the path to a sample image, then use this model to detect objects.</p>
+<ul>
+<li>This time, run_dtector also calls <code>draw_boxes</code> to draw the predicted bounding boxes.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_img</span>(<span class="params">path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    Loads a JPEG image and converts it to a tensor.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        path (string) -- path to a locally saved JPEG image</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        (tensor) -- an image tensor</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># read the file</span></span><br><span class="line">    img = tf.io.read_file(path)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># convert to a tensor</span></span><br><span class="line">    img = tf.image.decode_jpeg(img, channels=<span class="number">3</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> img</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_detector</span>(<span class="params">detector, path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    Runs inference on a local file using an object detection model.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        detector (model) -- an object detection model loaded from TF Hub</span></span><br><span class="line"><span class="string">        path (string) -- path to an image saved locally</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># load an image tensor from a local file path</span></span><br><span class="line">    img = load_img(path)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># add a batch dimension in front of the tensor</span></span><br><span class="line">    converted_img  = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># run inference using the model</span></span><br><span class="line">    start_time = time.time()</span><br><span class="line">    result = detector(converted_img)</span><br><span class="line">    end_time = time.time()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># save the results in a dictionary</span></span><br><span class="line">    result = &#123;key:value.numpy() <span class="keyword">for</span> key,value <span class="keyword">in</span> result.items()&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># print results</span></span><br><span class="line">    print(<span class="string">&quot;Found %d objects.&quot;</span> % <span class="built_in">len</span>(result[<span class="string">&quot;detection_scores&quot;</span>]))</span><br><span class="line">    print(<span class="string">&quot;Inference time: &quot;</span>, end_time-start_time)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># draw predicted boxes over the image</span></span><br><span class="line">    image_with_boxes = draw_boxes(</span><br><span class="line">      img.numpy(), result[<span class="string">&quot;detection_boxes&quot;</span>],</span><br><span class="line">      result[<span class="string">&quot;detection_class_entities&quot;</span>], result[<span class="string">&quot;detection_scores&quot;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># display the image</span></span><br><span class="line">    display_image(image_with_boxes)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Run-the-detector-on-your-selected-image"><a href="#Run-the-detector-on-your-selected-image" class="headerlink" title="Run the detector on your selected image!"></a>Run the detector on your selected image!</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">run_detector(detector, downloaded_image_path)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Run-the-detector-on-more-images"><a href="#Run-the-detector-on-more-images" class="headerlink" title="Run the detector on more images"></a>Run the detector on more images</h3><p>Perform inference on some additional images of your choice and check how long inference takes.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">image_urls = [</span><br><span class="line">  <span class="comment"># Source: https://commons.wikimedia.org/wiki/File:The_Coleoptera_of_the_British_islands_(Plate_125)_(8592917784).jpg</span></span><br><span class="line">  <span class="string">&quot;https://upload.wikimedia.org/wikipedia/commons/1/1b/The_Coleoptera_of_the_British_islands_%28Plate_125%29_%288592917784%29.jpg&quot;</span>,</span><br><span class="line">  <span class="comment"># By Américo Toledano, Source: https://commons.wikimedia.org/wiki/File:Biblioteca_Maim%C3%B3nides,_Campus_Universitario_de_Rabanales_007.jpg</span></span><br><span class="line">  <span class="string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Biblioteca_Maim%C3%B3nides%2C_Campus_Universitario_de_Rabanales_007.jpg/1024px-Biblioteca_Maim%C3%B3nides%2C_Campus_Universitario_de_Rabanales_007.jpg&quot;</span>,</span><br><span class="line">  <span class="comment"># Source: https://commons.wikimedia.org/wiki/File:The_smaller_British_birds_(8053836633).jpg</span></span><br><span class="line">  <span class="string">&quot;https://upload.wikimedia.org/wikipedia/commons/0/09/The_smaller_British_birds_%288053836633%29.jpg&quot;</span>,</span><br><span class="line">  ]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">detect_img</span>(<span class="params">image_url</span>):</span></span><br><span class="line">    start_time = time.time()</span><br><span class="line">    image_path = download_and_resize_image(image_url, <span class="number">640</span>, <span class="number">480</span>)</span><br><span class="line">    run_detector(detector, image_path)</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    print(<span class="string">&quot;Inference time:&quot;</span>,end_time-start_time)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">detect_img(image_urls[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">detect_img(image_urls[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">detect_img(image_urls[<span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>自动驾驶</category>
+      </categories>
+      <tags>
+        <tag>自动驾驶</tag>
+        <tag>机器学习</tag>
+        <tag>深度学习</tag>
       </tags>
   </entry>
 </search>
