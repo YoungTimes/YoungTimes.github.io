@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://example.com/2021/06/19/fine_tune_in_tf2x/</loc>
+    <lastmod>2021-06-19</lastmod>
+  </url>
+  <url>
     <loc>http://example.com/2021/06/14/object_detection/</loc>
     <lastmod>2021-06-17</lastmod>
   </url>
